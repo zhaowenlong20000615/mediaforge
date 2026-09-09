@@ -5,7 +5,7 @@ MediaForge 是本地优先的媒体与文档工作台：统一处理视频、音
 ## 启动
 
 ```bash
-python3 -m mediaforge.server   # http://localhost:18080
+python3 -m mediaforge.server   # http://localhost:18081
 python3 -m mediaforge.cli --help
 python3 -m mediaforge.cli doctor --json
 ```

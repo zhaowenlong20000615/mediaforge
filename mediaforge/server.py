@@ -31,5 +31,5 @@ class H(BaseHTTPRequestHandler):
    return self._send(404,{'error':'not_found'})
   except Exception as e:return self._send(400,{'error':type(e).__name__,'message':str(e)})
 def main():
- port=int(os.getenv('MEDIAFORGE_PORT','18080'));ThreadingHTTPServer(('0.0.0.0',port),H).serve_forever()
+ port=int(os.getenv('MEDIAFORGE_PORT','18081'));ThreadingHTTPServer(('0.0.0.0',port),H).serve_forever()
 if __name__=='__main__':main()
