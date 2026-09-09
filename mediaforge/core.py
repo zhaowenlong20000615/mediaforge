@@ -80,6 +80,8 @@ class TaskStore:
   elif tool=='video-transcode':out_ext='.'+p.get('format','mp4').lstrip('.')
   elif tool=='subtitle-convert':out_ext='.'+p.get('format','srt').lstrip('.')
   elif tool=='image-process':out_ext='.'+p.get('format',ext.lstrip('.') or 'png').lstrip('.')
+  elif tool=='pdf-tools' and p.get('operation')=='text':out_ext='.txt'
+  elif tool=='office-convert':out_ext='.'+p.get('format','pdf').lstrip('.')
   dest=self.outputs/(t['id']+'_'+src.stem+'_mediaforge'+out_ext); dest.parent.mkdir(exist_ok=True)
   if tool in ('image-process','watermark'):
    try:
@@ -93,6 +95,10 @@ class TaskStore:
    text=src.read_text(errors='replace')
    if out_ext=='.vtt' and not text.lstrip().startswith('WEBVTT'): text='WEBVTT\n\n'+text
    dest.write_text(text)
+  elif tool=='pdf-tools' and p.get('operation')=='text' and _which('pdftotext'):
+   subprocess.run(['pdftotext',str(src),str(dest)],check=True,timeout=120)
+  elif tool=='office-convert' and _which('libreoffice'):
+   subprocess.run(['libreoffice','--headless','--convert-to',p.get('format','pdf'),'--outdir',str(dest.parent),str(src)],check=True,timeout=600); generated=dest.parent/(src.stem+'.'+p.get('format','pdf')); generated.replace(dest) if generated.exists() and generated!=dest else None
   elif tool in ('video-transcode','audio-extract') and _which('ffmpeg'):
    cmd=['ffmpeg','-y','-i',str(src)];
    if tool=='audio-extract':cmd += ['-vn','-c:a','libmp3lame']
