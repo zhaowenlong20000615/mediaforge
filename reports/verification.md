@@ -12,5 +12,5 @@
 ## 条件与限制
 
 - 本机是否安装 FFmpeg/Poppler/LibreOffice/OCR/Whisper 由 doctor 实时决定；未安装适配器时任务会保留/复制输入并明确依赖状态。
-- 未对真实服务器执行部署，除非具备 SSH 凭证和明确可用的远程环境；不能冒称线上通过。
+- SSH 检查目标 `107.151.245.166` 返回 `Permission denied (publickey)`，因此未执行真实上传/启动；已完成本机 DRY_RUN 上传校验，不能冒称线上通过。
 - fixture 仅用于自动化状态机验证，不代表媒体内容质量。加密/损坏 PDF、复杂表格和 GPU ASR 需在依赖配置后单独验证。
