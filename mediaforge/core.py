@@ -55,7 +55,7 @@ class TaskStore:
     if t.get('idempotency_key')==idem:return t
    infos=[self.inspect(f) for f in files]
    tid='tsk_'+uuid.uuid4().hex[:10]; t={'id':tid,'tool':tool,'status':'accepted','progress':0,'stage':'queued','created_at':time.time(),'updated_at':time.time(),'idempotency_key':idem,'inputs':infos,'params':params,'outputs':[],'logs':['accepted: request received']}
-   self.tasks[tid]=t; self._save(); threading.Thread(target=self._run,args=(tid,),daemon=True).start(); return t
+   self.tasks[tid]=t; self._save(); threading.Thread(target=self._run,args=(tid,),daemon=False).start(); return t
  def _update(self,tid,**kw):
   with self.lock:
    if tid in self.tasks:self.tasks[tid].update(kw,updated_at=time.time());self._save()
@@ -110,6 +110,6 @@ class TaskStore:
  def resume(self,tid):
   t=self.get(tid)
   if t['status'] not in ('recoverable','cancelled','failed'):return t
-  self._update(tid,status='accepted',stage='queued',error=None);threading.Thread(target=self._run,args=(tid,),daemon=True).start();return self.get(tid)
+  self._update(tid,status='accepted',stage='queued',error=None);threading.Thread(target=self._run,args=(tid,),daemon=False).start();return self.get(tid)
  def preview(self,tid):
   t=self.get(tid);return {'task_id':tid,'outputs':t.get('outputs',[]),'previewable':bool(t.get('outputs')),'summary':t.get('summary'),'verification':'outputs exist and SHA-256 was computed; content quality requires user review'}
