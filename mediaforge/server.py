@@ -1,6 +1,6 @@
 from http.server import ThreadingHTTPServer,BaseHTTPRequestHandler
 from urllib.parse import urlparse
-import json,os
+import json,os,base64,uuid
 from .core import TaskStore,TOOLS,doctor
 store=TaskStore()
 class H(BaseHTTPRequestHandler):
@@ -25,6 +25,8 @@ class H(BaseHTTPRequestHandler):
  def do_POST(self):
   try:
    n=int(self.headers.get('Content-Length','0'));body=json.loads(self.rfile.read(n) or '{}');path=urlparse(self.path).path
+   if path=='/api/upload':
+    name=os.path.basename(body.get('name','upload.bin')); data=base64.b64decode(body.get('data','')); dest=store.inputs/(uuid.uuid4().hex+'_'+name); dest.write_bytes(data); return self._send(201,store.inspect(dest))
    if path=='/api/tasks':return self._send(202,store.submit(body['tool'],body.get('files',[]),body.get('params'),body.get('idempotency_key')))
    if path.endswith('/cancel'):return self._send(200,store.cancel(path.split('/')[3]))
    if path.endswith('/resume'):return self._send(200,store.resume(path.split('/')[3]))
