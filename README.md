@@ -33,4 +33,4 @@ python3 -m mediaforge.cli resume tsk_xxxxx --json
 
 ## 部署
 
-`deploy/` 提供 build/package/upload/activate/rollback/status 脚本。默认目标严格校验为 `107.151.245.166`，上传前使用 `DRY_RUN=1` 预览；服务器只接收发布包，不访问 GitHub。
+`deploy/` 提供 build/package/upload/activate/rollback/status 脚本。默认目标严格校验为 `107.151.245.166`，上传前使用 `DRY_RUN=1` 预览；服务器只接收发布包，不访问 GitHub。当前预览已部署至 `http://107.151.245.166:18081/`，GitHub 仓库为 `https://github.com/zhaowenlong20000615/mediaforge`。
