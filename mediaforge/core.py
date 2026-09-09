@@ -1,5 +1,5 @@
 from __future__ import annotations
-import hashlib,json,mimetypes,os,shutil,subprocess,threading,time,uuid
+import hashlib,json,mimetypes,os,shutil,subprocess,threading,time,uuid,zipfile
 from pathlib import Path
 STATUSES={"accepted","running","succeeded","partial","failed","cancelled","recoverable"}
 TOOLS=[
@@ -70,6 +70,11 @@ class TaskStore:
    for i,info in enumerate(t['inputs']):
     if self.get(tid)['status']=='cancelled': return
     outs.append(self._process_one(t,info)); self._update(tid,progress=int(10+85*(i+1)/len(t['inputs'])),stage='processing',logs=self.get(tid)['logs']+[f"processed: {info['name']}"])
+   if t['tool']=='batch' and outs:
+    bundle=self.outputs/(tid+'_bundle.zip')
+    with zipfile.ZipFile(bundle,'w',zipfile.ZIP_DEFLATED) as z:
+     for o in outs:z.write(o['path'],Path(o['path']).name)
+    outs.append({'name':bundle.name,'path':str(bundle),'size':bundle.stat().st_size,'sha256':self.inspect(bundle)['sha256'],'mime':'application/zip'})
    self._update(tid,status='succeeded',stage='verified',progress=100,outputs=outs,summary=f'{len(outs)} 个输出已生成并校验',logs=self.get(tid)['logs']+['succeeded: outputs verified'])
   except Exception as e:self._update(tid,status='failed',stage='error',error=str(e),logs=self.get(tid).get('logs',[])+[f'failed: {type(e).__name__}'])
   finally:
@@ -90,6 +95,8 @@ class TaskStore:
     if w or h: im.thumbnail((int(w or 10**6),int(h or 10**6)))
     if tool=='watermark':ImageDraw.Draw(im).text((16,16),str(p.get('text','MediaForge')),fill=p.get('color',(230,86,54)))
     im.save(dest)
+    if p.get('ocr') and _which('tesseract'):
+     subprocess.run(['tesseract',str(src),str(dest.with_suffix('.ocr')), '-l',str(p.get('lang','eng'))],check=True,timeout=120,stdout=subprocess.DEVNULL,stderr=subprocess.PIPE)
    except Exception: shutil.copy2(src,dest)
   elif tool=='subtitle-convert':
    text=src.read_text(errors='replace')

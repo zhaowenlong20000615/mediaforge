@@ -1,6 +1,6 @@
 from http.server import ThreadingHTTPServer,BaseHTTPRequestHandler
 from urllib.parse import urlparse
-import json,os,base64,uuid
+import json,os,base64,uuid,mimetypes
 from .core import TaskStore,TOOLS,doctor
 store=TaskStore()
 class H(BaseHTTPRequestHandler):
@@ -15,6 +15,10 @@ class H(BaseHTTPRequestHandler):
    if path=='/api/tools':return self._send(200,{'tools':TOOLS})
    if path=='/api/doctor':return self._send(200,{'checks':doctor()})
    if path=='/api/tasks':return self._send(200,{'tasks':store.list()})
+   if path.startswith('/api/tasks/') and path.endswith('/download'):
+    tid=path.split('/')[3]; name=urlparse(self.path).query.replace('file=',''); t=store.get(tid); matches=[o for o in t.get('outputs',[]) if o.get('name')==name];
+    if not matches:return self._send(404,{'error':'output_not_found'})
+    fp=matches[0]['path']; return self._send(200,open(fp,'rb').read(),mimetypes.guess_type(fp)[0] or 'application/octet-stream')
    if path.startswith('/api/tasks/'):
     tid=path.split('/')[3];return self._send(200,store.preview(tid))
    if path=='/' or path=='/index.html':return self._send(200,open(os.path.join(os.path.dirname(__file__),'../static/index.html'),'rb').read(),'text/html; charset=utf-8')
