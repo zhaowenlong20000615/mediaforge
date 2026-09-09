@@ -6,6 +6,7 @@
 - CLI `--help`、`tools --json`、`doctor --json`、任务提交/查询/预览。
 - REST `/healthz`、`/readyz`、`/version`、`/api/tools`、`/api/doctor`，并用 JSON 上传接口验证浏览器文件导入。
 - 使用本机 FFmpeg 生成短音频并完成 `audio-extract` 输出校验。
+- 批量任务生成 ZIP 结果包；浏览器上传与结果下载路径已接通。
 - stdio MCP JSON-RPC 工具发现与 `doctor`。
 - `bash -n deploy/*.sh` 与 DRY_RUN 目标校验。
 
