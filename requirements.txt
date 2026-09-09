@@ -1,0 +1,2 @@
+# Optional adapters are detected at runtime; core uses Python stdlib.
+Pillow>=10.0; extra == "image"
