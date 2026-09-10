@@ -1,0 +1,121 @@
+{
+  "asr": {
+    "status": "succeeded",
+    "error": null,
+    "output_mime": "text/plain",
+    "bytes_identical": true
+  },
+  "subtitle-extract": {
+    "status": "succeeded",
+    "error": null,
+    "output_mime": "text/plain",
+    "bytes_identical": true
+  },
+  "pdf-tools": {
+    "status": "succeeded",
+    "error": null,
+    "output_mime": "text/plain",
+    "bytes_identical": true
+  },
+  "image-process": {
+    "status": "succeeded",
+    "error": null,
+    "output_mime": "image/png",
+    "bytes_identical": true
+  },
+  "vtt_to_srt": {
+    "status": "succeeded",
+    "still_starts_WEBVTT": true
+  },
+  "valid_media_asr": {
+    "status": "succeeded",
+    "identical_bytes": true,
+    "output_mime": "audio/x-wav"
+  },
+  "valid_media_subtitle-extract": {
+    "status": "succeeded",
+    "identical_bytes": true,
+    "output_mime": "video/mp4"
+  },
+  "advertised_flac": {
+    "status": "failed"
+  },
+  "valid_pdf_rotate": {
+    "status": "succeeded",
+    "identical_bytes": true
+  },
+  "empty_task": {
+    "status": "succeeded",
+    "outputs": 0
+  },
+  "idempotency_conflict": {
+    "same_id": true,
+    "requested": "asr",
+    "returned": "batch"
+  },
+  "same_filename_collision": {
+    "status": "succeeded",
+    "same_output_path": true,
+    "first_hash_matches_download": false
+  },
+  "cancel_race_controlled": {
+    "running_immediate": "cancelled",
+    "running_final": "succeeded",
+    "queued_immediate": "cancelled",
+    "queued_final": "succeeded"
+  },
+  "reader_rewrites_running": {
+    "actual_worker": "running",
+    "second_reader": "recoverable",
+    "persisted": "recoverable"
+  },
+  "two_store_lost_update": {
+    "first_task_remains": false,
+    "tasks_on_disk": 1
+  },
+  "partial_lost": {
+    "status": "failed",
+    "reported_outputs": 0,
+    "actual_output_files": 1
+  },
+  "cli_failed_job_exit": {
+    "exit_code": 0,
+    "printed_status": "accepted",
+    "final_status": "failed"
+  },
+  "python_m_entry_exit": {
+    "exit_code": 0,
+    "stderr_contains_error": true
+  },
+  "mcp_standard_messages": [
+    {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "error": {
+        "code": -32000,
+        "message": "unknown tool"
+      }
+    },
+    {
+      "jsonrpc": "2.0",
+      "id": 2,
+      "error": {
+        "code": -32000,
+        "message": "unknown tool"
+      }
+    }
+  ],
+  "static_traversal_safe_readme": {
+    "status": 200,
+    "readme_returned": true
+  },
+  "unauth_outside_workspace_canary": {
+    "submit_status": 202,
+    "download_status": 200,
+    "outside_data_dir": true,
+    "canary_returned": true
+  },
+  "unicode_download": {
+    "status": 404
+  }
+}

@@ -1,2 +1,3 @@
-# Optional adapters are detected at runtime; core uses Python stdlib.
-Pillow>=10.0; extra == "image"
+# Use `uv sync --frozen --extra dev` for pinned development dependencies.
+# Optional adapters: `uv sync --extra asr --extra repair --extra background`.
+.

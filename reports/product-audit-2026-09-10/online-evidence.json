@@ -1,0 +1,111 @@
+{
+  "checked_at": "2026-09-10T08:57:35.976776+00:00",
+  "git_commit": "06ec781153f40691556a1ee9d02da3867b3d9fe9",
+  "target": "http://107.151.245.166:18081",
+  "method": "public GET only; security reproductions used local synthetic files",
+  "/healthz": {
+    "http_status": 200,
+    "body": {
+      "status": "ok"
+    }
+  },
+  "/readyz": {
+    "http_status": 200,
+    "body": {
+      "status": "ready",
+      "data_dir": "/opt/mediaforge/data"
+    }
+  },
+  "/version": {
+    "http_status": 200,
+    "body": {
+      "name": "mediaforge",
+      "version": "0.1.0"
+    }
+  },
+  "/api/doctor": {
+    "http_status": 200,
+    "body": {
+      "checks": [
+        {
+          "id": "ffmpeg",
+          "name": "FFmpeg",
+          "purpose": "视频/音频",
+          "status": "available",
+          "path": "/usr/bin/ffmpeg",
+          "install": null
+        },
+        {
+          "id": "ffprobe",
+          "name": "FFprobe",
+          "purpose": "媒体元数据",
+          "status": "available",
+          "path": "/usr/bin/ffprobe",
+          "install": null
+        },
+        {
+          "id": "pdftoppm",
+          "name": "Poppler",
+          "purpose": "PDF 渲染",
+          "status": "missing",
+          "path": null,
+          "install": "brew install ffmpeg poppler qpdf libreoffice tesseract"
+        },
+        {
+          "id": "pdfinfo",
+          "name": "Poppler",
+          "purpose": "PDF 信息",
+          "status": "missing",
+          "path": null,
+          "install": "brew install ffmpeg poppler qpdf libreoffice tesseract"
+        },
+        {
+          "id": "qpdf",
+          "name": "qpdf",
+          "purpose": "PDF 修复",
+          "status": "missing",
+          "path": null,
+          "install": "brew install ffmpeg poppler qpdf libreoffice tesseract"
+        },
+        {
+          "id": "libreoffice",
+          "name": "LibreOffice",
+          "purpose": "文档转换",
+          "status": "missing",
+          "path": null,
+          "install": "brew install ffmpeg poppler qpdf libreoffice tesseract"
+        },
+        {
+          "id": "whisper",
+          "name": "Whisper",
+          "purpose": "语音识别",
+          "status": "missing",
+          "path": null,
+          "install": "brew install ffmpeg poppler qpdf libreoffice tesseract"
+        },
+        {
+          "id": "tesseract",
+          "name": "Tesseract OCR",
+          "purpose": "OCR",
+          "status": "missing",
+          "path": null,
+          "install": "brew install ffmpeg poppler qpdf libreoffice tesseract"
+        },
+        {
+          "id": "pillow",
+          "name": "Pillow",
+          "purpose": "图片处理",
+          "status": "missing",
+          "error": "No module named 'PIL'",
+          "install": "pip install Pillow"
+        }
+      ]
+    }
+  },
+  "source_sha256": {
+    "mediaforge/core.py": "110b8562df6c904c8500ae33eebf825dfc5bddf5ab52a65a97123e6eea37c643",
+    "mediaforge/server.py": "673c68101f7e8381b2e4a94873fc293fe744973232f88f46352b6dc8ad8070b2",
+    "mediaforge/mcp.py": "e24526a59c8930c93d6fc4abd71f542ee3cde554a53b52079c46e1fd388b0404",
+    "static/app.js": "4f3ea2e8986d07779e1ce44d416e2c5fe9a3810802fe7250b531e35f26583dce"
+  }
+}

@@ -1,36 +1,99 @@
-# MediaForge
+# MediaForge 0.2
 
-MediaForge 是本地优先的媒体与文档工作台：统一处理视频、音频、字幕、PDF、Word 和图片，并用可恢复任务队列追踪每个输出。
+媒体与文档工作台：选择文件与工具、设置参数、观察任务、核对结果，再下载或继续处理。Web、CLI 和标准 MCP 使用同一个有认证的 API；服务端只接受工作区内的文件 ID。
 
-## 启动
+## 本地运行
 
-```bash
-python3 -m mediaforge.server   # http://localhost:18081
-python3 -m mediaforge.cli --help
-python3 -m mediaforge.cli doctor --json
+需要 Python 3.11+（验收使用 3.12）与 [uv](https://docs.astral.sh/uv/)。
+
+```sh
+uv sync --frozen --all-extras
+.venv/bin/mediaforge serve
 ```
 
-核心业务层为 `mediaforge/core.py`，CLI、REST UI 与 MCP 共用同一 `TaskStore`。数据默认写入 `~/.mediaforge`，可用 `MEDIAFORGE_DATA` 隔离工作区。
+打开 `http://127.0.0.1:18081/`。第一次启动会在 `~/.mediaforge/admin.token` 创建权限为 0600 的访问令牌文件。将令牌粘贴到工作区登录页；不要将它提交到 Git 或发给不可信服务。文件存储在服务所在设备，远程部署时会上传到服务器。
+
+```sh
+# macOS 外部依赖（模型单独配置）
+brew install ffmpeg poppler tesseract tesseract-lang libreoffice
+# Ubuntu/Debian
+sudo apt-get install ffmpeg poppler-utils tesseract-ocr tesseract-ocr-chi-sim libreoffice-writer fonts-noto-cjk
+```
+
+## 已实现的工具
+
+- 音视频：转码、音轨提取/转换、裁剪、合并、压缩、抽帧、音量标准化、频谱降噪。
+- 字幕/语音：SRT/VTT/ASS 转换、文本字幕轨提取、预配置 Faster Whisper 模型转写为 TXT/SRT/VTT。
+- PDF：拆分、合并、旋转、无损压缩、渲染图片、文本提取、文本重排为 Word、OCR/可搜索 PDF、表格 CSV/JSON。
+- Word：PDF、HTML、Markdown、文本导出，段落/表格/页眉页脚文字替换。
+- 图片：格式/质量/尺寸、裁剪、OCR、合成 PDF、重命名、U²-Net 去背景、遮罩修复、文字水印。
+- 批量：统一参数多文件、参数模板、分组、逐项部分成功、失败项恢复、可取消进程、ZIP 打包、分页过滤。
+
+准确参数以工具页面、`tools` JSON Schema 为准。每个操作有输入类型、参数范围和依赖状态；缺依赖或无有效结果会失败，不会复制文件假装完成。仅重命名操作有意保留原始字节。
 
 ## CLI
 
-```bash
-python3 -m mediaforge.cli tools --json
-python3 -m mediaforge.cli submit image-process ./photo.jpg --param width=1600 --json
-python3 -m mediaforge.cli tasks --json
-python3 -m mediaforge.cli preview tsk_xxxxx --json
-python3 -m mediaforge.cli cancel tsk_xxxxx --json
-python3 -m mediaforge.cli resume tsk_xxxxx --json
+CLI 连接服务，不直接修改状态数据库。全局 `--server`、`--token-file` 位于资源命令前；`--json` 可放在任意位置。
+
+```sh
+.venv/bin/mediaforge tools --json
+.venv/bin/mediaforge doctor --json
+.venv/bin/mediaforge tasks create image-process ./photo.png --param width=1600 --param format=webp --wait --json
+.venv/bin/mediaforge tasks list --status failed --limit 20 --json
+.venv/bin/mediaforge tasks get TASK_ID --json
+.venv/bin/mediaforge tasks cancel TASK_ID --json
+.venv/bin/mediaforge tasks resume TASK_ID --wait --json
+.venv/bin/mediaforge tasks export TASK_ID --wait --json
+.venv/bin/mediaforge files download FILE_ID --output ./outputs/result.webp --json
 ```
 
-退出码：0 成功，2 可操作输入错误，1 未分类内部错误。
+`tasks create` 不加 `--wait` 只确认受理；长任务通过 `tasks wait` 查询终态。稳定退出码：0 成功/受理，2 输入/连接/权限错误，3 部分成功，4 处理失败，5 已取消，6 可恢复中断，7 等待超时，130 用户中断客户端。客户端中断或等待超时不会隐式取消服务器任务。
 
-## MCP
+远程访问示例（不将令牌放入命令参数）：
 
-`python3 -m mediaforge.mcp` 通过 stdio 接受 JSON-RPC。工具：`list_tools`、`doctor`、`inspect_file`、`create_task`、`get_task_status`、`list_tasks`、`cancel_task`、`resume_task`、`get_task_preview`。只接受用户明确提供的本地文件路径；不记录文件内容或凭证。
+```sh
+export MEDIAFORGE_URL=https://107.151.245.166:18081/mediaforge
+export MEDIAFORGE_TOKEN_FILE=/secure/path/workspace.token
+.venv/bin/mediaforge doctor --json
+```
 
-可选依赖由 `doctor` 检测：FFmpeg/FFprobe、Poppler、qpdf、LibreOffice、Whisper、Tesseract、Pillow。未安装时核心仍可运行，并将需要外部适配器的任务标记为降级复制或未配置。
+## MCP 与项目内 Skill
 
-## 部署
+使用标准 MCP stdio 服务 `.venv/bin/mediaforge mcp`。它提供能力发现、诊断、上传、提交、状态、逐项详情、脱敏日志、取消、恢复、预览、下载和 ZIP 打包。使用官方 Python MCP SDK 实现初始化、`tools/list`、`tools/call` 与 Schema。
 
-`deploy/` 提供 build/package/upload/activate/rollback/status 脚本。默认目标严格校验为 `107.151.245.166`，上传前使用 `DRY_RUN=1` 预览；服务器只接收发布包，不访问 GitHub。当前预览已部署至 `http://107.151.245.166:18081/`，GitHub 仓库为 `https://github.com/zhaowenlong20000615/mediaforge`。
+```json
+{
+  "mcpServers": {
+    "mediaforge": {
+      "command": "/absolute/path/mediaforge/.venv/bin/mediaforge",
+      "args": ["mcp"],
+      "env": {
+        "MEDIAFORGE_URL": "https://107.151.245.166:18081/mediaforge",
+        "MEDIAFORGE_TOKEN_FILE": "/secure/path/workspace.token",
+        "MEDIAFORGE_LOCAL_ROOTS": "/authorized/input/folder",
+        "MEDIAFORGE_OUTPUT_ROOTS": "/authorized/output/folder"
+      }
+    }
+  }
+}
+```
+
+以上是配置示例，不包含真实凭证，也不会自动安装到其他应用或全局配置。项目技能包见 [skill/SKILL.md](skill/SKILL.md)，加载说明见 [docs/AI.md](docs/AI.md)。
+
+## 模型与边界
+
+`MEDIAFORGE_ASR_MODEL` 指向预下载 CTranslate2 模型目录；`U2NET_HOME` 指向含 `u2net.onnx` 的目录。运行任务时不自动下载。诊断页明确显示模型、CPU/CUDA 与 OCR 语言。安装方式、来源和限制见 [docs/MODELS.md](docs/MODELS.md)。
+
+PDF→Word 是文本重排，不能保证复杂版式复刻；ASS→SRT/VTT 丢弃样式；动画图片目前处理首帧；图片字幕轨不能直接导出为文本；压缩不保证已优化文件继续变小；OCR/ASR、复杂表格和修复结果需要人工复核。水印与修复只针对拥有编辑权的素材，不提供 DRM/版权保护绕过功能。
+
+## 验证与发布
+
+```sh
+.venv/bin/python -m pytest -q
+# 有已配置本地模型与合成语音样本时，设置环境后复测全部能力
+MEDIAFORGE_ASR_MODEL=/path/model U2NET_HOME=/path/u2net MEDIAFORGE_SPEECH_FIXTURE=/path/synthetic.wav .venv/bin/python -m pytest -q
+```
+
+没有配置可选模型时相应测试显式 skip，不能当作通过。原始 0.1 的审查与复现记录在 `reports/product-audit-2026-09-10/`；那些缺陷记录对应旧提交，修复后的验收依据见 [reports/verification.md](reports/verification.md)。
+
+源码在本机推送 [GitHub](https://github.com/zhaowenlong20000615/mediaforge)，发布包在本机生成，再通过 SSH 上传固定服务器。完整流程、回滚、令牌获取和迁移见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)。

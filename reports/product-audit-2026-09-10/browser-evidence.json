@@ -1,0 +1,62 @@
+{
+  "browser": "Codex in-app browser",
+  "source_js_matches_online": true,
+  "online": {
+    "url": "http://107.151.245.166:18081/",
+    "synthetic_upload_name": "audit-only-blue.png",
+    "upload_contents": "synthetic 64x64 blue RGB image",
+    "submit_observation": "selected file retained, queue remained empty, no user-visible error",
+    "console_errors": [
+      "Unexpected end of JSON input in api()/refresh()",
+      "Unexpected end of JSON input in api()/submit handler"
+    ],
+    "upload_response_root_cause": "not isolated; may include transport conditions",
+    "secure_context": false,
+    "crypto_randomUUID_type": "undefined",
+    "watermark_visible_fields": [
+      "width"
+    ],
+    "pdf_visible_parameter_fields": []
+  },
+  "narrow": {
+    "viewport_override": [
+      390,
+      844
+    ],
+    "measured_content_width": 375,
+    "upload_top_pixels": 1574,
+    "navigation_display": "none"
+  },
+  "local": {
+    "url": "http://127.0.0.1:28086/",
+    "synthetic_rows": [
+      "failed audio-extract",
+      "succeeded batch"
+    ],
+    "filter_value": "failed",
+    "displayed_after_filter": [
+      "FAILED",
+      "SUCCEEDED"
+    ],
+    "failed_row_detail": "error · 处理中",
+    "results_preview_or_download_buttons": false,
+    "service_stopped_then_refresh": "header remained 本地服务正常; console Failed to fetch"
+  },
+  "keyboard": {
+    "tool_count": 10,
+    "all_tool_tabIndex": -1,
+    "tool_roles": null,
+    "upload_input_css_display": "none"
+  },
+  "contrast": {
+    "accent_on_warm_paper": 3.13,
+    "accent_on_panel": 3.41,
+    "success_on_panel": 2.9
+  },
+  "cleanup": {
+    "temporary_browser_tabs": "closed",
+    "temporary_viewport": "reset",
+    "local_test_server": "stopped"
+  },
+  "limits": "No active scripts were injected. No load test or real personal documents used. No remote filesystem permission exploit run."
+}

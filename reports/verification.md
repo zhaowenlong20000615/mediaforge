@@ -1,17 +1,24 @@
-# MediaForge 验证报告
+# MediaForge 0.2 修复验证
 
-## 已通过
+本报告替代0.1版本中不准确的“全部已通过”表述。历史问题与证据见 `product-audit-2026-09-10/REPORT.md`，该目录的复现脚本针对原始06ec781提交；修复后的验收运行当前tests目录。
 
-- `python3 -m pytest -q`：核心任务、Unicode 文件名、幂等和取消测试。
-- CLI `--help`、`tools --json`、`doctor --json`、任务提交/查询/预览。
-- REST `/healthz`、`/readyz`、`/version`、`/api/tools`、`/api/doctor`，并用 JSON 上传接口验证浏览器文件导入。
-- 使用本机 FFmpeg 生成短音频并完成 `audio-extract` 输出校验。
-- 批量任务生成 ZIP 结果包；浏览器上传与结果下载路径已接通。
-- stdio MCP JSON-RPC 工具发现与 `doctor`。
-- `bash -n deploy/*.sh` 与 DRY_RUN 目标校验。
+## 当前本地证据
 
-## 条件与限制
+- 首轮39项：38通过，中文水印字体缺失1项失败；补充macOS STHeiti字体查找后该项单独通过。
+- 标准MCP初始化/发现/上传/处理/详情与越界拒绝、CLI上传/处理/下载/失败退出码、OCR实际文字识别单独通过。
+- 已配置Faster Whisper tiny模型，使用本机TTS生成的明确合成语音样本，实际CPU转写并检查hello/test内容，测试通过。
+- 已校验官方U²-Net模型，实际运行去背景、检查输出RGBA及透明通道，测试通过。首次冷启动等待阈值过短曾失败；按实际模型初始化时延调整验收等待后通过，服务自身超时/取消逻辑未放宽。
+- 浏览器用隔离测试工作区完成登录→上传真实PNG文件→设置32px→创建→成功→预览，输出显示32×32；导航与主要工具改为可聚焦控件。390px窄屏保留全部导航，上传入口已明显提前。
 
-- 本机是否安装 FFmpeg/Poppler/LibreOffice/OCR/Whisper 由 doctor 实时决定；未安装适配器时任务会保留/复制输入并明确依赖状态。
-- 已使用 `~/.ssh/chimera-lab_root_ed25519` 完成真实上传与激活；线上 `healthz`、`readyz`、`version` 和首页均返回成功。GitHub 已推送到 `https://github.com/zhaowenlong20000615/mediaforge`。
-- fixture 仅用于自动化状态机验证，不代表媒体内容质量。加密/损坏 PDF、复杂表格和 GPU ASR 需在依赖配置后单独验证。
+测试文件全部为明确的合成样本，没有使用个人文件或将fixture冒充真实业务素材。成功断言检查尺寸、页数/旋转、字幕条目与时间轴、编码、输出文字、CRC或实际输出内容，而非仅检查文件存在。
+
+## 发布验收
+
+完整回归、干净安装、线上真实处理、标准MCP/CLI、HTTPS授权边界与回滚仍须在最终候选包完成后记录；这些项目在此时不得标记通过。最终证据将另存为本目录下的release验证文件。
+
+## 已知产品边界
+
+- PDF→Word为文本重排；复杂版式不保证还原。复杂/扫描表格可能返回no_tables，需人工检查。
+- 图片字幕不能直接转文本；动画图片处理首帧；OCR/ASR/修复内容需要用户复核。
+- 当前验证CPU、macOS arm64和Linux x86_64；没有真实CUDA设备或Windows环境验证。
+- 未提供集成病毒扫描或面向不可信租户的强容器隔离。身份、路径与配额保护有自动化测试，恶意解析器漏洞/极限负载不在当前验收证据内。

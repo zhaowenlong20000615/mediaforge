@@ -1,10 +1,43 @@
 [build-system]
-requires = []
+requires = ["setuptools>=75", "wheel"]
 build-backend = "setuptools.build_meta"
+
 [project]
 name = "mediaforge"
-version = "0.1.0"
-description = "Local-first media and document workbench"
-requires-python = ">=3.10"
+version = "0.2.0"
+description = "Authenticated local and self-hosted media workbench"
+requires-python = ">=3.11,<3.15"
+dependencies = [
+    "fastapi>=0.115,<1",
+    "uvicorn>=0.34,<1",
+    "httpx>=0.28,<1",
+    "Pillow>=11,<13",
+    "pypdf[crypto]>=5,<7",
+    "python-docx>=1.1,<2",
+    "pdfplumber>=0.11,<1",
+    "pysubs2>=1.8,<2",
+    "jsonschema>=4.23,<5",
+    "filelock>=3.17,<4",
+    "cryptography>=44",
+    "reportlab>=4,<5",
+    "mcp>=1.12,<2",
+]
+
+[project.optional-dependencies]
+asr = ["faster-whisper>=1.1,<2"]
+background = ["rembg[cpu]>=2.0.65,<3"]
+repair = ["opencv-python-headless>=4.10,<5"]
+dev = ["pytest>=8,<10"]
+
 [project.scripts]
 mediaforge = "mediaforge.cli:main"
+
+[tool.setuptools]
+packages = ["mediaforge"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+mediaforge = ["web/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
