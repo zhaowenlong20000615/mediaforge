@@ -1,0 +1,41 @@
+{
+  "passed": true,
+  "steps": [
+    {
+      "rolled_back_to": "/opt/mediaforge/releases/0.2.0-0aca55dea963-9093ebd5",
+      "git_commit": "0aca55dea963df5b3ae8514b27cda0efb8f97a9d",
+      "health": {
+        "status": "ready",
+        "worker_ready": true,
+        "optional_or_external_dependencies_missing": [],
+        "meaning": "服务就绪不代表所有工具或模型已配置；工具目录给出每项可用性。"
+      },
+      "step": "rollback_to_previous_secure_release",
+      "public_version": {
+        "name": "mediaforge",
+        "version": "0.2.0",
+        "git_commit": "0aca55dea963df5b3ae8514b27cda0efb8f97a9d",
+        "artifact_sha256": "9093ebd5c65d0ef860e8ea1912bd5dbce7d0cf3e396baea4f7b88c05ecd9ade4",
+        "built_at": "2026-09-10T10:06:20Z"
+      }
+    },
+    {
+      "rolled_back_to": "/opt/mediaforge/releases/0.2.0-d840b361bf19-6e8e5fcb",
+      "git_commit": "d840b361bf19f8487345f0754783289f87f5b6e0",
+      "health": {
+        "status": "ready",
+        "worker_ready": true,
+        "optional_or_external_dependencies_missing": [],
+        "meaning": "服务就绪不代表所有工具或模型已配置；工具目录给出每项可用性。"
+      },
+      "step": "restore_final_release",
+      "public_version": {
+        "name": "mediaforge",
+        "version": "0.2.0",
+        "git_commit": "d840b361bf19f8487345f0754783289f87f5b6e0",
+        "artifact_sha256": "6e8e5fcbfd5dfa5625942460fea55614b5f13c1095fc7691bae4c0eb84f5459e",
+        "built_at": "2026-09-10T10:31:13Z"
+      }
+    }
+  ]
+}

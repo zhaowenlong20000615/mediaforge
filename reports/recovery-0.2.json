@@ -1,0 +1,32 @@
+{
+  "inconclusive_attempt": "Earlier WAN-triggered restart arrived after task success; not counted as a pass.",
+  "restart": {
+    "before": "running",
+    "after_restart": "recoverable",
+    "after_resume": "succeeded",
+    "retained_outputs": 3,
+    "completed_items": 6,
+    "hashes_preserved": true,
+    "service_pid_changed": true
+  },
+  "pdf_page_preview": {
+    "status": 200,
+    "width": 1400,
+    "height": 990,
+    "rotated_page_rendered": true
+  },
+  "version": {
+    "name": "mediaforge",
+    "version": "0.2.0",
+    "git_commit": "d840b361bf19f8487345f0754783289f87f5b6e0",
+    "artifact_sha256": "6e8e5fcbfd5dfa5625942460fea55614b5f13c1095fc7691bae4c0eb84f5459e",
+    "built_at": "2026-09-10T10:31:13Z"
+  },
+  "passed": true,
+  "cleanup": {
+    "dry_run": false,
+    "files": 26,
+    "bytes": 1158626,
+    "tasks": 2
+  }
+}
