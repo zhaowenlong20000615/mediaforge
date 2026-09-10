@@ -12,7 +12,7 @@ import subprocess
 import sys
 import warnings
 from .errors import ForgeError,safe_error
-from .dependencies import binary,ocr_languages
+from .dependencies import binary,ocr_languages,font_path
 from .files import probe
 
 
@@ -204,7 +204,7 @@ def page_indices(value,total):
             else:result.append(int(block)-1)
         if not result or min(result)<0 or max(result)>=total:raise ValueError()
         return list(dict.fromkeys(result))
-    except (ValueError,TypeError):raise ForgeError('page_range','页码范围无效。',f'请输入 1–{total} 内的页码，如 1-3,5。')
+    except (ValueError,TypeError):raise ForgeError('page_range','页码范围无效。',f'请输入 1–{total} 内的页码，例如 1-{min(total,3)}。')
 
 
 def write_pdf(writer,path):
@@ -373,11 +373,6 @@ def office(c):
     if not text.strip():raise ForgeError('no_text','文档没有可提取的文字。','图片内容可通过 OCR 处理。')
     if fmt=='html':text='<!doctype html><html><meta charset="utf-8"><title>Converted document</title><body>'+text+'</body></html>'
     out=c.work/('document.'+fmt);out.write_text(text,encoding='utf-8');c.out(out,verification={'mode':'semantic_text_and_tables'})
-
-
-def font_path():
-    candidates=[os.getenv('MEDIAFORGE_FONT',''),'/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc','/System/Library/Fonts/PingFang.ttc','/System/Library/Fonts/STHeiti Medium.ttc','/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf']
-    return next((x for x in candidates if x and Path(x).is_file()),None)
 
 
 def image(c):

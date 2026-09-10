@@ -63,3 +63,22 @@ def test_standard_mcp_end_to_end(live,samples):
                 details=await session.call_tool('get_task_details',{'task_id':job['id']});assert not details.isError
                 rejected=await session.call_tool('upload_file',{'path':'/etc/passwd'});assert rejected.isError
     asyncio.run(exercise())
+
+
+def test_mcp_rejects_credentials_even_inside_allowed_root(tmp_path,monkeypatch):
+    from mediaforge.mcp import scoped_path
+    monkeypatch.setenv('MEDIAFORGE_LOCAL_ROOTS',str(tmp_path))
+    for name in ['server.token','private.pem','.env.local']:
+        p=tmp_path/name;p.write_text('SYNTHETIC SECRET TEST ONLY')
+        with pytest.raises(ValueError):scoped_path(str(p))
+
+
+def test_http_transport_redacts_filenames_from_info_logs(live,samples,caplog):
+    import logging
+    url,token,_=live
+    caplog.set_level(logging.INFO)
+    logging.getLogger('httpx').setLevel(logging.NOTSET)
+    c=Client(url,token)
+    result=c.upload(samples/'图片 sample.png')
+    assert result['id']
+    assert 'sample.png' not in caplog.text and '%E5%9B%BE' not in caplog.text

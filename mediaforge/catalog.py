@@ -76,7 +76,7 @@ OPS = [
     op('pdf-ocr','PDF OCR','PDF / Word',['pdf'],['pypdf','poppler','tesseract'],'逐页识别文字并生成文本和可搜索 PDF。',{'pages':PAGES,'language':LANG,'password':PASSWORD}),
     op('pdf-tables','PDF 表格提取','PDF / Word',['pdf'],['pypdf','pdfplumber'],'提取可检测的表格为 CSV 和 JSON。',{'password':PASSWORD},note='扫描表格与跨页复杂布局可能无法可靠还原；请检查行列与合并单元格。'),
     op('office-convert','Word 转换','PDF / Word',['docx','doc'],['office-dynamic'],'Word 转 PDF、HTML、Markdown 或文本。',{
-        'format':choice('输出格式',['pdf','html','md','txt'],'pdf')},note='旧版 .doc 及 PDF 导出需要 LibreOffice。'),
+        'format':choice('输出格式',['pdf','html','md','txt'],'pdf')},note='旧版 .doc 及 PDF 导出需要 LibreOffice；HTML/Markdown 是文字与表格重排，不保留嵌入图片及复杂版式。'),
     op('word-replace','Word 批量替换','PDF / Word',['docx'],['docx'],'替换段落、表格、页眉与页脚中的文字。',{
         'find':field('string','查找文本',minLength=1,maxLength=500),
         'replace':field('string','替换为','',maxLength=5000)},required=['find'],note='跨格式片段的匹配保留首片段格式；请检查复杂排版。'),
@@ -97,7 +97,7 @@ OPS = [
     op('image-repair','修复自有图片瑕疵','图片',['image'],['opencv'],'按第二张图片的白色遮罩修复第一张图片。',{
         'rights_confirmed':RIGHTS,'radius':field('integer','修复半径',3,minimum=1,maximum=20)},
         combine=True,min_files=2,max_files=2,required=['rights_confirmed'],note='仅用于有编辑权的自有图片；禁止处理 DRM、平台版权标识或保护措施。'),
-    op('watermark','添加文字水印','图片',['image'],['pillow'],'给自有素材叠加可配置的文字。',{
+    op('watermark','添加文字水印','图片',['image'],['pillow','font'],'给自有素材叠加可配置的文字。',{
         'text':field('string','水印文字',minLength=1,maxLength=120),
         'position':choice('位置',['bottom-right','bottom-left','top-right','top-left','center'],'bottom-right'),
         'opacity':field('integer','不透明度 %',65,minimum=1,maximum=100),

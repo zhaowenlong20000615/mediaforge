@@ -196,9 +196,31 @@ def create_app(settings=None,start_worker=True):
             for t in doc.tables:
                 text+='\n'+'\n'.join('\t'.join(c.text for c in r.cells) for r in t.rows)
             result.update(text=text[:64000],truncated=len(text)>64000,layout_preview=False)
-        elif f['kind'] in {'image','video','audio','pdf'}:result['inline']=True
+        elif f['kind'] in {'image','video','audio','pdf'}:
+            result['inline']=True
+            if f['kind']=='pdf':result['pages']=f.get('pages',0);result['encrypted']=f.get('encrypted',False)
         else:result['download_only']=True
         return result
+
+    @app.get('/api/files/{id}/page')
+    def pdf_page(id:str,page:int=Query(1,ge=1,le=500),who=Depends(owner)):
+        import tempfile
+        import subprocess
+        from .dependencies import binary
+        f=store.file(who,id,True)
+        if f['kind']!='pdf':raise ForgeError('not_pdf','此文件不是 PDF。')
+        if f.get('encrypted') and not f.get('pages'):raise ForgeError('password_required','此 PDF 需要密码。','先以正确密码处理，再预览结果。',409)
+        if page>f.get('pages',0):raise ForgeError('page_range','页码超出范围。')
+        exe=binary('poppler')
+        if not exe:raise ForgeError('dependency_missing','PDF 预览需要 Poppler。','在诊断页配置 PDF 渲染工具。',409)
+        with tempfile.TemporaryDirectory(prefix='preview-',dir=store.root/'staging') as folder:
+            prefix=Path(folder)/'page'
+            try:
+                r=subprocess.run([exe,'-f',str(page),'-l',str(page),'-singlefile','-scale-to','1400','-png',f['path'],str(prefix)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=20)
+                out=prefix.with_suffix('.png')
+                if r.returncode or not out.exists() or out.stat().st_size>16*1024**2:raise ValueError()
+                return Response(out.read_bytes(),media_type='image/png')
+            except (subprocess.TimeoutExpired,ValueError):raise ForgeError('preview_failed','PDF 页面预览未完成。','可下载文件，或使用 PDF 转图片工具。')
 
     @app.get('/api/files/{id}/thumbnail')
     def thumbnail(id:str,who=Depends(owner)):

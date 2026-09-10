@@ -9,13 +9,13 @@ const idKey = () => window.crypto?.randomUUID?.() || Array.from(window.crypto.ge
 function h(tag, attrs={}, ...kids) {
   const el=document.createElement(tag);
   for (const [key,val] of Object.entries(attrs)) {
-    if (val===undefined || val===null || val===false) continue;
+    if (val===undefined || val===null || (val===false&&!key.startsWith('aria-'))) continue;
     if (key.startsWith('on')) el.addEventListener(key.slice(2).toLowerCase(),val);
     else if (key==='class') el.className=val;
     else if (key==='text') el.textContent=val;
     else if (key==='checked'||key==='disabled'||key==='hidden'||key==='selected') el[key]=Boolean(val);
     else if (key==='value') el.value=val;
-    else el.setAttribute(key,val===true?'':String(val));
+    else el.setAttribute(key,key.startsWith('aria-')?String(val):val===true?'':String(val));
   }
   for (const kid of kids.flat(Infinity)) { if(kid!==null && kid!==undefined && kid!==false) el.append(kid instanceof Node?kid:document.createTextNode(String(kid))); }
   return el;
@@ -91,7 +91,7 @@ function renderEditor(){
  const t=tool(),editor=$('#editor');if(!t||!editor)return;
  editor.replaceChildren(h('div',{class:'tool-head'},h('h2',{},t.name),h('p',{},t.description),t.note?h('p',{},t.note):null,h('span',{class:'tag'+(canRun()?'':' warning'),id:'tool-availability'},canRun()?'工具链可用':'工具链需要配置')));
  const form=h('form',{id:'task-form',onSubmit:submit});
- const fileInput=h('input',{id:'upload-input',type:'file',multiple:true,class:'visually-hidden',tabindex:'-1',onChange:e=>{enqueue([...e.target.files]);e.target.value='';}});
+ const fileInput=h('input',{id:'upload-input',type:'file',multiple:true,class:'visually-hidden',tabindex:'-1','aria-hidden':'true',onChange:e=>{enqueue([...e.target.files]);e.target.value='';}});
  const drop=h('div',{class:'drop',id:'drop',onDragover:e=>{e.preventDefault();drop.classList.add('over');},onDragleave:()=>drop.classList.remove('over'),onDrop:e=>{e.preventDefault();drop.classList.remove('over');enqueue([...e.dataTransfer.files]);}},
   fileInput,button('＋ 选择文件',()=>fileInput.click()),h('p',{},'也可以将文件拖到这里。文件会上传到当前工作区。'),h('small',{},`单文件上限 ${bytes(state.storage.max_file_bytes||0)} · ${t.combine?'按列表顺序组合处理':'每个文件独立处理'}`));
  form.append(h('section',{class:'section'},h('div',{class:'section-title'},h('h3',{},h('span',{class:'step'},'1'),'加入文件'),h('small',{},`${t.min_files}–${t.max_files} 个文件`)),drop,h('div',{class:'input-files',id:'input-files'})),
@@ -179,7 +179,12 @@ async function exportTasks(ids){
 async function refreshDetail(){
  const id=state.taskId;const data=await api('api/tasks/'+id);if(state.nav!=='task'||state.taskId!==id)return;
  const key=JSON.stringify(data);if(key===state.renderKey)return;state.renderKey=key;state.task=data;
- const main=$('#main');const currentPreview=$('#preview-panel');main.replaceChildren(head(nameOf(data.tool),'每个文件独立记录。处理完成后，请检查内容质量再交付。',h('a',{href:'#tasks',class:'button-link'},'← 任务队列'),'TASK / '+data.id.slice(-12)));
+ const main=$('#main');const currentPreview=$('#preview-panel');
+ const openItems=new Set([...main.querySelectorAll('details.item[open]')].map(x=>x.dataset.item));
+ const paramsOpen=Boolean(main.querySelector('details[data-params][open]'));
+ const existingLogs=$('#log-lines');const focused=document.activeElement;
+ const focusText=main.contains(focused)?focused.textContent:null;const focusHref=focused?.closest('.result')?.querySelector('a')?.getAttribute('href');
+ main.replaceChildren(head(nameOf(data.tool),'每个文件独立记录。处理完成后，请检查内容质量再交付。',h('a',{href:'#tasks',class:'button-link'},'← 任务队列'),'TASK / '+data.id.slice(-12)));
  main.append(h('div',{class:'summary-line'},badge(data.status),h('span',{},'创建于 '+time(data.created_at)),h('span',{},`${data.counts.succeeded} / ${data.item_count} 项完成`),h('span',{},data.group_name||'未分组')),
  h('div',{class:'task-progress'},h('strong',{},data.stage),h('span',{},Math.round(data.progress)+'%')),h('progress',{value:data.progress,max:100,'aria-label':'任务总进度'}));
  const actions=h('div',{class:'detail-actions'});
@@ -192,9 +197,11 @@ async function refreshDetail(){
  if(['partial','cancelled','recoverable'].includes(data.status))main.append(h('div',{class:'callout info'},'已成功的项目和结果会保留。恢复时只处理其余项目。'));
  main.append(h('section',{class:'section'},h('h2',{},'处理结果'),data.outputs.length?h('div',{class:'result-list'},data.outputs.map(f=>h('div',{class:'result'},h('div',{},h('div',{class:'file-name'},f.name),h('div',{class:'file-meta'},[bytes(f.size),f.kind,f.width?`${f.width}×${f.height}`:'',f.pages?`${f.pages} 页`:'',f.duration?`${f.duration.toFixed(2)} 秒`:''].filter(Boolean).join(' · ')),h('small',{},'结构已核验 · 内容质量待确认')),h('div',{class:'result-actions'},button('预览',()=>action(()=>showPreview(f)),'small'),h('a',{class:'button-link',href:'./api/files/'+f.id+'/content',download:f.name},'下载'),button('继续处理',()=>reuse([f]),'small'))))):h('div',{class:'callout info'},['accepted','running'].includes(data.status)?'结果生成并核验后，会显示在这里。':'当前没有生成可用结果，请查看下方项目错误。')));
  if(currentPreview)main.append(currentPreview);
- main.append(h('section',{class:'section'},h('h2',{},'逐项记录'),data.items.map(item=>h('details',{class:'item'},h('summary',{},h('span',{},item.input_ids.map(fid=>data.inputs.find(f=>f.id===fid)?.name||fid).join(' ＋ ')),badge(item.status)),h('p',{},`累计尝试 ${item.attempt} 次 · 结果 ${item.output_ids.length} 个`),item.error?errorBlock(item.error):h('p',{},'此项没有错误记录。')))),
- h('details',{class:'section'},h('summary',{},'查看使用的参数'),h('pre',{},JSON.stringify(data.params,null,2))),
+ main.append(h('section',{class:'section'},h('h2',{},'逐项记录'),data.items.map(item=>h('details',{class:'item','data-item':item.id,open:openItems.has(item.id)},h('summary',{},h('span',{},item.input_ids.map(fid=>data.inputs.find(f=>f.id===fid)?.name||fid).join(' ＋ ')),badge(item.status)),h('p',{},`累计尝试 ${item.attempt} 次 · 结果 ${item.output_ids.length} 个`),item.error?errorBlock(item.error):h('p',{},'此项没有错误记录。')))),
+ h('details',{class:'section','data-params':'true',open:paramsOpen},h('summary',{},'查看使用的参数'),h('pre',{},JSON.stringify(data.params,null,2))),
  h('section',{class:'section'},h('div',{class:'section-title'},h('h2',{},'阶段日志'),button('读取日志',()=>action(async()=>{const log=await api('api/tasks/'+id+'/logs');$('#log-lines').replaceChildren(...log.events.map(e=>h('div',{class:'log'},time(e.time)+' · '+e.message)));}),'small')),h('div',{id:'log-lines',class:'muted'},'按需读取脱敏日志，不包含文件内容或密码。')));
+ if(existingLogs?.querySelector('.log'))$('#log-lines').replaceWith(existingLogs);
+ if(focusText){const match=[...main.querySelectorAll('button,a,summary')].find(x=>x.textContent===focusText&&(!focusHref||x.closest('.result')?.querySelector('a')?.getAttribute('href')===focusHref));match?.focus({preventScroll:true});}
 }
 function reuse(files){state.files=files;persistFiles();state.submitKey=null;toast('结果已加入输入列表，请选择下一步工具。');navigate('workbench');}
 async function showPreview(f){
@@ -205,7 +212,16 @@ async function showPreview(f){
  else if(data.kind==='image')panel.append(h('img',{src:url,alt:'处理结果：'+f.name}));
  else if(data.kind==='video')panel.append(h('video',{src:url,controls:true,preload:'metadata'}));
  else if(data.kind==='audio')panel.append(h('audio',{src:url,controls:true,preload:'metadata'}));
- else if(data.kind==='pdf')panel.append(h('iframe',{src:url,title:'PDF 结果预览'}));
+ else if(data.kind==='pdf'){
+  if(data.encrypted&&!data.pages)panel.append(errorBlock({message:'此 PDF 需要打开密码。',action:'先通过带密码参数的工具处理，再预览输出。'}));
+  else {
+   let page=1;const pageImage=h('img',{alt:'PDF 第 1 页',onError:()=>toast('此页预览失败。可下载文件，或在诊断页检查 PDF 渲染工具。')});
+   const position=h('span',{'aria-live':'polite'});
+   const previous=button('上一页',()=>{page--;draw();},'small');const next=button('下一页',()=>{page++;draw();},'small');
+   function draw(){pageImage.src='./api/files/'+f.id+'/page?page='+page;pageImage.alt='PDF 第 '+page+' 页';position.textContent=page+' / '+data.pages+' 页';previous.disabled=page<=1;next.disabled=page>=data.pages;}
+   panel.append(h('div',{class:'toolbar'},previous,position,next),pageImage);draw();
+  }
+ }
  else panel.append(h('p',{},'此格式需下载到对应应用中查看。'));
  panel.append(h('details',{},h('summary',{},'文件校验信息'),h('pre',{},JSON.stringify({sha256:f.sha256,verification:f.verification},null,2))));panel.scrollIntoView({behavior:'auto',block:'start'});
 }

@@ -52,6 +52,8 @@ def checks():
     available = installed('rembg') and (model_dir/'u2net.onnx').is_file()
     result.append({'id':'background-model','name':'U²-Net','available':available,'status':'available' if available else 'missing',
                    'purpose':'离线去背景','install':'uv sync --extra background；在 U2NET_HOME 配置 u2net.onnx。','details':{'model_configured':(model_dir/'u2net.onnx').is_file()}})
+    available=bool(font_path())
+    result.append({'id':'font','name':'水印字体','available':available,'status':'available' if available else 'missing','purpose':'文字水印','install':'配置 MEDIAFORGE_FONT，或安装 Noto CJK 字体。','details':{}})
     return result
 
 
@@ -87,3 +89,8 @@ def ocr_languages():
         p=subprocess.run([exe,'--list-langs'],capture_output=True,text=True,timeout=8)
         return [line.strip() for line in p.stdout.splitlines() if line.strip() and not line.startswith('List of')]
     except (OSError,subprocess.TimeoutExpired): return []
+
+
+def font_path():
+    candidates=[os.getenv('MEDIAFORGE_FONT',''),'/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc','/System/Library/Fonts/PingFang.ttc','/System/Library/Fonts/STHeiti Medium.ttc','/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf']
+    return next((x for x in candidates if x and Path(x).is_file()),None)

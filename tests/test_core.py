@@ -212,3 +212,22 @@ def test_reuploaded_identical_content_uses_same_idempotent_task(store,samples):
     first=store.submit(OWNER,'image-process',[a['id']],{},'content-key')
     repeated=store.submit(OWNER,'image-process',[b['id']],{},'content-key')
     assert first['id']==repeated['id']
+
+
+def test_cleanup_racing_submission_cannot_accept_deleted_input(store,samples,monkeypatch):
+    import threading
+    f=store.import_file(OWNER,samples/'图片 sample.png')
+    original=store.file;read=threading.Event();continue_submit=threading.Event();errors=[]
+    def delayed(owner,id,internal=False):
+        result=original(owner,id,internal)
+        if internal:read.set();assert continue_submit.wait(3)
+        return result
+    monkeypatch.setattr(store,'file',delayed)
+    def create():
+        try:store.submit(OWNER,'image-process',[f['id']])
+        except ForgeError as error:errors.append(error.code)
+    thread=threading.Thread(target=create);thread.start();assert read.wait(3)
+    result=store.cleanup(OWNER,days=0,dry_run=False);assert result['files']==1
+    continue_submit.set();thread.join(3)
+    assert not thread.is_alive() and errors==['file_not_found']
+    assert store.tasks(OWNER)['total']==0

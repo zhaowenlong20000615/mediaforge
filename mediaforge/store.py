@@ -214,6 +214,11 @@ class Store:
                 if old['fingerprint']!=fingerprint: raise ForgeError('idempotency_conflict','同一幂等键已用于不同请求。','为不同请求使用新的幂等键。',409)
                 id=old['id']
             else:
+                # Recheck ownership/existence under the write transaction: cleanup may
+                # have removed an upload after the earlier metadata read.
+                marks=','.join('?' for _ in file_ids)
+                present=con.execute('SELECT COUNT(*) FROM files WHERE owner=? AND id IN ('+marks+')',[owner,*file_ids]).fetchone()[0]
+                if present!=len(file_ids):raise ForgeError('file_not_found','输入文件已被清理。','重新上传文件后再提交。',404)
                 count=con.execute("SELECT COUNT(*) FROM tasks WHERE owner=? AND status IN ('accepted','running')",(owner,)).fetchone()[0]
                 if count>=self.settings.max_pending: raise ForgeError('queue_full','工作区队列已满。','等待任务完成后重试。',429)
                 con.execute('INSERT INTO tasks VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',

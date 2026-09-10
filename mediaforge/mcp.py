@@ -19,7 +19,7 @@ def scoped_path(value,output=False):
     roots=[Path(x).expanduser().resolve() for x in os.getenv(key,defaults).split(os.pathsep) if x]
     path=Path(value).expanduser().resolve()
     if not any(path.is_relative_to(root) for root in roots):raise ValueError('文件不在 MCP 配置允许的本地目录内。')
-    if any(part in {'.git','.env','admin.token','secret.key','.ssh'} for part in path.parts):raise ValueError('MCP 不处理凭证或版本控制文件。')
+    if path.suffix.lower() in {'.token','.pem','.key'} or path.name.startswith('.env') or any(part in {'.git','credentials','.credentials','admin.token','secret.key','.ssh'} for part in path.parts):raise ValueError('MCP 不处理凭证或版本控制文件。')
     return path
 
 

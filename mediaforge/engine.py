@@ -180,9 +180,14 @@ class Engine:
                 path=Path(out['path']).resolve()
                 if not path.is_relative_to(work) or not path.is_file(): raise ForgeError('invalid_output_path','处理结果路径不合法。')
                 if path.stat().st_size>self.store.settings.max_file_bytes: raise ForgeError('output_too_large','输出超过单文件限制。','降低分辨率或拆分任务。',413)
-                meta=inspect(path,out['name']); meta['verification']=out.get('verification',{'decoded':True})
+                name=out['name']
+                if not CATALOG[t['tool']]['combine'] and t['tool']!='image-rename':
+                    stem=Path(inputs[0]['name']).stem.encode('utf-8')[:140].decode('utf-8','ignore')
+                    name=stem+'__'+name
+                meta=inspect(path,name); meta['verification']=out.get('verification',{'decoded':True})
+                meta['source_file_ids']=[f['id'] for f in inputs]
                 meta['quality_review']='required'
-                prepared.append((path,out['name'],meta))
+                prepared.append((path,name,meta))
             moved=[]
             try:
                 with self.store.tx() as con:

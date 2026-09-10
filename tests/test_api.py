@@ -90,3 +90,18 @@ def test_filename_markup_and_html_attachment(api,tmp_path):
     response=c.get('/api/files/'+f['id']+'/content?inline=true')
     assert response.headers['content-disposition'].startswith('attachment')
     assert c.get('/api/files/'+f['id']+'/preview').json()['text']=='<script>example only</script>'
+
+
+def test_pdf_page_preview_and_password_boundary(api,samples):
+    from PIL import Image
+    from io import BytesIO
+    c,s=api
+    f=upload(c,samples/'document.pdf').json()
+    t=c.post('/api/tasks',json={'tool':'pdf-rotate','file_ids':[f['id']],'params':{'pages':'2','angle':'90'}}).json()
+    result=wait(s,t['id']);assert result['status']=='succeeded'
+    response=c.get('/api/files/'+result['outputs'][0]['id']+'/page?page=2')
+    assert response.status_code==200
+    with Image.open(BytesIO(response.content)) as page:assert page.width>page.height
+    assert c.get('/api/files/'+f['id']+'/page?page=4').status_code==400
+    protected=upload(c,samples/'protected.pdf').json()
+    assert c.get('/api/files/'+protected['id']+'/page').status_code==409

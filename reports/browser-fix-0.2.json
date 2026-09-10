@@ -1,0 +1,41 @@
+{
+  "tested_at": "2026-09-10T10:29:22.547557+00:00",
+  "environment": "Isolated local service, same packaged web implementation as release",
+  "checks": {
+    "login_with_fixture_token": true,
+    "upload_real_png": true,
+    "resize_parameters": {
+      "requested_width": 32,
+      "observed_output_dimensions": [
+        32,
+        32
+      ]
+    },
+    "task_details_and_image_preview": true,
+    "pdf_page_rotation": {
+      "source_pages": 3,
+      "selected_page": 2,
+      "rotation": 90,
+      "page_preview_displayed": true
+    },
+    "invalid_page_error": true,
+    "rebuild_with_existing_inputs": true,
+    "status_filter": {
+      "before": 3,
+      "after_failed_filter": 1
+    },
+    "narrow_layout": {
+      "viewport_width": 390,
+      "content_width": 375,
+      "all_navigation_links_retained": true,
+      "upload_reachable_without_full_tool_list_scroll": true
+    },
+    "native_controls_and_labels": true,
+    "stdout_or_UI_token_disclosure": false
+  },
+  "notes": [
+    "Synthetic PNG/PDF only; no user documents.",
+    "Native PDF iframe was replaced with authenticated server-rendered page images after blank preview was observed.",
+    "CUDA/Windows/browser-family matrix not claimed."
+  ]
+}

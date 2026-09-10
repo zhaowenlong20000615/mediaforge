@@ -2,6 +2,7 @@
 from pathlib import Path
 from urllib.parse import urlsplit,quote
 import json
+import logging
 import os
 import time
 import httpx
@@ -10,6 +11,9 @@ from .errors import ForgeError
 
 class Client:
     def __init__(self,server=None,token_file=None):
+        # MCP SDK enables INFO logging globally; URLs can contain user filenames.
+        logging.getLogger('httpx').setLevel(logging.WARNING)
+        logging.getLogger('httpcore').setLevel(logging.WARNING)
         self.base=(server or os.getenv('MEDIAFORGE_URL','http://127.0.0.1:18081')).rstrip('/')
         parsed=urlsplit(self.base)
         if parsed.username or parsed.password or parsed.query or parsed.fragment:
