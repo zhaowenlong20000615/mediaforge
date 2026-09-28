@@ -1,0 +1,32 @@
+{
+  "date": "2026-09-28",
+  "project_id": "local.mediaforge",
+  "component_source_commit": "707ec0825429f21f162ce935a15b251231f77564",
+  "client_source_commit": "d840b361bf19f8487345f0754783289f87f5b6e0",
+  "page": "https://107.151.245.166:18081/mediaforge/access/",
+  "native_authentication_preserved": true,
+  "download_check": {
+    "project": "mediaforge",
+    "authenticated_download": "passed",
+    "files": [
+      {
+        "name": "mediaforge-0.2.0-client.zip",
+        "size": 75697,
+        "sha256": "904a1e9d09b5933cffc9f5c8a78175c1d988f593a39e1c49b05e2871867bb4d6"
+      }
+    ]
+  },
+  "files": [
+    {
+      "name": "mediaforge-0.2.0-client.zip",
+      "label": "媒体工具箱 · 跨平台接入包",
+      "description": "本项目客户端脚本与技能说明；运行环境另行安装，不包含业务凭证。",
+      "size": 75697,
+      "sha256": "904a1e9d09b5933cffc9f5c8a78175c1d988f593a39e1c49b05e2871867bb4d6",
+      "url": "/mediaforge/access/files/mediaforge-0.2.0-client.zip",
+      "verification": "已核对包完整性；Windows 实机尚未验证"
+    }
+  ],
+  "windows_runtime_verified": false,
+  "runtime_scope": "命令行和 AI 工具连接本项目服务；数据和授权仍由原项目管理。"
+}
