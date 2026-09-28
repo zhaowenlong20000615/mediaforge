@@ -50,7 +50,7 @@ with tempfile.TemporaryDirectory() as folder:
     if p.is_file():z.write(p,p.relative_to(stage))
  manifest={k:v for k,v in config.items() if k not in {'include','clientRef','bundles','buildMode','nginx','pythonMin','browser','sourceSkill'}}
  manifest['clientCommit']=ref;manifest['files']=[]
- for p in sorted(files.glob('*.zip')):
+ for p in sorted(files.glob('homeward-'+config['clientVersion']+'-*.zip' if config['buildMode']=='go' else config['slug']+'-'+config['clientVersion']+'-client.zip')):
   with zipfile.ZipFile(p) as z:assert z.testzip() is None
   manifest['files'].append({'name':p.name,'label':config['title']+' · '+(p.stem.split(config['clientVersion']+'-')[-1] if config['buildMode']=='go' else config['packageLabel']),'description':config['packageDescription'],'size':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'url':config['fileBase']+p.name,'verification':'已核对包完整性；Windows 实机尚未验证'})
  (site/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2))
