@@ -39,7 +39,13 @@
   "entrypoints": {
     "web": "https://107.151.245.166:18081/mediaforge/",
     "cli": "mediaforge",
-    "mcp": "mediaforge mcp"
+    "mcp": "mediaforge mcp",
+    "downloads": "https://107.151.245.166:18081/mediaforge/access/#download",
+    "install": "https://107.151.245.166:18081/mediaforge/access/#install",
+    "cli_docs": "https://107.151.245.166:18081/mediaforge/access/#cli",
+    "mcp_docs": "https://107.151.245.166:18081/mediaforge/access/#mcp",
+    "skill": "https://107.151.245.166:18081/mediaforge/access/#skill",
+    "skill_docs": "https://107.151.245.166:18081/mediaforge/access/#skill"
   },
   "docs": {
     "quickstart": "README.md",

@@ -97,3 +97,7 @@ MEDIAFORGE_ASR_MODEL=/path/model U2NET_HOME=/path/u2net MEDIAFORGE_SPEECH_FIXTUR
 没有配置可选模型时相应测试显式 skip，不能当作通过。原始 0.1 的审查与复现记录在 `reports/product-audit-2026-09-10/`；那些缺陷记录对应旧提交，修复后的验收依据见 [reports/verification.md](reports/verification.md)。
 
 源码在本机推送 [GitHub](https://github.com/zhaowenlong20000615/mediaforge)，发布包在本机生成，再通过 SSH 上传固定服务器。完整流程、回滚、令牌获取和迁移见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)。
+
+## 项目下载与 AI 接入
+
+本项目自己的中文下载、安装和 CLI／MCP／技能说明：https://107.151.245.166:18081/mediaforge/access/ 。接入包固定到已核对的客户端提交，不带业务凭证；下载沿用原项目身份，不依赖私有 GitHub 访问。运行位置：命令行和 AI 工具连接本项目服务；数据和授权仍由原项目管理。 Windows 本次未实机验证。构建：python3 accessDelivery/build.py。

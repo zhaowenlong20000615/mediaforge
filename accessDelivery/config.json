@@ -1,0 +1,95 @@
+{
+  "projectId": "local.mediaforge",
+  "slug": "mediaforge",
+  "title": "媒体工具箱",
+  "accent": "#80542b",
+  "home": "https://107.151.245.166:18081/mediaforge/",
+  "pageUrl": "https://107.151.245.166:18081/mediaforge/access/",
+  "fileBase": "/mediaforge/access/files/",
+  "clientRef": "d840b361bf19",
+  "clientVersion": "0.2.0",
+  "buildMode": "python",
+  "pythonMin": [
+    3,
+    11
+  ],
+  "browser": false,
+  "include": [
+    "pyproject.toml",
+    "README.md",
+    "mediaforge",
+    "skill",
+    "docs/DEPLOYMENT.md",
+    "docs/MODELS.md"
+  ],
+  "runtime": "Python 3.11–3.14；首次安装依赖需要联网。",
+  "scope": "命令行和 AI 工具连接本项目服务；数据和授权仍由原项目管理。",
+  "description": "从本项目获取 CLI、MCP 与技能包，按已有业务身份接入。日常网页功能可以直接使用。",
+  "packageLabel": "跨平台接入包",
+  "packageDescription": "本项目客户端脚本与技能说明；运行环境另行安装，不包含业务凭证。",
+  "authHelp": "先在本项目登录，或使用本项目已有的访问令牌。不会使用运营工作台令牌代替项目授权。",
+  "skillPath": "client/skill/SKILL.md",
+  "skillSummary": "技能包随接入包提供，包含本项目真实工具、步骤、结果判定与失败处理。",
+  "steps": [
+    "将本项目接入包完整解压到独立目录，先检查本页的运行环境要求。",
+    "按照本页命令安装依赖或运行帮助，随后配置该项目自己的服务地址和受限授权。",
+    "需要 AI 调用时，将下方 MCP 模板中的绝对路径和身份配置替换为自己的值。"
+  ],
+  "checks": [
+    "先核对 CLI 帮助及 MCP 工具发现，再执行一个有权限的只读查询。",
+    "查询返回错误、未配置、模拟或待验证时，按原项目结果处理，不当作业务成功。",
+    "需要实际业务验证时，在原项目核对任务状态和最终产物。"
+  ],
+  "limits": [
+    "接入云端时，上传的文件在服务器处理；安装 CLI 不等于本地媒体引擎就绪。",
+    "本地处理需要原项目的系统依赖及模型，按 client/docs/DEPLOYMENT.md 与 MODELS.md 配置并运行 doctor。",
+    "可选语音、抠图和修复模型未随接入包安装；Windows 本次未实机验证。"
+  ],
+  "commands": [
+    {
+      "title": "安装与帮助",
+      "windows": "py -3 install.py\n.venv\\Scripts\\mediaforge.exe --help",
+      "unix": "python3 install.py\n.venv/bin/mediaforge --help"
+    },
+    {
+      "title": "连接已授权的云端工作区",
+      "windows": "$env:MEDIAFORGE_URL=\"https://107.151.245.166:18081/mediaforge\"\n$env:MEDIAFORGE_TOKEN_FILE=\"C:\\私有目录\\媒体工作区令牌.txt\"",
+      "unix": "export MEDIAFORGE_URL=https://107.151.245.166:18081/mediaforge\nexport MEDIAFORGE_TOKEN_FILE=/私有目录/媒体工作区令牌.txt"
+    }
+  ],
+  "mcp": {
+    "windows": {
+      "mcpServers": {
+        "mediaforge": {
+          "command": "C:\\替换为解压目录\\.venv\\Scripts\\mediaforge.exe",
+          "args": [
+            "mcp"
+          ],
+          "env": {
+            "MEDIAFORGE_URL": "https://107.151.245.166:18081/mediaforge",
+            "MEDIAFORGE_TOKEN_FILE": "C:\\私有目录\\媒体工作区令牌.txt"
+          }
+        }
+      }
+    },
+    "unix": {
+      "mcpServers": {
+        "mediaforge": {
+          "command": "/替换为解压目录/.venv/bin/mediaforge",
+          "args": [
+            "mcp"
+          ],
+          "env": {
+            "MEDIAFORGE_URL": "https://107.151.245.166:18081/mediaforge",
+            "MEDIAFORGE_TOKEN_FILE": "/私有目录/媒体工作区令牌.txt"
+          }
+        }
+      }
+    }
+  },
+  "nginx": {
+    "config": "mediaforge.conf",
+    "port": 18081
+  },
+  "sourceSkill": "skill/SKILL.md"
+}
