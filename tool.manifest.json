@@ -1,7 +1,7 @@
 {
   "id": "local.mediaforge",
   "name": "MediaForge 媒体与文档工作台",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "有工作区授权、真实处理与可恢复任务的本地/自托管媒体工作台",
   "capabilities": [
     "export-results",
@@ -45,7 +45,8 @@
     "cli_docs": "https://107.151.245.166:18081/mediaforge/access/#cli",
     "mcp_docs": "https://107.151.245.166:18081/mediaforge/access/#mcp",
     "skill": "https://107.151.245.166:18081/mediaforge/access/#skill",
-    "skill_docs": "https://107.151.245.166:18081/mediaforge/access/#skill"
+    "skill_docs": "https://107.151.245.166:18081/mediaforge/access/#skill",
+    "local_engine_install": "https://107.151.245.166:18081/mediaforge/access/#install"
   },
   "docs": {
     "quickstart": "README.md",

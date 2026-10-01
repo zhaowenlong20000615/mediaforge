@@ -24,14 +24,30 @@ def installed(module):
     except (ImportError, ValueError): return False
 
 
+def install_hint(name):
+    system = platform.system()
+    if system == 'Windows':
+        instructions = {
+            'ffmpeg': '安装 Windows 版 FFmpeg，将包含 ffmpeg.exe 和 ffprobe.exe 的 bin 目录加入 PATH。',
+            'ffprobe': '安装 Windows 版 FFmpeg，将包含 ffprobe.exe 的 bin 目录加入 PATH。',
+            'poppler': '安装 Windows 版 Poppler，将包含 pdftoppm.exe 的目录加入 PATH。',
+            'tesseract': '安装 Windows 版 Tesseract 及所需中文语言包，将 tesseract.exe 所在目录加入 PATH。',
+            'libreoffice': '安装 Windows 版 LibreOffice，将包含 soffice.exe 的 program 目录加入 PATH。',
+        }
+        return instructions[name] + ' 修改后重新启动本机媒体服务，再检查依赖。'
+    if system == 'Linux':
+        return 'sudo apt-get install ffmpeg poppler-utils tesseract-ocr tesseract-ocr-chi-sim libreoffice fonts-noto-cjk'
+    if system == 'Darwin':
+        return 'brew install ffmpeg poppler tesseract tesseract-lang libreoffice'
+    return '请为当前操作系统安装 ' + name + '，将程序加入 PATH 后重新启动媒体服务。'
+
+
 def checks():
-    linux = platform.system() == 'Linux'
-    install = 'sudo apt-get install ffmpeg poppler-utils tesseract-ocr tesseract-ocr-chi-sim libreoffice fonts-noto-cjk' if linux else 'brew install ffmpeg poppler tesseract tesseract-lang libreoffice'
     result = []
     for id, command, purpose in [('ffmpeg','ffmpeg','音视频处理'),('ffprobe','ffprobe','媒体检查'),('poppler','poppler','PDF 渲染'),('tesseract','tesseract','OCR'),('libreoffice','libreoffice','Office/PDF 导出')]:
         available = bool(binary(command))
         result.append({'id':id,'name':command,'available':available,'status':'available' if available else 'missing',
-                       'purpose':purpose,'install':install if not available else '', 'details':{}})
+                       'purpose':purpose,'install':install_hint(id) if not available else '', 'details':{}})
     for id, module in [('pillow','PIL'),('pypdf','pypdf'),('docx','docx'),('pdfplumber','pdfplumber'),('pysubs2','pysubs2'),('opencv','cv2')]:
         available = installed(module)
         result.append({'id':id,'name':id,'available':available,'status':'available' if available else 'missing','purpose':'文件处理',
@@ -92,5 +108,9 @@ def ocr_languages():
 
 
 def font_path():
-    candidates=[os.getenv('MEDIAFORGE_FONT',''),'/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc','/System/Library/Fonts/PingFang.ttc','/System/Library/Fonts/STHeiti Medium.ttc','/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf']
+    candidates=[os.getenv('MEDIAFORGE_FONT','')]
+    if platform.system() == 'Windows':
+        fonts = Path(os.getenv('WINDIR', 'C:/Windows')) / 'Fonts'
+        candidates.extend(str(fonts / name) for name in ('msyh.ttc', 'msyh.ttf', 'simhei.ttf', 'simsun.ttc'))
+    candidates.extend(['/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc','/System/Library/Fonts/PingFang.ttc','/System/Library/Fonts/STHeiti Medium.ttc','/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'])
     return next((x for x in candidates if x and Path(x).is_file()),None)
