@@ -95,30 +95,32 @@ WantedBy=multi-user.target
     cert=Path('/etc/letsencrypt/live/homeward-ip/fullchain.pem');key=cert.with_name('privkey.pem')
     if not cert.exists() or not key.exists():raise RuntimeError('Configured shared IP TLS certificate is unavailable')
     if NGINX.exists() and '# MediaForge owned' not in NGINX.read_text():raise RuntimeError('Refusing to replace an unowned ingress configuration')
-    NGINX.write_text('''# MediaForge owned; no other virtual host is modified.
-server {
-    listen 18081 ssl;
-    server_name 107.151.245.166;
-    ssl_certificate /etc/letsencrypt/live/homeward-ip/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/homeward-ip/privkey.pem;
-    ssl_protocols TLSv1.2 TLSv1.3;
-    client_max_body_size 512m;
-    error_page 497 =301 https://$host:18081$request_uri;
-    location = / { return 302 /mediaforge/; }
-    location /mediaforge/ {
-        proxy_pass http://unix:/run/mediaforge/api.sock:/;
-        proxy_set_header Host $http_host;
-        proxy_set_header X-Forwarded-Proto https;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_request_buffering off;
-        proxy_buffering off;
-        proxy_read_timeout 120s;
+    # Preserve existing delivery and authentication locations during upgrades.
+    if not NGINX.exists():
+        NGINX.write_text('''# MediaForge owned; no other virtual host is modified.
+    server {
+        listen 18081 ssl;
+        server_name 107.151.245.166;
+        ssl_certificate /etc/letsencrypt/live/homeward-ip/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/homeward-ip/privkey.pem;
+        ssl_protocols TLSv1.2 TLSv1.3;
+        client_max_body_size 512m;
+        error_page 497 =301 https://$host:18081$request_uri;
+        location = / { return 302 /mediaforge/; }
+        location /mediaforge/ {
+            proxy_pass http://unix:/run/mediaforge/api.sock:/;
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_request_buffering off;
+            proxy_buffering off;
+            proxy_read_timeout 120s;
+        }
+        location = /healthz { proxy_pass http://unix:/run/mediaforge/api.sock:/healthz; }
+        location = /readyz { proxy_pass http://unix:/run/mediaforge/api.sock:/readyz; }
+        location = /version { proxy_pass http://unix:/run/mediaforge/api.sock:/version; }
     }
-    location = /healthz { proxy_pass http://unix:/run/mediaforge/api.sock:/healthz; }
-    location = /readyz { proxy_pass http://unix:/run/mediaforge/api.sock:/readyz; }
-    location = /version { proxy_pass http://unix:/run/mediaforge/api.sock:/version; }
-}
-''')
+    ''')
     command(['nginx','-t'])
     command(['systemctl','daemon-reload'])
 
