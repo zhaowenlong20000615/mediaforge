@@ -7,6 +7,7 @@ import pwd
 import grp
 import re
 import shutil
+import sqlite3
 import subprocess
 import sys
 import tarfile
@@ -146,6 +147,12 @@ def activate(name):
         wheel=next((release/'wheels').glob('mediaforge-*.whl'))
         command([str(venv/'bin/pip'),'install','--no-index','--no-deps',str(wheel)],stdout=log,stderr=log)
     old=target(CURRENT);previous_nginx=NGINX.read_bytes() if NGINX.exists() else None
+    database=BASE/'data/state.sqlite3'
+    if database.exists():
+        connection=sqlite3.connect('file:'+str(database)+'?mode=ro',uri=True)
+        try:active=connection.execute("SELECT COUNT(*) FROM tasks WHERE status IN ('accepted','running')").fetchone()[0]
+        finally:connection.close()
+        if active:raise RuntimeError('Active media tasks exist; activation stopped before switching releases')
     try:
         configure();switch(release)
         command(['systemctl','enable',SERVICE],capture_output=True)
