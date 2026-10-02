@@ -142,11 +142,19 @@ def activate(name):
     (release/'release.json').write_text(json.dumps(meta,indent=2)+'\n')
     venv=release/'.venv'
     if not venv.exists():command(['python3','-m','venv',str(venv)])
+    old=target(CURRENT)
+    wheel_sources=['--find-links',str(release/'wheels')]
+    cached_wheels=None
+    if old and old.is_relative_to(BASE/'releases') and secure_release(old) and (old/'wheels').is_dir():
+        # Reuse only this project's retained release cache. pip still verifies
+        # every selected dependency against the incoming requirement hashes.
+        cached_wheels=old/'wheels'
+        wheel_sources.extend(['--find-links',str(cached_wheels)])
     with (release/'install.log').open('wb') as log:
-        command([str(venv/'bin/pip'),'install','--no-index','--find-links',str(release/'wheels'),'--require-hashes','-r',str(release/'dependencies.txt')],stdout=log,stderr=log)
+        command([str(venv/'bin/pip'),'install','--no-index',*wheel_sources,'--require-hashes','--report',str(release/'dependency-install.json'),'-r',str(release/'dependencies.txt')],stdout=log,stderr=log)
         wheel=next((release/'wheels').glob('mediaforge-*.whl'))
         command([str(venv/'bin/pip'),'install','--no-index','--no-deps',str(wheel)],stdout=log,stderr=log)
-    old=target(CURRENT);previous_nginx=NGINX.read_bytes() if NGINX.exists() else None
+    previous_nginx=NGINX.read_bytes() if NGINX.exists() else None
     database=BASE/'data/state.sqlite3'
     if database.exists():
         connection=sqlite3.connect('file:'+str(database)+'?mode=ro',uri=True)
@@ -160,7 +168,7 @@ def activate(name):
         health=ready()
         command(['systemctl','reload','nginx'])
         if secure_release(old) and old!=release:(BASE/'previous.json').write_text(json.dumps({'release':str(old)}))
-        deployed={**meta,'deployed_at':now(),'release':str(release),'url':'https://107.151.245.166:18081/mediaforge/','health':health,'uid':pwd.getpwnam('mediaforge').pw_uid}
+        deployed={**meta,'deployed_at':now(),'release':str(release),'url':'https://107.151.245.166:18081/mediaforge/','health':health,'uid':pwd.getpwnam('mediaforge').pw_uid,'dependency_cache':str(cached_wheels) if cached_wheels else None,'dependency_install_report_sha256':hashlib.sha256((release/'dependency-install.json').read_bytes()).hexdigest()}
         (BASE/'deployment.json').write_text(json.dumps(deployed,indent=2)+'\n')
         print(json.dumps({'activated':str(release),'git_commit':meta['git_commit'],'health':health,'url':deployed['url']}))
     except BaseException:
