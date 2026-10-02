@@ -9,6 +9,8 @@ import re
 import subprocess
 import tarfile
 import time
+import tomllib
+import urllib.parse
 
 ROOT=Path(__file__).resolve().parents[1]
 HOST='107.151.245.166'
@@ -28,6 +30,15 @@ def package():
     version=json.loads(subprocess.check_output([str(ROOT/'.venv/bin/python'),'-c','import json,mediaforge;print(json.dumps(mediaforge.__version__))'],cwd=ROOT,text=True))
     own=list((ROOT/'dist').glob('mediaforge-'+version+'-*.whl'))
     if not own or not list((ROOT/'dist/wheels').glob('*.whl')):raise SystemExit('Build project wheel and pinned Linux dependencies first.')
+    # Refuse incomplete or changed wheelhouses before spending time uploading.
+    locked = {}
+    for dependency in tomllib.loads((ROOT/'uv.lock').read_text())['package']:
+        for wheel in dependency.get('wheels',[]):
+            locked[Path(urllib.parse.unquote(urllib.parse.urlsplit(wheel['url']).path)).name] = wheel['hash'].removeprefix('sha256:')
+    for wheel in (ROOT/'dist/wheels').glob('*.whl'):
+        with wheel.open('rb') as stream:actual = hashlib.file_digest(stream,'sha256').hexdigest()
+        if locked.get(wheel.name) != actual:raise SystemExit('Wheel is absent from the lock or has failed integrity verification: '+wheel.name)
+    run(['uv','pip','compile','--offline','--no-index','--find-links','dist/wheels','--python-version','3.12','--python-platform','x86_64-unknown-linux-gnu','dist/dependencies.txt','--output-file','dist/validated-linux-requirements.txt'],cwd=ROOT,stdout=subprocess.DEVNULL)
     built=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime());name=f'mediaforge-{version}-{commit[:12]}-{time.strftime("%Y%m%dT%H%M%SZ",time.gmtime())}.tar.gz'
     artifact=ROOT/'dist'/name
     sources=subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode().strip('\0').split('\0')
