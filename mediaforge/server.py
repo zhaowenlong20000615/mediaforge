@@ -116,7 +116,7 @@ def create_app(settings=None,start_worker=True):
     def ready():
         ready=engine.ready if start_worker else True
         status=checks(); missing=[x['id'] for x in status if not x['available']]
-        return JSONResponse({'status':('ready_degraded' if missing else 'ready') if ready else 'not_ready','worker_ready':ready,'optional_or_external_dependencies_missing':missing,'meaning':'服务就绪不代表所有工具或模型已配置；工具目录给出每项可用性。'},status_code=200 if ready else 503)
+        return JSONResponse({'status':('ready_degraded' if missing else 'ready') if ready else 'not_ready','worker_ready':ready,'worker_error':engine.scheduler_error,'optional_or_external_dependencies_missing':missing,'meaning':'服务就绪不代表所有工具或模型已配置；工具目录给出每项可用性。'},status_code=200 if ready else 503)
 
     @app.get('/version')
     def version():
@@ -150,7 +150,7 @@ def create_app(settings=None,start_worker=True):
     def tools(who=Depends(owner)):return {'tools':catalog_status(OPS)}
 
     @app.get('/api/doctor')
-    def doctor(who=Depends(owner)):return {'checks':checks(),'ocr_languages':ocr_languages(),'storage':store.storage(who),'server_platform':sys_platform(),'worker_ready':engine.ready}
+    def doctor(who=Depends(owner)):return {'checks':checks(),'ocr_languages':ocr_languages(),'storage':store.storage(who),'server_platform':sys_platform(),'worker_ready':engine.ready,'worker_error':engine.scheduler_error}
 
     @app.post('/api/files',status_code=201)
     async def upload(request:Request,name:str=Query(min_length=1,max_length=220),who=Depends(owner)):

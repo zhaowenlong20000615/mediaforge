@@ -1,7 +1,7 @@
 {
   "id": "local.mediaforge",
   "name": "MediaForge 媒体与文档工作台",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "有工作区授权、真实处理与可恢复任务的本地/自托管媒体工作台",
   "capabilities": [
     "export-results",

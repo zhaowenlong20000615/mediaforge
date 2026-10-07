@@ -1,11 +1,11 @@
 {
-  "tests": "86",
+  "tests": "88",
   "failures": "0",
   "errors": "0",
   "skipped": "0",
-  "time": "58.876",
-  "version": "0.2.5",
-  "scope": "Real codecs, converters, CJK OCR and actual server PDF fixture; live accepted-task response-drop tests",
+  "time": "58.625",
+  "version": "0.2.6",
+  "scope": "Actual codecs/models/CJK conversion plus scheduler full-database recovery and disk-full download checks",
   "models": [
     "faster-whisper-small CPU/int8",
     "u2net CPU"

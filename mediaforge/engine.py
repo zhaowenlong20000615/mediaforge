@@ -21,6 +21,7 @@ class Engine:
         self.lock=FileLock(str(store.root/'worker.lock'))
         self.pool=ThreadPoolExecutor(max_workers=store.settings.concurrency,thread_name_prefix='mediaforge-worker')
         self.futures={}
+        self.scheduler_error=None
 
     def start(self):
         try: self.lock.acquire(timeout=0)
@@ -40,18 +41,40 @@ class Engine:
         self.thread.start()
 
     @property
-    def ready(self): return self.thread is not None and self.thread.is_alive() and not self.stop_event.is_set()
+    def ready(self): return self.thread is not None and self.thread.is_alive() and not self.stop_event.is_set() and self.scheduler_error is None
+
+    def _schedule_once(self):
+        for tid,future in list(self.futures.items()):
+            if not future.done():continue
+            error=future.exception()
+            if error is not None:
+                # A full database can prevent the worker from recording failure.
+                # Retain the future until recovery has been committed.
+                with self.store.tx() as con:
+                    con.execute("UPDATE tasks SET status='recoverable',stage='存储恢复后可继续',error=?,updated=? WHERE id=? AND status='running'",(json.dumps(safe_error(error)),time.time(),tid))
+                    con.execute("UPDATE items SET status='recoverable' WHERE task_id=? AND status='running'",(tid,))
+            del self.futures[tid]
+        while len(self.futures)<self.store.settings.concurrency and not self.stop_event.is_set():
+            with self.store.tx() as con:
+                row=con.execute("SELECT id FROM tasks WHERE status='accepted' AND cancel=0 ORDER BY created LIMIT 1").fetchone()
+                if not row:break
+                con.execute("UPDATE tasks SET status='running',stage='准备处理',updated=? WHERE id=? AND status='accepted'",(time.time(),row['id']))
+            self.futures[row['id']]=self.pool.submit(self._task,row['id'])
 
     def _loop(self):
         next_cleanup=time.monotonic()+60
         while not self.stop_event.is_set():
-            self.futures={k:f for k,f in self.futures.items() if not f.done()}
-            while len(self.futures)<self.store.settings.concurrency and not self.stop_event.is_set():
-                with self.store.tx() as con:
-                    row=con.execute("SELECT id FROM tasks WHERE status='accepted' AND cancel=0 ORDER BY created LIMIT 1").fetchone()
-                    if not row: break
-                    con.execute("UPDATE tasks SET status='running',stage='准备处理',updated=? WHERE id=? AND status='accepted'",(time.time(),row['id']))
-                self.futures[row['id']]=self.pool.submit(self._task,row['id'])
+            try:
+                self._schedule_once();self.scheduler_error=None
+            except Exception as exc:
+                error=safe_error(exc)
+                if error['code']=='processing_failed':error=ForgeError('scheduler_unavailable','任务调度暂时不可用，正在自动重试。','检查服务存储与数据库权限。',503,True).payload()
+                changed=self.scheduler_error!=error
+                self.scheduler_error=error
+                if changed:
+                    try:print(json.dumps({'time':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'project_id':'local.mediaforge','request_id':None,'task_id':None,'event':'scheduler_retry','error':error},ensure_ascii=False),flush=True)
+                    except OSError:pass  # Logging must not kill recovery on a full disk.
+                self.stop_event.wait(1);continue
             if time.monotonic()>next_cleanup:
                 try:
                     with self.store.connect() as con: owners=[r[0] for r in con.execute('SELECT DISTINCT owner FROM tokens')]

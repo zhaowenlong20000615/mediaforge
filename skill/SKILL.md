@@ -73,3 +73,7 @@ PDF→Word默认layout，保留图片/有框表格并附document-preview.pdf；�
 ## 0.2.5 中文文字层与连接恢复
 
 中文扫描PDF的TXT与后续PDF提取文本/文字Word导出共用PyMuPDF文字解码。必须核对PDF文字层能搜索中文，不能只看图片上的文字。CLI/MCP对GET及有原幂等键的任务/导出提交在网络异常时自动重试一次；无幂等键的写操作、文件上传不会自动重复。仍报connection_failed时先查既有任务，避免重复提交。
+
+## 0.2.6 存储故障
+
+readyz在任务调度存储故障时返回503，doctor的worker_error说明原因。调度会自动重试，存储恢复后已有accepted任务继续；recoverable任务需核对后显式resume。storage_full时释放服务端空间，local_storage_full时释放调用端输出目录空间，不能把两者混为一谈。下载失败不会留下已发布的残缺结果。

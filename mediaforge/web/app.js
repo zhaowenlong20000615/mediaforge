@@ -278,6 +278,7 @@ async function showPreview(f){
 async function renderDiagnostics(){
  const version=state.viewVersion;const d=await api('api/doctor');if(version!==state.viewVersion)return;state.checks=d.checks;state.storage=d.storage;
  $('#main').replaceChildren(head('检查你的工具链','这里显示实际运行处理任务的服务环境。未配置的模型不会自动下载，缺失能力会明确停用。',button('重新检查',()=>action(async()=>{state.tools=(await api('api/tools')).tools;await renderDiagnostics();}))),
+ d.worker_error?errorBlock(d.worker_error):null,
  h('div',{class:'summary-line'},h('span',{},d.server_platform.system+' / '+d.server_platform.architecture),h('span',{},d.worker_ready?'任务引擎运行中':'任务引擎未就绪'),h('span',{},`OCR 语言：${d.ocr_languages.join('、')||'未安装'}`)),
  h('div',{class:'diagnostics'},d.checks.map(c=>h('div',{class:'dependency'},h('div',{},h('strong',{},c.name),h('small',{},c.purpose),!c.available?h('code',{},c.install):null,Object.keys(c.details||{}).length?h('p',{class:'file-meta'},Object.entries(c.details).map(([k,v])=>k+': '+v).join(' · ')):null),h('div',{},h('span',{class:'tag'+(c.available?'':' warning')},c.available?'已配置':c.status==='broken'?'启动失败':'未配置'))))));
 }

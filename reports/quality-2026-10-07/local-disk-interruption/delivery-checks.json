@@ -5,8 +5,5 @@
   "anonymous_download": 401,
   "zip_sha256": "9d934db5aecbd9cd55411eba6d975b0aad077512fbb20b66476612a79f8ce9af",
   "zip_crc_ok": true,
-  "includes_third_party_notices": true,
-  "installed_version": "0.2.5",
-  "installed_package_inside_download": true,
-  "cli_help_ok": true
+  "includes_third_party_notices": true
 }

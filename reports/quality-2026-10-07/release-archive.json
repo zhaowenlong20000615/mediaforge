@@ -1,0 +1,17 @@
+{
+  "project_id": "local.mediaforge",
+  "version": "0.2.3",
+  "git_commit": "0c80b1da31660cbdf24eb7e3129b1efc27462d61",
+  "artifact_sha256": "55e14a64381a8554533a8fb6e28fb32bde0dd14a844d1d8d571854348d82bcf5",
+  "built_at": "2026-10-07T08:54:36Z",
+  "python": "3.12",
+  "target": "linux-x86_64",
+  "archive_artifact": "/opt/mediaforge/incoming/mediaforge-0.2.3-0c80b1da3166-20261007T085436Z.tar.gz",
+  "removed_checkout": "/opt/mediaforge/releases/0.2.3-0c80b1da3166-55e14a64",
+  "current": "/opt/mediaforge/releases/0.2.5-8120bd517ff7-0b2afbb6",
+  "previous": "/opt/mediaforge/releases/0.2.4-1de87e711200-8af2b435",
+  "archived_at": "2026-10-07T10:21:30Z",
+  "reason": "Redundant release from this task; complete verified package retained on server and local host",
+  "reclaimed_bytes": 1367674880,
+  "available_bytes": 3327463424
+}

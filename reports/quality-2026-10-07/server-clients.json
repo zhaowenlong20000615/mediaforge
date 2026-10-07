@@ -15,10 +15,10 @@
   },
   "version": {
     "name": "mediaforge",
-    "version": "0.2.3",
-    "git_commit": "0c80b1da31660cbdf24eb7e3129b1efc27462d61",
-    "artifact_sha256": "55e14a64381a8554533a8fb6e28fb32bde0dd14a844d1d8d571854348d82bcf5",
-    "built_at": "2026-10-07T08:54:36Z"
+    "version": "0.2.5",
+    "git_commit": "8120bd517ff797f2041659b0f54b292e20e8eceb",
+    "artifact_sha256": "0b2afbb6aaff580bd7027a3cd2044b411adc617fd2d53703fdb9504df2efa81d",
+    "built_at": "2026-10-07T10:04:13Z"
   },
   "cleanup": {
     "dry_run": false,

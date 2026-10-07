@@ -7,6 +7,7 @@ import hashlib
 import tempfile
 import re
 import os
+import errno
 import time
 import httpx
 from .errors import ForgeError
@@ -93,6 +94,10 @@ class Client:
             raise ForgeError('download_interrupted','下载中断。','检查网络后重新下载。',503,True)
         except FileExistsError:
             raise ForgeError('output_exists','目标文件已经存在。','换一个输出路径。',409)
+        except OSError as exc:
+            if exc.errno in {errno.ENOSPC,getattr(errno,'EDQUOT',-1)}:
+                raise ForgeError('local_storage_full','本机存储空间不足，下载没有完成。','释放本机空间或选择其他输出目录，再重新下载。',507,True)
+            raise ForgeError('local_write_failed','无法写入本机输出目录。','检查输出目录权限和可用空间。',409)
         finally:
             if temp is not None:temp.unlink(missing_ok=True)
         return {'file_id':id,'output':str(path.resolve()),'size':size,'sha256':digest.hexdigest()}
