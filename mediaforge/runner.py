@@ -315,7 +315,9 @@ def pdf(c):
         if op=='pdf-rotate':evidence['rotations']=[int(p.get('/Rotate',0)) for p in pdf_reader(out,'').pages]
         c.out(out,verification=evidence)
     elif op in {'pdf-text','pdf-word'}:
-        texts=[reader.pages[i].extract_text() or '' for i in pages]
+        from .document_quality import pdf_text_pages
+        all_texts=pdf_text_pages(c.files[0]['path'],c.p.get('password',''))
+        texts=[all_texts[i] for i in pages]
         if not any(x.strip() for x in texts):raise ForgeError('no_text_layer','PDF 没有可提取的文本层。','使用 PDF OCR 识别扫描文档。')
         evidence={'source_pages':len(texts),'mode':'text_reflow'}
         if op=='pdf-text':
@@ -364,10 +366,11 @@ def pdf(c):
                 raise ForgeError('pdf_ocr_failed','PDF OCR 未能完成。','检查文件、语言包和 OCRmyPDF 依赖后重试。')
             result=pdf_reader(out,'')
             if len(result.pages)!=len(pages):raise ForgeError('verification_failed','OCR 前后页数不一致。')
-            texts=[page.extract_text() or '' for page in result.pages]
+            from .document_quality import pdf_text_pages
+            texts=pdf_text_pages(out)
             if not any(text.strip() for text in texts):raise ForgeError('no_text','没有识别出文字。','检查扫描清晰度和 OCR 语言设置。')
             text=c.work/'recognized.txt';text.write_text('\n\n'.join(texts),encoding='utf-8');c.out(text)
-            c.out(out,verification={'pages':len(result.pages),'searchable':True,'engine':'ocrmypdf','existing_text_preserved':True,'language':language,'layout':c.p.get('layout','block')})
+            c.out(out,verification={'pages':len(result.pages),'searchable':True,'engine':'ocrmypdf','existing_text_preserved':True,'text_extractor':'pymupdf','language':language,'layout':c.p.get('layout','block')})
         else:
             for j,i in enumerate(pages):
                 prefix=c.work/f'page-{i+1:04}';dpi=c.p.get('dpi',150)

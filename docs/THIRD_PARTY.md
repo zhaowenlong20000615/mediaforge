@@ -17,3 +17,5 @@ Python依赖版本与校验值在uv.lock，浏览器测试依赖在package-lock.
 - [faster-whisper](https://github.com/SYSTRAN/faster-whisper)及[small模型](https://huggingface.co/Systran/faster-whisper-small)：沿用本地CTranslate2推理，CPU/int8。模型单独传输与校验，不打入源码包。
 
 本轮质量样本中的NASA astronaut图像来自scikit-image自带公共领域样本；coffee图像由Rachel Michetti提供，CC0。其他文字、表格、测试视频与Mac系统语音由验收脚本生成，仅用于可重复测试。候选BiRefNet-general-lite模型来源rembg官方release；主体保留不佳，未作为本次部署依赖。
+
+0.2.5还使用PyMuPDF读取OCRmyPDF产生的中文CID字体文字层；Linux实际输出在pypdf中出现交错NUL字符，在PyMuPDF中正确解码。回归夹具`tests/fixtures/cjk-ocr-text-layer.pdf`由本任务的合成中文样张在本项目服务器生成，未包含用户文档。

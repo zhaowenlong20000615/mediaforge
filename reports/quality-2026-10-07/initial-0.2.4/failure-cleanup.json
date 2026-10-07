@@ -1,0 +1,9 @@
+{
+  "scope": "workspace_13806a6a8fbf4f9abf13b8468941109d",
+  "cleanup": {
+    "dry_run": false,
+    "files": 11,
+    "bytes": 61423,
+    "tasks": 8
+  }
+}

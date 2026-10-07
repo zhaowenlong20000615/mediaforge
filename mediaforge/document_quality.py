@@ -8,6 +8,15 @@ from urllib.parse import urlsplit
 from .errors import ForgeError
 
 
+def pdf_text_pages(source,password=''):
+    """Decode OCR CID fonts correctly, including Linux CJK text layers."""
+    import pymupdf
+    with pymupdf.open(source) as document:
+        if document.needs_pass and not document.authenticate(password):
+            raise ForgeError('wrong_password','PDF 打开密码不正确。','核实密码后重新提交任务。')
+        return [page.get_text(sort=True) for page in document]
+
+
 def convert_word_semantics(source,target,format):
     import mammoth
     import bleach

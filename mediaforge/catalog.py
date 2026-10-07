@@ -74,9 +74,9 @@ OPS = [
     op('pdf-rotate','PDF 旋转','PDF / Word',['pdf'],['pypdf'],'旋转选定页面。',{'pages':PAGES,'angle':choice('旋转角度',['90','180','270'],'90'),'password':PASSWORD}),
     op('pdf-compress','PDF 无损压缩','PDF / Word',['pdf'],['pypdf'],'压缩内容流并复用重复对象。',{'password':PASSWORD},note='不降低图片分辨率；源文件已优化时体积可能不减。'),
     op('pdf-images','PDF 转图片','PDF / Word',['pdf'],['pypdf','poppler'],'将选定页面渲染成 PNG。',{'pages':PAGES,'dpi':field('integer','渲染 DPI',120,minimum=72,maximum=300),'password':PASSWORD}),
-    op('pdf-text','PDF 提取文本','PDF / Word',['pdf'],['pypdf'],'按页提取可选中的文字。',{'pages':PAGES,'password':PASSWORD},note='扫描 PDF 没有文本层时，请使用 PDF OCR。'),
-    op('pdf-word','PDF 转 Word','PDF / Word',['pdf'],['pypdf','docx','pdf2docx'],'转换为可编辑 Word，附实际排版的 PDF 预览。',{'password':PASSWORD,'mode':choice('转换方式',['layout','text'],'layout')},note='layout 保留图片与有框表格，并检查渲染后的文字与数字；text 仅提取文字。扫描件请先 OCR；多栏、公式及无框表格请核对预览。'),
-    op('pdf-ocr','PDF OCR','PDF / Word',['pdf'],['pypdf','ocrmypdf','tesseract'],'保留已有文本与页面内容，为扫描页补 OCR 文字层。',{'pages':PAGES,'language':LANG,'layout':OCR_LAYOUT,'password':PASSWORD},note='默认按连续文字识别；多栏页面选择 auto，零散标签选择 sparse。请核对金额、编号与是否漏行。'),
+    op('pdf-text','PDF 提取文本','PDF / Word',['pdf'],['pypdf','pymupdf'],'按页提取可选中的文字。',{'pages':PAGES,'password':PASSWORD},note='扫描 PDF 没有文本层时，请使用 PDF OCR。'),
+    op('pdf-word','PDF 转 Word','PDF / Word',['pdf'],['pypdf','pymupdf','docx','pdf2docx'],'转换为可编辑 Word，附实际排版的 PDF 预览。',{'password':PASSWORD,'mode':choice('转换方式',['layout','text'],'layout')},note='layout 保留图片与有框表格，并检查渲染后的文字与数字；text 仅提取文字。扫描件请先 OCR；多栏、公式及无框表格请核对预览。'),
+    op('pdf-ocr','PDF OCR','PDF / Word',['pdf'],['pypdf','pymupdf','ocrmypdf','tesseract'],'保留已有文本与页面内容，为扫描页补 OCR 文字层。',{'pages':PAGES,'language':LANG,'layout':OCR_LAYOUT,'password':PASSWORD},note='默认按连续文字识别；多栏页面选择 auto，零散标签选择 sparse。请核对金额、编号与是否漏行。'),
     op('pdf-tables','PDF 表格提取','PDF / Word',['pdf'],['pypdf','pdfplumber'],'提取可检测的表格为 CSV 和 JSON。',{'password':PASSWORD},note='扫描表格与跨页复杂布局可能无法可靠还原；请检查行列与合并单元格。'),
     op('office-convert','Word 转换','PDF / Word',['docx','doc'],['office-dynamic'],'Word 转 PDF、HTML、Markdown 或文本。',{
         'format':choice('输出格式',['pdf','html','md','txt'],'pdf')},note='旧版 .doc 及 PDF 导出需要 LibreOffice；HTML/Markdown 保留标题、列表、格式、表格与图片；它们采用语义排版，视觉版式需要 PDF。'),

@@ -82,3 +82,36 @@ def test_http_transport_redacts_filenames_from_info_logs(live,samples,caplog):
     result=c.upload(samples/'图片 sample.png')
     assert result['id']
     assert 'sample.png' not in caplog.text and '%E5%9B%BE' not in caplog.text
+
+
+@pytest.mark.parametrize('idempotent',[True,False])
+def test_dropped_submission_response_never_creates_duplicate_task(live,samples,idempotent):
+    import httpx
+    from mediaforge.errors import ForgeError
+    url,token,store=live;client=Client(url,token);file=client.upload(samples/'图片 sample.png')
+    class DropFirstResponse(httpx.BaseTransport):
+        def __init__(self):self.transport=httpx.HTTPTransport();self.submissions=0
+        def handle_request(self,request):
+            response=self.transport.handle_request(request)
+            if request.method=='POST' and request.url.path=='/api/tasks':
+                self.submissions+=1
+                if self.submissions==1:
+                    response.read();response.close()
+                    raise httpx.RemoteProtocolError('Injected disconnect after the real server accepted the task')
+            return response
+        def close(self):self.transport.close()
+    transport=DropFirstResponse();headers=dict(client.http.headers);client.http.close()
+    client.http=httpx.Client(headers=headers,transport=transport,timeout=20)
+    payload={'tool':'image-process','file_ids':[file['id']],'params':{'width':48}}
+    if idempotent:payload['idempotency_key']='dropped-response-regression'
+    try:
+        if idempotent:
+            accepted=client.request('POST','api/tasks',json=payload)
+            result=client.wait(accepted['id'],20)
+            assert result['status']=='succeeded' and result['outputs'][0]['width']==48
+            assert transport.submissions==2
+        else:
+            with pytest.raises(ForgeError,match='无法连接'):client.request('POST','api/tasks',json=payload)
+            assert transport.submissions==1
+        assert store.tasks('workspace_default')['total']==1
+    finally:client.http.close()

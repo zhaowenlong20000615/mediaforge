@@ -40,8 +40,15 @@ class Client:
         self.http=httpx.Client(base_url=self.base,headers={'Authorization':'Bearer '+token},timeout=httpx.Timeout(60,read=120,write=600),trust_env=False)
 
     def request(self,method,path,**kwargs):
-        try:r=self.http.request(method,self.base+'/'+path.lstrip('/'),**kwargs)
-        except httpx.HTTPError:raise ForgeError('connection_failed','无法连接服务。','检查服务地址、HTTPS 证书和服务状态。',503,True)
+        body=kwargs.get('json')
+        safe_retry=method.upper()=='GET' or (method.upper()=='POST' and path.strip('/') in {'api/tasks','api/exports'} and isinstance(body,dict) and bool(body.get('idempotency_key')))
+        for attempt in range(2 if safe_retry else 1):
+            try:
+                r=self.http.request(method,self.base+'/'+path.lstrip('/'),**kwargs)
+                break
+            except httpx.HTTPError:
+                if safe_retry and attempt==0:time.sleep(.25);continue
+                raise ForgeError('connection_failed','无法连接服务。','检查服务地址、HTTPS 证书和服务状态。',503,True)
         if r.status_code>=400:
             try:e=r.json().get('error',{})
             except ValueError:e={}

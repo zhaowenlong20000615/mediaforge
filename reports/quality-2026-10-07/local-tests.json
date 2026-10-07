@@ -1,11 +1,11 @@
 {
-  "tests": "83",
+  "tests": "86",
   "failures": "0",
   "errors": "0",
   "skipped": "0",
-  "time": "70.690",
-  "version": "0.2.4",
-  "scope": "Actual local codec/converter/model execution; both Chinese OCR language packs and configuration files present",
+  "time": "58.876",
+  "version": "0.2.5",
+  "scope": "Real codecs, converters, CJK OCR and actual server PDF fixture; live accepted-task response-drop tests",
   "models": [
     "faster-whisper-small CPU/int8",
     "u2net CPU"

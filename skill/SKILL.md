@@ -69,3 +69,7 @@ PDF→Word默认layout，保留图片/有框表格并附document-preview.pdf；�
 ## 0.2.4 OCR版面
 
 图片与PDF OCR默认layout=block（连续文字）。多栏材料显式layout=auto，零散文字layout=sparse。核对整行内容、编号与金额；非空TXT不等于识别完整。本轮真实服务器样张曾在auto模式漏掉一整行，因此不以任务succeeded作为质量判定。
+
+## 0.2.5 中文文字层与连接恢复
+
+中文扫描PDF的TXT与后续PDF提取文本/文字Word导出共用PyMuPDF文字解码。必须核对PDF文字层能搜索中文，不能只看图片上的文字。CLI/MCP对GET及有原幂等键的任务/导出提交在网络异常时自动重试一次；无幂等键的写操作、文件上传不会自动重复。仍报connection_failed时先查既有任务，避免重复提交。

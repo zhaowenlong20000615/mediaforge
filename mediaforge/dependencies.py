@@ -82,7 +82,7 @@ def checks():
         hint=('程序已找到但无法正常启动，请修复动态库或重新安装后重试。 ' if status=='broken' else '')+install_hint(id)
         result.append({'id':id,'name':command,'available':available,'status':status,
                        'purpose':purpose,'install':hint if not available else '', 'details':{'startup_verified':available,'path':chosen}})
-    for id, module in [('pillow','PIL'),('pypdf','pypdf'),('docx','docx'),('pdfplumber','pdfplumber'),('pysubs2','pysubs2'),('opencv','cv2'),('ocrmypdf','ocrmypdf'),('mammoth','mammoth'),('img2pdf','img2pdf'),('pdf2docx','pdf2docx')]:
+    for id, module in [('pillow','PIL'),('pypdf','pypdf'),('pymupdf','pymupdf'),('docx','docx'),('pdfplumber','pdfplumber'),('pysubs2','pysubs2'),('opencv','cv2'),('ocrmypdf','ocrmypdf'),('mammoth','mammoth'),('img2pdf','img2pdf'),('pdf2docx','pdf2docx')]:
         available = installed(module)
         result.append({'id':id,'name':id,'available':available,'status':'available' if available else 'missing','purpose':'文件处理',
                        'install':'uv sync --extra repair' if id == 'opencv' else 'uv sync --frozen', 'details':{}})

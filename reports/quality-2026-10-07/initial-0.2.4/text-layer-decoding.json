@@ -1,0 +1,6 @@
+{
+  "fixture": "tests/fixtures/cjk-ocr-text-layer.pdf",
+  "pypdf_nul_characters": 35,
+  "pymupdf_nul_characters": 0,
+  "after_text": "媒体工具箱质量验收\n\n合同编号           ; MF-2026-1007\n\n应付金额                          ; 1,280.50 元\n\n交付要求                        ; 画面清晰 , 文字完整。\n\nWord / PDF / OCR - Quality 12345"
+}

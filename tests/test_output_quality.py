@@ -30,6 +30,17 @@ def test_image_pdf_embeds_original_pixels_and_jpeg_bytes(running,tmp_path):
     assert t['outputs'][0]['verification']['image_recompression'] is False
 
 
+def test_linux_chinese_ocr_font_layer_can_export_text_and_word(running):
+    # Actual OCRmyPDF Linux output: pypdf used to interleave NULs with every CJK
+    # character, causing the produced TXT to be rejected as a binary file.
+    source=Path(__file__).parent/'fixtures/cjk-ocr-text-layer.pdf';store,_=running
+    for operation,params in [('pdf-text',{}),('pdf-word',{'mode':'text'})]:
+        t=job(store,operation,[source],params);assert t['status']=='succeeded',t['error']
+        text=output_path(store,t).read_text() if operation=='pdf-text' else '\n'.join(p.text for p in Document(output_path(store,t)).paragraphs)
+        text=''.join(text.split());assert '\x00' not in text
+        assert all(value in text for value in ['媒体工具箱质量验收','MF-2026-1007','1,280.50','交付要求','画面清晰','文字完整'])
+
+
 def test_image_default_webp_is_lossless_and_icc_retained(running,tmp_path):
     store,_=running
     a=np.random.default_rng(8).integers(0,256,(120,180,3),dtype=np.uint8)

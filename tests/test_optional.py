@@ -40,9 +40,11 @@ def test_chinese_ocr_retains_spaced_lines_and_amounts(running,tmp_path):
         text=''.join(output_path(store,t).read_text().split())
         assert all(value in text for value in ['媒体工具箱质量验收','合同编号','MF-2026-1007','应付金额','1,280.50','交付要求','画面清晰','文字完整','12345']),text
         if operation=='pdf-ocr':
-            from pypdf import PdfReader
-            searchable=''.join(PdfReader(output_path(store,t,1)).pages[0].extract_text().split())
-            assert '交付要求' in searchable and '1,280.50' in searchable
+            import pymupdf
+            with pymupdf.open(output_path(store,t,1)) as pdf:
+                searchable=''.join(pdf[0].get_text().split())
+                assert '交付要求' in searchable and '1,280.50' in searchable
+                assert pdf[0].search_for('交付要求')
 
 
 def test_asr_local_model(running):
