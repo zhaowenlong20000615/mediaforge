@@ -24,6 +24,18 @@ const button=(text,fn,cls='',attrs={})=>h('button',{type:'button',class:cls,onCl
 const tool=()=>state.tools.find(t=>t.id===state.toolId);
 const nameOf=id=>state.tools.find(t=>t.id===id)?.name||id;
 const badge=status=>h('span',{class:'tag '+({failed:'bad',partial:'warning',recoverable:'warning',running:'neutral',accepted:'neutral',cancelled:'neutral'}[status]||'')},labels[status]||status);
+function qualitySummary(file){
+ const v=file.verification||{};const notes=[];
+ if(v.role==='layout_preview')notes.push('Word 实际排版预览');
+ else if(v.rendered_numbers_preserved)notes.push('已渲染核对文字与数字，排版请查看附带预览');
+ else if(v.stream_copy)notes.push('保留原始画面与音频，未重新编码');
+ else if(v.image_recompression===false)notes.push('原始图片无损嵌入');
+ else if(v.word_timestamps)notes.push('字幕已按词对齐，请核对专名与数字');
+ else if(v.edge_refined)notes.push('边缘已细化，请核对主体完整性');
+ else notes.push('结构已核验 · 内容质量待确认');
+ if(Array.isArray(v.quality_notes))notes.push(...v.quality_notes);
+ return notes.join(' · ');
+}
 function toast(message) { const el=$('#notice');el.textContent=message;el.classList.add('visible');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('visible'),6500); }
 function connection(ok) { state.connected=ok;const el=$('#connection');if(el){el.className='connection'+(ok?'':' offline');el.textContent=ok?'工作区已连接':'连接中断 · 正在重试';} }
 function errorBlock(error) { return h('div',{class:'callout error',role:'alert'},h('strong',{},error.message||'操作失败'),error.action?h('p',{},error.action):null); }
@@ -233,7 +245,7 @@ async function refreshDetail(){
  actions.append(button('复制任务编号',()=>action(async()=>{await navigator.clipboard.writeText(id);toast('任务编号已复制。');}),'small'));main.append(actions);
  if(data.error)main.append(errorBlock(data.error));
  if(['partial','cancelled','recoverable'].includes(data.status))main.append(h('div',{class:'callout info'},'已成功的项目和结果会保留。恢复时只处理其余项目。'));
- main.append(h('section',{class:'section'},h('h2',{},'处理结果'),data.outputs.length?h('div',{class:'result-list'},data.outputs.map(f=>h('div',{class:'result'},h('div',{},h('div',{class:'file-name'},f.name),h('div',{class:'file-meta'},[bytes(f.size),f.kind,f.width?`${f.width}×${f.height}`:'',f.pages?`${f.pages} 页`:'',f.duration?`${f.duration.toFixed(2)} 秒`:''].filter(Boolean).join(' · ')),h('small',{},'结构已核验 · 内容质量待确认')),h('div',{class:'result-actions'},button('预览',()=>action(()=>showPreview(f)),'small'),h('a',{class:'button-link',href:'./api/files/'+f.id+'/content',download:f.name},'下载'),button('继续处理',()=>reuse([f]),'small'))))):h('div',{class:'callout info'},['accepted','running'].includes(data.status)?'结果生成并核验后，会显示在这里。':'当前没有生成可用结果，请查看下方项目错误。')));
+ main.append(h('section',{class:'section'},h('h2',{},'处理结果'),data.outputs.length?h('div',{class:'result-list'},data.outputs.map(f=>h('div',{class:'result'},h('div',{},h('div',{class:'file-name'},f.name),h('div',{class:'file-meta'},[bytes(f.size),f.kind,f.width?`${f.width}×${f.height}`:'',f.pages?`${f.pages} 页`:'',f.duration?`${f.duration.toFixed(2)} 秒`:''].filter(Boolean).join(' · ')),h('small',{},qualitySummary(f))),h('div',{class:'result-actions'},button('预览',()=>action(()=>showPreview(f)),'small'),h('a',{class:'button-link',href:'./api/files/'+f.id+'/content',download:f.name},'下载'),button('继续处理',()=>reuse([f]),'small'))))):h('div',{class:'callout info'},['accepted','running'].includes(data.status)?'结果生成并核验后，会显示在这里。':'当前没有生成可用结果，请查看下方项目错误。')));
  if(currentPreview)main.append(currentPreview);
  main.append(h('section',{class:'section'},h('h2',{},'逐项记录'),data.items.map(item=>h('details',{class:'item','data-item':item.id,open:openItems.has(item.id)},h('summary',{},h('span',{},item.input_ids.map(fid=>data.inputs.find(f=>f.id===fid)?.name||fid).join(' ＋ ')),badge(item.status)),h('p',{},`累计尝试 ${item.attempt} 次 · 结果 ${item.output_ids.length} 个`),item.error?errorBlock(item.error):h('p',{},'此项没有错误记录。')))),
  h('details',{class:'section','data-params':'true',open:paramsOpen},h('summary',{},'查看使用的参数'),h('pre',{},JSON.stringify(data.params,null,2))),

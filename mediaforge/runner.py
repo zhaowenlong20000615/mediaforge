@@ -11,6 +11,7 @@ import shutil
 import subprocess
 import sys
 import warnings
+from fractions import Fraction
 from .errors import ForgeError,safe_error
 from .dependencies import verified_binary,ocr_languages,font_path
 from .files import probe
@@ -71,15 +72,20 @@ def check_track(file,kind,track=0):
 def media(c):
     f=c.files[0]; src=f['path']; p=c.p; op=c.op; duration=f.get('duration',0)
     c.progress(5,'检查媒体轨道')
+    if op in {'video-transcode','media-trim','media-compress','media-merge'}:
+        # Refresh uploads created before color/rotation/codec metadata existed.
+        for file in c.files:file['streams']=probe(file['path']).get('streams',[])
+        if any(s.get('color_transfer') in {'smpte2084','arib-std-b67'} for f in c.files for s in f.get('streams',[])):
+            raise ForgeError('hdr_requires_conversion','检测到 HDR 素材，当前此操作未提供可靠的 HDR 色彩转换。','先在支持 HDR 的工具中导出 SDR 版本；避免输出发灰或过曝。')
     if op=='video-transcode' or op=='media-compress' and f['kind']=='video':
         fmt=p.get('format','mp4'); out=c.work/('video.'+fmt)
-        filters=['scale=trunc(iw/2)*2:trunc(ih/2)*2']
-        if p.get('width'): filters=['scale='+str(p['width']//2*2)+':-2']
+        filters=['scale=trunc(iw/2)*2:trunc(ih/2)*2:flags=lanczos']
+        if p.get('width'): filters=['scale='+str(p['width']//2*2)+':-2:flags=lanczos']
         codec='libvpx-vp9' if fmt=='webm' else 'libx264'
-        args=['-i',src,'-map','0:v:0','-map','0:a?','-vf',','.join(filters),'-c:v',codec,'-crf',str(p.get('crf',28)),
-              '-c:a','libopus' if fmt=='webm' else 'aac']
+        args=['-i',src,'-map','0:v:0','-map','0:a?','-vf',','.join(filters),'-c:v',codec,'-crf',str(p.get('crf',23)),
+              '-c:a','libopus' if fmt=='webm' else 'aac','-b:a','192k','-pix_fmt','yuv420p']
         if fmt=='webm':args+=['-b:v','0']
-        else:args+=['-preset','fast']
+        else:args+=['-preset','medium']
         if fmt=='mp4':args+=['-movflags','+faststart']
         c.ffmpeg(args+[out],duration)
         c.out(out,verification={'operation':op,'expected_container':fmt,'codec':codec}); return
@@ -89,18 +95,34 @@ def media(c):
         codec={'mp3':'libmp3lame','wav':'pcm_s16le','flac':'flac','m4a':'aac','ogg':'libvorbis'}[fmt]
         out=c.work/('audio.'+fmt)
         args=['-i',src,'-map',f'0:a:{track}','-vn','-c:a',codec]
-        if op=='audio-normalize':args+=['-af',f'loudnorm=I={p["lufs"]}:TP=-1.5:LRA=11','-ar','48000']
+        measured=None
+        if op=='audio-extract':
+            if fmt=='mp3':args+=['-q:a','2']
+            elif fmt=='ogg':args+=['-q:a','6']
+            elif fmt=='m4a':args+=['-b:a','256k']
+        if op=='audio-normalize':
+            c.progress(8,'测量源音频响度')
+            exe=verified_binary('ffmpeg')
+            first=subprocess.run([exe,'-hide_banner','-nostdin','-protocol_whitelist','file,pipe','-i',src,'-map',f'0:a:{track}',
+                '-af',f'loudnorm=I={p["lufs"]}:TP=-1.5:LRA=11:print_format=json','-f','null','-'],stdout=subprocess.DEVNULL,stderr=subprocess.PIPE)
+            match=re.search(rb'\{\s*"input_i".*?\}',first.stderr,re.S)
+            if first.returncode or not match:raise ForgeError('loudness_analysis','无法测量音频响度。')
+            measured=json.loads(match.group())
+            if not all(math.isfinite(float(measured[k])) for k in ['input_i','input_tp','input_lra','input_thresh','target_offset']):
+                raise ForgeError('no_audible_signal','音轨近似静音，无法进行响度标准化。')
+            filt=f'loudnorm=I={p["lufs"]}:TP=-1.5:LRA=11:measured_I={measured["input_i"]}:measured_TP={measured["input_tp"]}:measured_LRA={measured["input_lra"]}:measured_thresh={measured["input_thresh"]}:offset={measured["target_offset"]}:linear=true'
+            args+=['-af',filt,'-ar','48000']
         if op=='audio-denoise':args+=['-af',f'afftdn=nr={p["strength"]}']
         if op=='media-compress':args+=['-b:a',str(p['audio_kbps'])+'k']
         c.ffmpeg(args+[out],duration)
         actual=probe(out); codecs=[s['codec_name'] for s in actual['streams'] if s['codec_type']=='audio']
-        c.out(out,verification={'audio_codecs':codecs,'source_track':track}); return
+        c.out(out,verification={'audio_codecs':codecs,'source_track':track,'loudness_target':p.get('lufs'),'two_pass_normalization':bool(measured)}); return
     if op=='media-trim':
         start=p['start']; length=p['duration']
         if duration and start>=duration:raise ForgeError('invalid_range','开始时间超过媒体时长。','设置更早的开始时间。')
         out=c.work/('clip.mp4' if f['kind']=='video' else 'clip.wav')
         args=['-i',src,'-ss',str(start),'-t',str(length)]
-        if f['kind']=='video':args+=['-map','0:v:0','-map','0:a?','-vf','scale=trunc(iw/2)*2:trunc(ih/2)*2','-c:v','libx264','-preset','fast','-c:a','aac','-movflags','+faststart']
+        if f['kind']=='video':args+=['-map','0:v:0','-map','0:a?','-vf','scale=trunc(iw/2)*2:trunc(ih/2)*2','-c:v','libx264','-preset','medium','-crf','18','-c:a','aac','-b:a','192k','-movflags','+faststart']
         else:args+=['-map','0:a:0','-c:a','pcm_s16le']
         c.ffmpeg(args+[out],length)
         actual=float(probe(out)['format'].get('duration',0))
@@ -116,25 +138,55 @@ def media(c):
         return
     if op=='media-merge':
         is_video=p['kind']=='video'; normalized=[]
-        for i,file in enumerate(c.files):
-            c.progress(5+i/len(c.files)*75,f'标准化第 {i+1} 个文件')
-            part=c.work/(f'part-{i}.mp4' if is_video else f'part-{i}.wav')
-            if is_video:
-                if file['kind']!='video':raise ForgeError('unsupported_input','视频合并只接受视频。','选择音频合并以提取并合并音轨。')
-                args=['-i',file['path']]
-                if not any(s['codec_type']=='audio' for s in file.get('streams',[])):
-                    args+=['-f','lavfi','-i','anullsrc=r=48000:cl=stereo','-shortest']
-                args+=['-vf','scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=30',
-                       '-c:v','libx264','-preset','ultrafast','-pix_fmt','yuv420p','-c:a','aac','-ar','48000','-ac','2',part]
-            else:
-                check_track(file,'audio')
-                args=['-i',file['path'],'-map','0:a:0','-vn','-ar','48000','-ac','2','-c:a','pcm_s16le',part]
-            c.ffmpeg(args); normalized.append(part)
-        manifest=c.work/'concat.txt'
-        manifest.write_text('\n'.join("file '"+p.name+"'" for p in normalized))
+        streams=[file.get('streams',[]) for file in c.files]
+        video=[s for s in streams[0] if s['codec_type']=='video' and not s.get('disposition',{}).get('attached_pic')]
+        if is_video and (not video or any(f['kind']!='video' for f in c.files)):
+            raise ForgeError('unsupported_input','视频合并只接受视频。','选择音频合并以提取并合并音轨。')
+        geometry={}
+        if is_video:
+            reference=video[0]
+            try:sar=Fraction(reference.get('sample_aspect_ratio','1:1').replace(':','/'))
+            except (ValueError,ZeroDivisionError):sar=Fraction(1)
+            if sar<=0:sar=Fraction(1)
+            width=max(2,round(reference['width']*sar/2)*2);height=reference['height']//2*2
+            if reference.get('rotation',0)%180:width,height=height,width
+            try:fps=Fraction(reference.get('avg_frame_rate','30/1'))
+            except (ValueError,ZeroDivisionError):fps=Fraction(30)
+            if fps<=0 or fps>120:raise ForgeError('frame_rate','源视频帧率超出支持范围。','请先转换成不超过120fps的视频。')
+            geometry={'width':width,'height':height,'fps':str(fps)}
+            fields=['codec_type','codec_name','width','height','pix_fmt','avg_frame_rate','sample_rate','channels','sample_aspect_ratio','extradata_hash','time_base','rotation']
+            signatures=[[[s.get(k) for k in fields] for s in ss if s['codec_type'] in {'video','audio'}] for ss in streams]
+            compatible=all(signature==signatures[0] for signature in signatures) and all(any(s['codec_type']=='audio' for s in ss) for ss in streams) and reference.get('extradata_hash') and reference['codec_name'] in {'h264','hevc'} and all(s.get('codec_name') in {'aac','alac','mp3'} for ss in streams for s in ss if s['codec_type']=='audio')
+            if compatible:
+                # Controlled internal names keep concat manifests independent of user filenames.
+                for i,file in enumerate(c.files):
+                    path=c.work/f'original-{i}{Path(file["path"]).suffix}'
+                    try:os.link(file['path'],path)
+                    except OSError:shutil.copyfile(file['path'],path)
+                    normalized.append(path)
+        stream_copy=bool(normalized)
+        if not stream_copy:
+            for i,file in enumerate(c.files):
+                c.progress(5+i/len(c.files)*75,f'高质量处理第 {i+1} 个文件')
+                part=c.work/(f'part-{i}.mp4' if is_video else f'part-{i}.wav')
+                if is_video:
+                    args=['-i',file['path']]
+                    if not any(s['codec_type']=='audio' for s in file.get('streams',[])):
+                        args+=['-f','lavfi','-i','anullsrc=r=48000:cl=stereo','-map','0:v:0','-map','1:a:0','-t',str(file['duration'])]
+                    else:args+=['-map','0:v:0','-map','0:a:0']
+                    args+=['-vf',f'scale=trunc(iw*sar/2)*2:ih:flags=lanczos,setsar=1,scale={width}:{height}:force_original_aspect_ratio=decrease:flags=lanczos,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps={fps}',
+                           '-c:v','libx264','-preset','medium','-crf','18','-pix_fmt','yuv420p','-c:a','aac','-b:a','192k','-ar','48000','-ac','2',part]
+                else:
+                    check_track(file,'audio')
+                    args=['-i',file['path'],'-map','0:a:0','-vn','-ar','48000','-ac','2','-c:a','pcm_s24le',part]
+                c.ffmpeg(args);normalized.append(part)
+        manifest=c.work/'concat.txt';manifest.write_text('\n'.join("file '"+part.name+"'" for part in normalized))
         out=c.work/('merged.mp4' if is_video else 'merged.wav')
-        c.ffmpeg(['-f','concat','-safe','1','-i',manifest,'-c','copy',out],sum(f.get('duration',0) for f in c.files))
-        c.out(out,verification={'merged_files':len(normalized),'order_preserved':True}); return
+        maps=['-map','0:v:0','-map','0:a?'] if is_video else ['-map','0:a:0']
+        c.ffmpeg(['-f','concat','-safe','1','-i',manifest,*maps,'-c','copy',out],sum(f.get('duration',0) for f in c.files))
+        expected=sum(f.get('duration',0) for f in c.files);actual=float(probe(out)['format']['duration'])
+        if expected and abs(actual-expected)>max(.3,expected*.02):raise ForgeError('verification_failed','合并后时长与源文件总时长不一致。')
+        c.out(out,verification={'merged_files':len(normalized),'order_preserved':True,'stream_copy':bool(stream_copy),'target_geometry':geometry,'expected_duration':expected,'actual_duration':actual});return
     raise ForgeError('unknown_operation','未实现的媒体操作。')
 
 
@@ -162,22 +214,33 @@ def subtitles(c):
 
 def asr(c):
     from faster_whisper import WhisperModel
+    from .subtitle_quality import cues_from_words
     import pysubs2
     check_track(c.files[0],'audio')
-    c.progress(8,'加载本地语音模型')
-    device=c.p['device']
-    model=WhisperModel(os.environ['MEDIAFORGE_ASR_MODEL'],device=device,compute_type='int8' if device=='cpu' else 'float16',cpu_threads=2,local_files_only=True)
-    segments,info=model.transcribe(c.files[0]['path'],language=c.p['language'] or None,beam_size=3)
-    subs=pysubs2.SSAFile(); texts=[]
+    c.progress(8,'加载本地高质量语音模型')
+    device=c.p['device'];model_path=os.environ['MEDIAFORGE_ASR_MODEL']
+    model=WhisperModel(model_path,device=device,compute_type='int8' if device=='cpu' else 'float16',cpu_threads=2,local_files_only=True)
+    segments,info=model.transcribe(c.files[0]['path'],language=c.p['language'] or None,beam_size=5,
+        vad_filter=True,word_timestamps=True,condition_on_previous_text=False)
+    words=[];texts=[];confidence=[]
     for segment in segments:
         text=segment.text.strip()
         if text:
-            subs.append(pysubs2.SSAEvent(start=int(segment.start*1000),end=int(segment.end*1000),text=text)); texts.append(text)
-        c.progress(min(94,10+segment.end/max(info.duration,1)*84),'正在识别语音')
+            texts.append(text);confidence.append(float(segment.avg_logprob))
+            if segment.words:
+                words.extend({'start':w.start,'end':w.end,'text':w.word} for w in segment.words)
+            else:words.append({'start':segment.start,'end':segment.end,'text':text})
+        c.progress(min(94,10+segment.end/max(info.duration,1)*84),'逐词识别并对齐字幕')
     if not texts:raise ForgeError('no_speech','没有识别出有效语音。','检查音轨、人声清晰度和语言设置。')
+    cues=cues_from_words(words,c.p.get('max_line_chars',28))
+    subs=pysubs2.SSAFile()
+    for cue in cues:subs.append(pysubs2.SSAEvent(start=int(cue['start']*1000),end=int(cue['end']*1000),text=cue['text'].replace('\n','\\N')))
+    evidence={'segments':len(subs),'language':info.language,'language_probability':round(info.language_probability,4),
+        'model':Path(model_path).name,'word_timestamps':True,'vad':True,'max_cue_seconds':max(round(x['end']-x['start'],3) for x in cues),
+        'mean_log_probability':round(sum(confidence)/len(confidence),4),'requires_review':True}
     for fmt in ['srt','vtt']:
-        file=c.work/('transcript.'+fmt); subs.save(str(file),format_=fmt,encoding='utf-8'); c.out(file,verification={'segments':len(subs),'language':info.language})
-    file=c.work/'transcript.txt';file.write_text('\n'.join(texts),encoding='utf-8'); c.out(file,verification={'segments':len(subs)})
+        file=c.work/('transcript.'+fmt);subs.save(str(file),format_=fmt,encoding='utf-8');c.out(file,verification=evidence)
+    file=c.work/'transcript.txt';file.write_text('\n'.join(texts),encoding='utf-8');c.out(file,verification=evidence)
 
 
 def pdf_reader(path,password):
@@ -253,8 +316,23 @@ def pdf(c):
     elif op in {'pdf-text','pdf-word'}:
         texts=[reader.pages[i].extract_text() or '' for i in pages]
         if not any(x.strip() for x in texts):raise ForgeError('no_text_layer','PDF 没有可提取的文本层。','使用 PDF OCR 识别扫描文档。')
+        evidence={'source_pages':len(texts),'mode':'text_reflow'}
         if op=='pdf-text':
             out=c.work/'document.txt';out.write_text('\n\n'.join(texts),encoding='utf-8')
+        elif c.p.get('mode','layout')=='layout':
+            from .document_quality import pdf_to_docx_layout,verify_document_render
+            selected=PdfWriter()
+            for i in pages:selected.add_page(reader.pages[i])
+            source=c.work/'layout-source.pdf';write_pdf(selected,source)
+            out=c.work/'document.docx';c.progress(20,'重建页面布局、表格与图片')
+            evidence=pdf_to_docx_layout(source,out)
+            c.progress(70,'渲染 Word 并检查文字与数字是否完整')
+            rendered_dir=c.work/'layout-review';rendered_dir.mkdir()
+            profile=c.work/'lo-layout-profile'
+            c.run([verified_binary('libreoffice'),'-env:UserInstallation='+profile.as_uri(),'--headless','--convert-to','pdf','--outdir',rendered_dir,out])
+            rendered=rendered_dir/'document.pdf'
+            if not rendered.is_file():raise ForgeError('document_render_failed','无法核验 Word 实际排版。','在诊断页检查 LibreOffice。')
+            evidence.update(verify_document_render(source,rendered))
         else:
             from docx import Document
             doc=Document()
@@ -262,7 +340,8 @@ def pdf(c):
                 if i:doc.add_page_break()
                 for para in text.splitlines():doc.add_paragraph(para)
             out=c.work/'document.docx';doc.save(out)
-        c.out(out,verification={'source_pages':len(texts),'mode':'text_reflow'})
+        c.out(out,verification=evidence)
+        if op=='pdf-word' and c.p.get('mode','layout')=='layout':c.out(rendered,'document-preview.pdf',{**evidence,'role':'layout_preview'})
     elif op in {'pdf-images','pdf-ocr'}:
         # Decrypt into a private job file; never put passwords on command lines.
         w=PdfWriter()
@@ -370,53 +449,61 @@ def office(c):
             for part in [section.header,section.footer,section.first_page_header,section.first_page_footer,section.even_page_header,section.even_page_footer]:walk(part)
         if not count:raise ForgeError('no_matches','没有找到要替换的文字。','检查查找文字是否一致。')
         out=c.work/'replaced.docx';doc.save(out);Document(out);c.out(out,verification={'replacements':count});return
-    fmt=p['format'];chunks=[]
-    for kind,block in doc_blocks(doc):
-        if kind=='paragraph':
-            text=block.text
-            if fmt=='html':chunks.append('<p>'+html.escape(text)+'</p>')
-            elif fmt=='md' and block.style.name.startswith('Heading'):
-                level=block.style.name.split()[-1];level=int(level) if level.isdigit() else 1
-                chunks.append('#'*min(level,6)+' '+text)
-            else:chunks.append(text)
-        else:
-            rows=[[cell.text for cell in row.cells] for row in block.rows]
-            if fmt=='html':chunks.append('<table>'+''.join('<tr>'+''.join('<td>'+html.escape(x)+'</td>' for x in row)+'</tr>' for row in rows)+'</table>')
-            elif fmt=='md':
-                for i,row in enumerate(rows):
-                    chunks.append('| '+' | '.join(x.replace('|','\\|').replace('\n',' ') for x in row)+' |')
-                    if i==0:chunks.append('| '+' | '.join('---' for _ in row)+' |')
-            else:chunks.extend('\t'.join(row) for row in rows)
-    text='\n\n'.join(chunks)
-    if not text.strip():raise ForgeError('no_text','文档没有可提取的文字。','图片内容可通过 OCR 处理。')
-    if fmt=='html':text='<!doctype html><html><meta charset="utf-8"><title>Converted document</title><body>'+text+'</body></html>'
-    out=c.work/('document.'+fmt);out.write_text(text,encoding='utf-8');c.out(out,verification={'mode':'semantic_text_and_tables'})
+    from .document_quality import convert_word_semantics
+    fmt=p['format'];out=c.work/('document.'+fmt)
+    evidence=convert_word_semantics(src,out,fmt)
+    c.out(out,verification=evidence)
 
 
 def image(c):
-    from PIL import Image,ImageOps,ImageDraw,ImageFont
+    from PIL import Image,ImageOps,ImageDraw,ImageFont,ImageCms
     p=c.p;op=c.op
-    with Image.open(c.files[0]['path']) as source:im=ImageOps.exif_transpose(source).copy()
+    with Image.open(c.files[0]['path']) as source:
+        im=ImageOps.exif_transpose(source).copy();icc=source.info.get('icc_profile');dpi=source.info.get('dpi')
     if op=='image-ocr':
         c.progress(20,'识别图片文字');text=ocr(c,c.files[0]['path'],c.work/'recognized')
         if not text:raise ForgeError('no_text','没有识别出文字。','检查图片清晰度或切换 OCR 语言。')
         c.out(c.work/'recognized.txt',verification={'language':p['language']});return
     if op=='image-pdf':
-        pages=[]
-        for file in c.files:
-            with Image.open(file['path']) as source:pages.append(ImageOps.exif_transpose(source).convert('RGB'))
-        out=c.work/'images.pdf';pages[0].save(out,save_all=True,append_images=pages[1:],resolution=100)
+        import img2pdf
+        images=[]
+        for i,file in enumerate(c.files):
+            path=Path(file['path'])
+            with Image.open(path) as source:
+                if source.format not in {'PNG','JPEG','JPEG2000','TIFF'} or getattr(source,'n_frames',1)>1:
+                    normalized=c.work/f'page-{i:04}.png'
+                    ImageOps.exif_transpose(source).save(normalized,format='PNG',icc_profile=source.info.get('icc_profile'))
+                    path=normalized
+            images.append(str(path))
+        out=c.work/'images.pdf'
+        with out.open('wb') as stream:img2pdf.convert(*images,outputstream=stream,rotation=img2pdf.Rotation.ifvalid)
         count=len(pdf_reader(out,'').pages)
-        if count!=len(pages):raise ForgeError('verification_failed','PDF 页数与图片数量不一致。')
-        c.out(out,verification={'pages':count});return
+        if count!=len(images):raise ForgeError('verification_failed','PDF 页数与图片数量不一致。')
+        c.out(out,verification={'pages':count,'engine':'img2pdf','image_recompression':False});return
     if op=='image-rename':
         suffix=Path(c.files[0]['name']).suffix.lower();name=f'{p["prefix"]}-{p["start"]+c.r["seq"]:04}{suffix}'
         out=c.work/name;shutil.copyfile(c.files[0]['path'],out)
         c.out(out,verification={'operation':'rename_copy','content_unchanged':True});return
+    # A CMYK/Lab profile cannot be attached unchanged to RGB pixels: that makes
+    # output colors wrong even when the file opens successfully.
+    color_converted=False
+    if im.mode in {'CMYK','LAB'}:
+        if icc:
+            try:
+                srgb=ImageCms.ImageCmsProfile(ImageCms.createProfile('sRGB'))
+                im=ImageCms.profileToProfile(im,ImageCms.ImageCmsProfile(io.BytesIO(icc)),srgb,outputMode='RGB')
+                icc=srgb.tobytes();color_converted=True
+            except Exception:raise ForgeError('color_profile','图片色彩配置损坏，无法可靠转换颜色。','请在图片编辑器中转换为 sRGB 后重试。')
+        elif im.mode=='LAB':
+            im=ImageCms.profileToProfile(im,ImageCms.createProfile('LAB'),ImageCms.createProfile('sRGB'),outputMode='RGB')
+            icc=ImageCms.ImageCmsProfile(ImageCms.createProfile('sRGB')).tobytes();color_converted=True
+        else:im=im.convert('RGB');color_converted=True
+    if im.mode=='P':im=im.convert('RGBA' if 'transparency' in im.info else 'RGB')
     if op=='image-background':
         from rembg import remove,new_session
         c.progress(15,'加载本地抠图模型')
-        session=new_session('u2net',providers=['CPUExecutionProvider']);im=remove(im,session=session)
+        session=new_session('u2net',providers=['CPUExecutionProvider'])
+        im=remove(im,session=session,alpha_matting=c.p.get('refine_edges',True),alpha_matting_erode_size=5)
     elif op=='image-repair':
         import cv2
         import numpy as np
@@ -445,11 +532,18 @@ def image(c):
     fmt=p.get('format','png');out=c.work/('image.'+fmt)
     if fmt in {'jpeg','bmp'} and im.mode not in {'RGB','L'}:
         base=Image.new('RGB',im.size,'white');base.paste(im,mask=im.getchannel('A') if 'A' in im.getbands() else None);im=base
-    im.save(out,quality=p.get('quality',85),optimize=True)
+    # Pillow's optimized JPEG buffer estimate can be too small for detailed
+    # 4:4:4 images. Standard Huffman tables preserve the same visual quality.
+    options={'quality':p.get('quality',92),'optimize':fmt!='jpeg'}
+    if fmt=='jpeg':options['subsampling']=0
+    if fmt=='webp':options.update(lossless=p.get('lossless',True),method=6)
+    if icc:options['icc_profile']=icc
+    if dpi:options['dpi']=dpi
+    im.save(out,**options)
     with Image.open(out) as check:
         if check.size!=im.size:raise ForgeError('verification_failed','输出图片尺寸不一致。')
         check.verify()
-    c.out(out,verification={'width':im.width,'height':im.height,'format':fmt,'animated_source_frames':c.files[0].get('frames',1),'processed_frame':0})
+    c.out(out,verification={'width':im.width,'height':im.height,'format':fmt,'animated_source_frames':c.files[0].get('frames',1),'processed_frame':0,'quality':p.get('quality',92),'lossless':fmt in {'png','tiff','bmp'} or fmt=='webp' and p.get('lossless',True),'icc_preserved':bool(icc) and not color_converted,'color_converted_to_rgb':color_converted,'engine':'u2net' if op=='image-background' else 'pillow','edge_refined':op=='image-background' and p.get('refine_edges',True)})
 
 
 def execute(request):

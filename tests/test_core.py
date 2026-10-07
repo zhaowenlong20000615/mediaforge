@@ -199,7 +199,7 @@ def test_worker_exclusion_and_timeout_retry(store,samples):
     with pytest.raises(RuntimeError,match='already owns'):second.start()
     second.pool.shutdown()
     # An intentionally tiny execution deadline produces a bounded failure, not a false success.
-    ids=[store.import_file(OWNER,samples/'video.mp4')['id'] for _ in range(20)]
+    ids=[store.import_file(OWNER,samples/('video.mp4' if i%2==0 else 'silent.mp4'))['id'] for i in range(20)]
     t=store.submit(OWNER,'media-merge',ids,{'kind':'video'},timeout=1,retries=1)
     result=wait(store,t['id'],15)
     assert result['status']=='failed' and result['error']['code']=='timeout'

@@ -28,9 +28,12 @@ def probe(path):
     if not exe:
         raise ForgeError('dependency_missing','媒体检查需要 FFprobe。','安装 FFmpeg 后重试。',409)
     try:
-        r=subprocess.run([exe,'-protocol_whitelist','file,pipe','-v','error','-show_entries','format=duration,format_name:stream=index,codec_type,codec_name,width,height,sample_rate,channels:stream_disposition=attached_pic','-of','json',str(path)],capture_output=True,timeout=20)
+        r=subprocess.run([exe,'-protocol_whitelist','file,pipe','-v','error','-show_data_hash','sha256','-show_entries','format=duration,format_name:stream=index,codec_type,codec_name,width,height,sample_rate,channels,avg_frame_rate,pix_fmt,sample_aspect_ratio,color_transfer,color_primaries,color_space,extradata_hash,time_base:stream_disposition=attached_pic:stream_side_data=rotation','-of','json',str(path)],capture_output=True,timeout=20)
         if r.returncode or len(r.stdout)>4*1024**2: raise ValueError()
-        return json.loads(r.stdout)
+        data=json.loads(r.stdout)
+        for stream in data.get('streams',[]):
+            stream['rotation']=next((int(round(float(s['rotation'])))%360 for s in stream.get('side_data_list',[]) if 'rotation' in s),0)
+        return data
     except (ValueError,OSError,subprocess.TimeoutExpired):
         raise ForgeError('invalid_media','无法读取音视频信息。','文件可能损坏，或使用了不支持的格式。')
 
@@ -110,7 +113,7 @@ def inspect(path, name=None):
                     if kind=='audio' and mime=='video/mp4':mime='audio/mp4'
                     data.update(kind=kind,mime=mime,
                                 duration=float(info.get('format',{}).get('duration',0)),
-                                streams=[{k:s[k] for k in ['index','codec_type','codec_name','width','height','sample_rate','channels'] if k in s} for s in streams])
+                                streams=[{k:s[k] for k in ['index','codec_type','codec_name','width','height','sample_rate','channels','avg_frame_rate','pix_fmt','sample_aspect_ratio','color_transfer','color_primaries','color_space','extradata_hash','time_base','rotation'] if k in s} for s in streams])
                 except (ForgeError,ValueError):
                     raise ForgeError('unsupported_file','文件格式不支持或文件已损坏。','请选择有效的媒体、PDF、Word、图片或 UTF-8 字幕文件。')
     if data['kind']=='unknown': raise ForgeError('unsupported_file','无法识别文件内容。','不要仅修改文件扩展名；请重新导出文件。')

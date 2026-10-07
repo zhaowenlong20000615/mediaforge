@@ -8,7 +8,7 @@
 uv sync --frozen --all-extras
 .venv/bin/python -m pytest -q
 uv export --frozen --all-extras --no-emit-project --format requirements-txt --output-file dist/dependencies.txt
-python3 -m pip download --dest dist/wheels --only-binary=:all: --platform manylinux_2_28_x86_64 --platform manylinux_2_17_x86_64 --platform manylinux2014_x86_64 --platform manylinux_2_34_x86_64 --implementation cp --python-version 312 -r dist/dependencies.txt
+python3 -m pip download --dest dist/wheels --only-binary=:all: --platform manylinux_2_28_x86_64 --platform manylinux_2_17_x86_64 --platform manylinux2014_x86_64 --platform manylinux_2_34_x86_64 --platform manylinux_2_27_x86_64 --implementation cp --python-version 312 -r dist/dependencies.txt
 ./deploy/build.sh
 git add -A
 git commit -m 'release: verified MediaForge update'
@@ -51,3 +51,5 @@ DRY_RUN=1 ./deploy/activate.sh
 升级0.1时，旧JSON状态和文件移到legacy目录保留，不把旧“成功”结果迁移为可信结果。新状态数据库不覆盖旧数据。0.2内部schema兼容回滚；未来破坏性迁移必须提供独立备份/恢复流程。
 
 TLS证书由主机已有证书续期机制维护，本项目复用证书路径。发布验收需要检查证书有效期、未授权401、授权主流程、可用依赖、真实业务输出、MCP、CLI及回滚，不仅检查healthz。
+
+0.2.3默认PDF→Word需LibreOffice做渲染核验；可编辑DOCX与PDF排版预览一同返回。模型部署默认small（详见MODELS.md）；已有runtime.env不会被activate静默覆盖，模型切换需要项目内独立备份/校验。升级依赖后将不再属于uv.lock的旧wheel移到dist/previous-wheels再打包，完整性检查会拒绝混入未锁定依赖。

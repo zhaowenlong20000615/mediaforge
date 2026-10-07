@@ -7,7 +7,7 @@
   "pageUrl": "https://107.151.245.166:18081/mediaforge/access/",
   "fileBase": "/mediaforge/access/files/",
   "clientRef": "HEAD",
-  "clientVersion": "0.2.2",
+  "clientVersion": "0.2.3",
   "buildMode": "python",
   "pythonMin": [
     3,
@@ -20,7 +20,8 @@
     "mediaforge",
     "skill",
     "docs/DEPLOYMENT.md",
-    "docs/MODELS.md"
+    "docs/MODELS.md",
+    "docs/THIRD_PARTY.md"
   ],
   "runtime": "Python 3.11–3.14；首次安装依赖需要联网。",
   "scope": "命令行和 AI 工具连接本项目服务；数据和授权仍由原项目管理。",

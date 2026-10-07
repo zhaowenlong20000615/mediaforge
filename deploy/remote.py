@@ -60,7 +60,7 @@ def configure():
     data.mkdir(exist_ok=True,mode=0o700);os.chown(data,user.pw_uid,user.pw_gid);data.chmod(0o700)
     (BASE/'models').mkdir(exist_ok=True)
     if not (BASE/'runtime.env').exists():
-        (BASE/'runtime.env').write_text('MEDIAFORGE_DATA=/opt/mediaforge/data\nMEDIAFORGE_UNIX_SOCKET=/run/mediaforge/api.sock\nMEDIAFORGE_PORT=18081\nMEDIAFORGE_SECURE_COOKIE=1\nMEDIAFORGE_COOKIE_PATH=/mediaforge/\nMEDIAFORGE_PUBLIC_URL=https://107.151.245.166:18081\nMEDIAFORGE_RELEASE_FILE=/opt/mediaforge/current/release.json\nMEDIAFORGE_ASR_MODEL=/opt/mediaforge/models/faster-whisper-tiny\nU2NET_HOME=/opt/mediaforge/models/u2net\nMEDIAFORGE_WORKER_MEMORY=6442450944\nOMP_NUM_THREADS=2\nOPENBLAS_NUM_THREADS=2\nNUMBA_CACHE_DIR=/opt/mediaforge/data/numba-cache\n')
+        (BASE/'runtime.env').write_text('MEDIAFORGE_DATA=/opt/mediaforge/data\nMEDIAFORGE_UNIX_SOCKET=/run/mediaforge/api.sock\nMEDIAFORGE_PORT=18081\nMEDIAFORGE_SECURE_COOKIE=1\nMEDIAFORGE_COOKIE_PATH=/mediaforge/\nMEDIAFORGE_PUBLIC_URL=https://107.151.245.166:18081\nMEDIAFORGE_RELEASE_FILE=/opt/mediaforge/current/release.json\nMEDIAFORGE_ASR_MODEL=/opt/mediaforge/models/faster-whisper-small\nU2NET_HOME=/opt/mediaforge/models/u2net\nMEDIAFORGE_WORKER_MEMORY=6442450944\nOMP_NUM_THREADS=2\nOPENBLAS_NUM_THREADS=2\nNUMBA_CACHE_DIR=/opt/mediaforge/data/numba-cache\n')
         (BASE/'runtime.env').chmod(0o600)
     unit='''[Unit]
 Description=MediaForge authenticated media workbench

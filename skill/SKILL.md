@@ -19,7 +19,7 @@ description: 使用 MediaForge 对授权文件进行音视频、字幕、PDF、W
 目标：批量将用户选择的图片缩到1600px，检查结果后导出。
 
 - `upload_file({"path":"/authorized/inputs/photo.png"})` → 得到 `file_...`。
-- `create_processing_task({"operation":"image-process","file_ids":["file_..."],"params":{"width":1600,"format":"webp","quality":85},"idempotency_key":"user-request-unique-key"})`。
+- `create_processing_task({"operation":"image-process","file_ids":["file_..."],"params":{"width":1600,"format":"webp","lossless":true},"idempotency_key":"user-request-unique-key"})`。
 - `get_task_status({"task_id":"task_..."})` 查询直到终态；accepted和running不表示处理完成。
 - `get_task_details` 检查逐项状态、输出尺寸/格式/大小/哈希/verification。
 - `preview_result` 查看结果；需要人工确认视觉、语音或文字质量。
@@ -47,7 +47,7 @@ mediaforge files download FILE_ID --output /authorized/outputs/result.webp --jso
 
 ## 限制
 
-PDF→Word为文字重排；扫描件先OCR。ASS样式无法完整保留到SRT/VTT。图片字幕轨不支持直接文本导出。动画图片处理首帧。OCR/ASR与复杂表格必须检查内容，不能宣布“质量已审核”。水印/修复要求素材编辑权；不处理DRM、平台版权标识或保护绕过。
+PDF→Word默认layout，保留图片/有框表格并附document-preview.pdf；下载前查看实际排版，text模式仅文字重排。扫描件先OCR。ASS样式无法完整保留到SRT/VTT。图片字幕轨不支持直接文本导出。动画图片处理首帧。OCR/ASR与复杂表格必须检查内容，不能宣布“质量已审核”。水印/修复要求素材编辑权；不处理DRM、平台版权标识或保护绕过。
 
 ## 安装/加载
 
@@ -56,3 +56,12 @@ PDF→Word为文字重排；扫描件先OCR。ASS样式无法完整保留到SRT/
 ## 0.2.2 注意事项
 
 诊断中的broken表示程序存在但启动失败；不要继续提交依赖它的任务。PDF OCR使用OCRmyPDF补充文字层，原有文本页保留。下载工具返回实际核验过的SHA-256；校验不一致会报download_integrity。工作区清理按关联任务保留数据，空间释放数以清理预览为准。
+
+## 0.2.3 产物质量判定
+
+- 视频合并检查分辨率/帧率与首段一致；stream_copy=true表示没有重新编码。不同规格会按首段高质量重编码，不默认降到720p。
+- 图片转PDF的image_recompression=false表示无损嵌入；WebP默认lossless=true，修改quality不会改变无损模式，需要小文件时显式lossless=false。
+- PDF→Word返回DOCX和实际排版PDF；rendered_text_coverage与rendered_numbers_preserved来自渲染后核对。document_layout_loss表示可见文字或数字有损失，不能交付该转换结果。
+- Word HTML/Markdown保留正文语义与图片；quality_notes有样式/页眉页脚限制时必须告知使用者，完整外观导出PDF。
+- 字幕默认28格行宽（中文约两格）、每条至多两行和六秒；核对专名、时间和数字，不能把模型概率当准确率。OCR默认chi_sim+eng，缺语言包时按doctor选择已安装语言。
+- hdr_requires_conversion明确提示当前不支持HDR重编码；不要绕过后宣称色彩正确。

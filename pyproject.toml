@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mediaforge"
-version = "0.2.2"
+version = "0.2.3"
 description = "Authenticated local and self-hosted media workbench"
 requires-python = ">=3.11,<3.15"
 dependencies = [
@@ -23,6 +23,11 @@ dependencies = [
     "mcp>=1.12,<2",
     "ocrmypdf>=17,<18",
     "filetype>=1.2,<2",
+    "mammoth>=1.9,<2",
+    "markdownify>=1.1,<2",
+    "bleach>=6.2,<7",
+    "img2pdf>=0.6,<1",
+    "pdf2docx==0.5.13",
 ]
 
 [project.optional-dependencies]

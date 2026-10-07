@@ -1,4 +1,4 @@
-# MediaForge 0.2.2
+# MediaForge 0.2.3
 
 媒体与文档工作台：选择文件与工具、设置参数、观察任务、核对结果，再下载或继续处理。Web、CLI 和标准 MCP 使用同一个有认证的 API；服务端只接受工作区内的文件 ID。
 
@@ -24,9 +24,9 @@ sudo apt-get install ffmpeg poppler-utils tesseract-ocr tesseract-ocr-chi-sim li
 
 - 音视频：转码、音轨提取/转换、裁剪、合并、压缩、抽帧、音量标准化、频谱降噪。
 - 字幕/语音：SRT/VTT/ASS 转换、文本字幕轨提取、预配置 Faster Whisper 模型转写为 TXT/SRT/VTT。
-- PDF：拆分、合并、旋转、无损压缩、渲染图片、文本提取、文本重排为 Word、OCRmyPDF 补充文字层/可搜索 PDF、表格 CSV/JSON。
+- PDF：拆分、合并、旋转、无损压缩、渲染图片、文本提取、保留布局/图片/有框表格为 Word（附 PDF 预览）、OCRmyPDF 补充文字层/可搜索 PDF、表格 CSV/JSON。
 - Word：PDF、HTML、Markdown、文本导出，段落/表格/页眉页脚文字替换。
-- 图片：格式/质量/尺寸、裁剪、OCR、合成 PDF、重命名、U²-Net 去背景、遮罩修复、文字水印。
+- 图片：格式/质量/尺寸、裁剪、OCR、合成 PDF、重命名、U²-Net 去背景与边缘细化、遮罩修复、文字水印。
 - 批量：统一参数多文件、参数模板、分组、逐项部分成功、失败项恢复、可取消进程、ZIP 打包、分页过滤。
 
 准确参数以工具页面、`tools` JSON Schema 为准。每个操作有输入类型、参数范围和依赖状态；缺依赖或无有效结果会失败，不会复制文件假装完成。仅重命名操作有意保留原始字节。
@@ -84,7 +84,7 @@ export MEDIAFORGE_TOKEN_FILE=/secure/path/workspace.token
 
 `MEDIAFORGE_ASR_MODEL` 指向预下载 CTranslate2 模型目录；`U2NET_HOME` 指向含 `u2net.onnx` 的目录。运行任务时不自动下载。诊断页明确显示模型、CPU/CUDA 与 OCR 语言。安装方式、来源和限制见 [docs/MODELS.md](docs/MODELS.md)。
 
-PDF→Word 是文本重排，不能保证复杂版式复刻；ASS→SRT/VTT 丢弃样式；动画图片目前处理首帧；图片字幕轨不能直接导出为文本；压缩不保证已优化文件继续变小；OCR/ASR、复杂表格和修复结果需要人工复核。水印与修复只针对拥有编辑权的素材，不提供 DRM/版权保护绕过功能。
+PDF→Word 默认重建可编辑版式、附渲染预览；复杂多栏/公式/无框表格仍需核对，text 模式仅文字重排；ASS→SRT/VTT 丢弃样式；动画图片目前处理首帧；图片字幕轨不能直接导出为文本；压缩不保证已优化文件继续变小；OCR/ASR、复杂表格和修复结果需要人工复核。水印与修复只针对拥有编辑权的素材，不提供 DRM/版权保护绕过功能。
 
 ## 验证与发布
 
@@ -111,3 +111,11 @@ PDF OCR 改用 OCRmyPDF；已有文本页保留，扫描页增加文字层。它
 前端端到端测试采用Playwright，axe-core检查可访问性。运行 `npm ci && npm run test:ui` 前启动隔离测试服务并配置 `MF_BROWSER_URL`、`MF_BROWSER_TOKEN_FILE`；仅使用测试工作区。详见 `reports/audit-2026-10-06/verification.md`。
 
 已有多个FFmpeg安装时，诊断与执行共用已核验的程序路径；macOS默认安装损坏时，会尝试已安装的Homebrew完整版本。启动检查最多缓存30秒。不会改写系统PATH、安装系统软件或替换其他项目的依赖。
+
+## 0.2.3 输出质量
+
+兼容视频合并直接保留原始码流；其他视频沿用首段分辨率/帧率，以 CRF 18 转码。图片转 PDF 使用 img2pdf 无损嵌入，JPEG 默认质量92、4:4:4，WebP 默认无损；保留有效色彩配置并正确转换 CMYK/Lab。HDR 重编码当前会明确拒绝，避免静默输出错误色彩。
+
+Word 的 HTML/Markdown 正文导出使用 Mammoth、markdownify，保留标题、列表、表格和内嵌图片；样式与页眉页脚限制显示在结果中，完整外观使用 PDF。PDF→Word 使用固定版本 pdf2docx，并以 LibreOffice 渲染后复查可见文字和数字；发现明显丢字/漏数会失败，成功结果附排版预览。
+
+服务器语音默认使用 small 模型，逐词对齐并限制字幕两行/六秒；OCR 默认中英文；音量标准化采用两遍测量。模型选择以实测为准：BiRefNet-lite 在验收人像中漏掉头盔，故保留 U²-Net 并使用边缘细化。质量证据见 [质量验收报告](reports/quality-2026-10-07/verification.md)，组件来源与许可见 [第三方说明](docs/THIRD_PARTY.md)。

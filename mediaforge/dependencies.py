@@ -82,7 +82,7 @@ def checks():
         hint=('程序已找到但无法正常启动，请修复动态库或重新安装后重试。 ' if status=='broken' else '')+install_hint(id)
         result.append({'id':id,'name':command,'available':available,'status':status,
                        'purpose':purpose,'install':hint if not available else '', 'details':{'startup_verified':available,'path':chosen}})
-    for id, module in [('pillow','PIL'),('pypdf','pypdf'),('docx','docx'),('pdfplumber','pdfplumber'),('pysubs2','pysubs2'),('opencv','cv2'),('ocrmypdf','ocrmypdf')]:
+    for id, module in [('pillow','PIL'),('pypdf','pypdf'),('docx','docx'),('pdfplumber','pdfplumber'),('pysubs2','pysubs2'),('opencv','cv2'),('ocrmypdf','ocrmypdf'),('mammoth','mammoth'),('img2pdf','img2pdf'),('pdf2docx','pdf2docx')]:
         available = installed(module)
         result.append({'id':id,'name':id,'available':available,'status':'available' if available else 'missing','purpose':'文件处理',
                        'install':'uv sync --extra repair' if id == 'opencv' else 'uv sync --frozen', 'details':{}})
@@ -97,11 +97,12 @@ def checks():
     available = installed('faster_whisper') and has_model
     result.append({'id':'asr-model','name':'Faster Whisper','available':available,'status':'available' if available else 'missing',
                    'purpose':'离线语音转写','install':'uv sync --extra asr；配置 MEDIAFORGE_ASR_MODEL 为已下载的 CTranslate2 模型目录。',
-                   'details':{'library':installed('faster_whisper'),'model_configured':has_model,'cpu':True,'cuda_devices':gpu}})
+                   'details':{'library':installed('faster_whisper'),'model_configured':has_model,'cpu':True,'cuda_devices':gpu,'model':model.name if has_model else None}})
     model_dir = Path(os.getenv('U2NET_HOME','/nonexistent'))
-    available = installed('rembg') and (model_dir/'u2net.onnx').is_file()
-    result.append({'id':'background-model','name':'U²-Net','available':available,'status':'available' if available else 'missing',
-                   'purpose':'离线去背景','install':'uv sync --extra background；在 U2NET_HOME 配置 u2net.onnx。','details':{'model_configured':(model_dir/'u2net.onnx').is_file()}})
+    bg_name='u2net'
+    available = installed('rembg') and (model_dir/(bg_name+'.onnx')).is_file()
+    result.append({'id':'background-model','name':bg_name,'available':available,'status':'available' if available else 'missing',
+                   'purpose':'离线去背景','install':'uv sync --extra background；在 U2NET_HOME 配置 u2net.onnx。','details':{'model_configured':(model_dir/(bg_name+'.onnx')).is_file(),'model':bg_name}})
     available=bool(font_path())
     result.append({'id':'font','name':'水印字体','available':available,'status':'available' if available else 'missing','purpose':'文字水印','install':'配置 MEDIAFORGE_FONT，或安装 Noto CJK 字体。','details':{}})
     return result
@@ -111,7 +112,9 @@ def required(tool, params=None, input_kinds=None):
     deps = list(tool['dependencies'])
     if 'office-dynamic' in deps:
         deps.remove('office-dynamic')
-        deps.append('libreoffice' if (params or {}).get('format','pdf')=='pdf' or 'doc' in (input_kinds or []) else 'docx')
+        deps.extend(['docx','mammoth'])
+        if (params or {}).get('format','pdf')=='pdf' or 'doc' in (input_kinds or []):deps.append('libreoffice')
+    if tool['id']=='pdf-word' and (params or {}).get('mode','layout')=='layout':deps.append('libreoffice')
     if 'ffmpeg' in deps: deps.append('ffprobe')
     return deps
 
