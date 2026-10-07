@@ -1,12 +1,13 @@
 {
-  "client_version": "0.2.5",
-  "client_commit": "8120bd517ff797f2041659b0f54b292e20e8eceb",
+  "client_version": "0.2.6",
+  "client_commit": "f159f8fbb4c8a6767622d8e9b3bedf326dedad1b",
   "authenticated_download": 200,
   "anonymous_download": 401,
-  "zip_sha256": "9d934db5aecbd9cd55411eba6d975b0aad077512fbb20b66476612a79f8ce9af",
+  "zip_sha256": "43427ca99f5eef9b7e893e7c5068f0ec0ef1da4ceffd9506bd32005c8d82d944",
   "zip_crc_ok": true,
   "includes_third_party_notices": true,
-  "installed_version": "0.2.5",
+  "installed_version": "0.2.6",
   "installed_package_inside_download": true,
-  "cli_help_ok": true
+  "cli_help_ok": true,
+  "real_cli_mcp_workflows_passed": true
 }

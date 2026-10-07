@@ -1,8 +1,8 @@
 {
   "scope": "Same generated fixtures; metrics describe these fixtures, not universal model accuracy.",
   "source_version": "0.2.2",
-  "target_version": "0.2.3",
-  "target_location": "after-server",
+  "target_version": "0.2.6",
+  "target_location": "after-server-026",
   "jpeg": {
     "before_ssim": 0.839369,
     "after_ssim": 0.990526
@@ -91,9 +91,9 @@
   "ocr": {
     "expected_chinese": "媒体工具箱质量验收合同编号应付金额元交付要求画面清晰文字完整",
     "before": "PRL A A ea\nia» MF-2026-1007\n\nMHS : 1,280.50\n\nWord / PDF / OCR - Quality 12345\n",
-    "after": "媒体工具箱质量验收\n合同编号 : MF-2026-1007\n\n应付金额 : 1,280.50 元\n\nWord / PDF / OCR - Quality 12345\n",
+    "after": "媒体工具箱质量验收\n\n合同编号 ; MF-2026-1007\n\n应付金额 ; 1,280.50 元\n\n交付要求 ; 画面清晰，文字完整 。\nWord / PDF / OCR - Quality 12345\n",
     "before_chinese_character_error_rate": 1.0,
-    "after_chinese_character_error_rate": 0.4
+    "after_chinese_character_error_rate": 0.0
   },
   "passed": true
 }

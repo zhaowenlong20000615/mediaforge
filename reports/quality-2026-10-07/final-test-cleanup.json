@@ -1,0 +1,28 @@
+{
+  "quality": {
+    "dry_run": false,
+    "files": 0,
+    "bytes": 0,
+    "tasks": 0
+  },
+  "browser": {
+    "dry_run": false,
+    "files": 36,
+    "bytes": 183825,
+    "tasks": 18
+  },
+  "interrupted_smoke_workspaces": {
+    "workspace_70015927e2274155833185f50910b443": {
+      "dry_run": false,
+      "files": 48,
+      "bytes": 1538803,
+      "tasks": 30
+    },
+    "workspace_f45f9cee75404a94b09b66d014523033": {
+      "dry_run": false,
+      "files": 30,
+      "bytes": 1373870,
+      "tasks": 19
+    }
+  }
+}

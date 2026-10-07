@@ -1,0 +1,14 @@
+{
+  "failure": "Injected SQLITE_FULL in an isolated data directory; real image processing after recovery",
+  "thread_survived": true,
+  "readiness_degraded": true,
+  "error_code": "storage_full",
+  "task_retained": true,
+  "final_status": "succeeded",
+  "readiness_restored": true,
+  "actual_size": [
+    48,
+    30
+  ],
+  "passed": true
+}

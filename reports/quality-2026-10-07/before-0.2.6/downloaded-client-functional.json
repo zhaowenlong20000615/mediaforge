@@ -1,0 +1,22 @@
+{
+  "server": "https://107.151.245.166:18081/mediaforge",
+  "checks": {
+    "secure_cookie": true,
+    "cookie_me": true,
+    "logout_revoked": true
+  },
+  "version": {
+    "name": "mediaforge",
+    "version": "0.2.5",
+    "git_commit": "8120bd517ff797f2041659b0f54b292e20e8eceb",
+    "artifact_sha256": "0b2afbb6aaff580bd7027a3cd2044b411adc617fd2d53703fdb9504df2efa81d",
+    "built_at": "2026-10-07T10:04:13Z"
+  },
+  "cleanup": {
+    "dry_run": false,
+    "files": 0,
+    "bytes": 0,
+    "tasks": 0
+  },
+  "passed": false
+}

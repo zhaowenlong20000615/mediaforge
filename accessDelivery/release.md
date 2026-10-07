@@ -15,3 +15,5 @@ Nginx 入口继续调用本项目原认证。发布包校验失败、元数据�
 原生归途服务需先有 0.1.2 的管理员鉴权下载路由；组件发布本身不更改主程序。Sub2API 的隔离实例使用 --fork，部署地址及权限与正式实例分开。
 
 2026-10-07：0.2.2 接入包已从提交0c00918生成并发布，认证下载、ZIP/SHA校验、独立安装与远程CLI/MCP实际处理通过。当前证据见 `reports/audit-2026-10-06/delivery-checks.json` 与 `downloaded-client-functional.json`。
+
+2026-10-07：0.2.6客户端从f159f8f生成并发布，与应用同版本/同代码提交；认证下载、ZIP/SHA、独立安装及真实CLI/MCP任务与下载全部通过。证据见reports/quality-2026-10-07/delivery-checks.json及downloaded-client-functional.json。
