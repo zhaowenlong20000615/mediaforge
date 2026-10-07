@@ -1,5 +1,6 @@
 """The same operation schema drives UI forms, API validation, CLI and MCP."""
 from copy import deepcopy
+import json
 from jsonschema import Draft202012Validator
 from .errors import ForgeError
 
@@ -73,7 +74,7 @@ OPS = [
     op('pdf-images','PDF 转图片','PDF / Word',['pdf'],['pypdf','poppler'],'将选定页面渲染成 PNG。',{'pages':PAGES,'dpi':field('integer','渲染 DPI',120,minimum=72,maximum=300),'password':PASSWORD}),
     op('pdf-text','PDF 提取文本','PDF / Word',['pdf'],['pypdf'],'按页提取可选中的文字。',{'pages':PAGES,'password':PASSWORD},note='扫描 PDF 没有文本层时，请使用 PDF OCR。'),
     op('pdf-word','PDF 转 Word','PDF / Word',['pdf'],['pypdf','docx'],'提取文字并按页重排为可编辑 DOCX。',{'password':PASSWORD},note='文字重排模式，不保留原页的复杂布局；扫描件应先 OCR。'),
-    op('pdf-ocr','PDF OCR','PDF / Word',['pdf'],['pypdf','poppler','tesseract'],'逐页识别文字并生成文本和可搜索 PDF。',{'pages':PAGES,'language':LANG,'password':PASSWORD}),
+    op('pdf-ocr','PDF OCR','PDF / Word',['pdf'],['pypdf','ocrmypdf','tesseract'],'保留已有文本与页面内容，为扫描页补 OCR 文字层。',{'pages':PAGES,'language':LANG,'password':PASSWORD}),
     op('pdf-tables','PDF 表格提取','PDF / Word',['pdf'],['pypdf','pdfplumber'],'提取可检测的表格为 CSV 和 JSON。',{'password':PASSWORD},note='扫描表格与跨页复杂布局可能无法可靠还原；请检查行列与合并单元格。'),
     op('office-convert','Word 转换','PDF / Word',['docx','doc'],['office-dynamic'],'Word 转 PDF、HTML、Markdown 或文本。',{
         'format':choice('输出格式',['pdf','html','md','txt'],'pdf')},note='旧版 .doc 及 PDF 导出需要 LibreOffice；HTML/Markdown 是文字与表格重排，不保留嵌入图片及复杂版式。'),
@@ -108,8 +109,14 @@ CATALOG = {item['id']:item for item in OPS}
 
 
 def validate(operation, params):
+    if not isinstance(operation,str):raise ForgeError('invalid_tool','工具名称必须是文字。')
     if operation not in CATALOG:
         raise ForgeError('unknown_tool','没有这个处理工具。','刷新工具列表后重试。',404)
+    if not isinstance(params,dict):
+        raise ForgeError('invalid_parameters','参数必须是 JSON 对象。','按工具表单填写参数。')
+    try:json.dumps(params,allow_nan=False)
+    except (ValueError,TypeError):
+        raise ForgeError('invalid_parameters','参数包含无效的数字或数据类型。','只使用有限数值和标准 JSON 值。')
     tool = CATALOG[operation]
     values = deepcopy(params)
     for key, spec in tool['schema']['properties'].items():

@@ -1,0 +1,48 @@
+{
+  "review_date": "2026-10-06",
+  "timezone": "America/Los_Angeles",
+  "baseline_commit": "a73c8830c19f275ce69f4870f8436df1df93f173",
+  "python_regression": {
+    "passed": 66,
+    "skipped": 2,
+    "skip_reason": "Local ASR and background model weights are absent; server models will be verified over real HTTPS",
+    "raw_tail": "...............................................................ss...     [100%]\n=========================== short test summary info ============================\nSKIPPED [1] ../../mediaforge/tests/test_optional.py:28: Explicit local ASR model and synthetic speech fixture not configured\nSKIPPED [1] ../../mediaforge/tests/test_optional.py:36: Explicit background model not configured\n66 passed, 2 skipped, 2 warnings in 33.77s\n"
+  },
+  "browser_regression": {
+    "passed": 7,
+    "engine": "Chromium / Playwright",
+    "checks": [
+      "authenticated upload and resize",
+      "download SHA-256",
+      "image/PDF preview",
+      "invalid page feedback",
+      "Chinese status search",
+      "parallel upload order",
+      "stale navigation response",
+      "mobile navigation and overflow",
+      "offline recovery",
+      "logout aborts pending uploads",
+      "changed advanced params create new idempotency key",
+      "axe WCAG A/AA serious/critical findings: none"
+    ]
+  },
+  "new_backend_regressions": {
+    "passed": 13,
+    "first_reproduced": 9,
+    "fixes": [
+      "linked cleanup graph",
+      "recent task retention",
+      "queue quota on resume",
+      "Chinese and literal search",
+      "UTF8 chunk boundaries",
+      "download temporary file ownership and integrity",
+      "CLI MCP explicit server config",
+      "structured invalid-parameter responses",
+      "actual binary startup diagnosis",
+      "OCRmyPDF mixed text/scan preservation",
+      "actual media MIME",
+      "crash recovery of cleanup",
+      "bounded PDF page range"
+    ]
+  }
+}

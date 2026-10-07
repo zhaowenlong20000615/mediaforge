@@ -11,6 +11,7 @@ import tarfile
 import time
 import tomllib
 import urllib.parse
+import zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
 HOST='107.151.245.166'
@@ -30,6 +31,15 @@ def package():
     version=json.loads(subprocess.check_output([str(ROOT/'.venv/bin/python'),'-c','import json,mediaforge;print(json.dumps(mediaforge.__version__))'],cwd=ROOT,text=True))
     own=list((ROOT/'dist').glob('mediaforge-'+version+'-*.whl'))
     if not own or not list((ROOT/'dist/wheels').glob('*.whl')):raise SystemExit('Build project wheel and pinned Linux dependencies first.')
+    if len(own)!=1:raise SystemExit('Expected exactly one project wheel for the release version.')
+    # A stale wheel must never be labeled as a newer source commit.
+    with zipfile.ZipFile(own[0]) as wheel:
+        for source in subprocess.check_output(['git','ls-files','-z','mediaforge'],cwd=ROOT).decode().strip('\0').split('\0'):
+            path=ROOT/source
+            if path.is_file() and source.endswith(('.py','.js','.css','.html')):
+                if source not in wheel.namelist() or wheel.read(source)!=path.read_bytes():
+                    raise SystemExit('Project wheel differs from committed source; rebuild: '+source)
+
     # Refuse incomplete or changed wheelhouses before spending time uploading.
     locked = {}
     for dependency in tomllib.loads((ROOT/'uv.lock').read_text())['package']:

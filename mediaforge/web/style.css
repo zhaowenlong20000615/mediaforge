@@ -3,3 +3,9 @@
 .preview,#main{scroll-margin-top:100px}@media(max-width:800px){.preview,#main{scroll-margin-top:140px}}
 
 .page-head .button-link{flex-shrink:0;white-space:nowrap}@media(max-width:800px){.page-head .button-link{min-width:90px}}
+/* Reviewed at desktop and 390px with axe-core. */
+:root{--muted:#525d59}
+.sidebar-note{color:#525d59}
+.file-name,.task-title,details.item summary>span,.page-head h1,.preview h2{overflow-wrap:anywhere;min-width:0}
+button.small,.file-actions button{min-height:44px}
+@media(max-width:430px){.page-head{flex-wrap:wrap}.page-head .button-link{min-width:0}.header-right{min-width:0}.connection{overflow-wrap:anywhere}}

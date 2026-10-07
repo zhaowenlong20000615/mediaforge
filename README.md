@@ -1,4 +1,4 @@
-# MediaForge 0.2
+# MediaForge 0.2.2
 
 媒体与文档工作台：选择文件与工具、设置参数、观察任务、核对结果，再下载或继续处理。Web、CLI 和标准 MCP 使用同一个有认证的 API；服务端只接受工作区内的文件 ID。
 
@@ -24,7 +24,7 @@ sudo apt-get install ffmpeg poppler-utils tesseract-ocr tesseract-ocr-chi-sim li
 
 - 音视频：转码、音轨提取/转换、裁剪、合并、压缩、抽帧、音量标准化、频谱降噪。
 - 字幕/语音：SRT/VTT/ASS 转换、文本字幕轨提取、预配置 Faster Whisper 模型转写为 TXT/SRT/VTT。
-- PDF：拆分、合并、旋转、无损压缩、渲染图片、文本提取、文本重排为 Word、OCR/可搜索 PDF、表格 CSV/JSON。
+- PDF：拆分、合并、旋转、无损压缩、渲染图片、文本提取、文本重排为 Word、OCRmyPDF 补充文字层/可搜索 PDF、表格 CSV/JSON。
 - Word：PDF、HTML、Markdown、文本导出，段落/表格/页眉页脚文字替换。
 - 图片：格式/质量/尺寸、裁剪、OCR、合成 PDF、重命名、U²-Net 去背景、遮罩修复、文字水印。
 - 批量：统一参数多文件、参数模板、分组、逐项部分成功、失败项恢复、可取消进程、ZIP 打包、分页过滤。
@@ -101,3 +101,13 @@ MEDIAFORGE_ASR_MODEL=/path/model U2NET_HOME=/path/u2net MEDIAFORGE_SPEECH_FIXTUR
 ## 项目下载与 AI 接入
 
 本项目自己的中文下载、安装和 CLI／MCP／技能说明：https://107.151.245.166:18081/mediaforge/access/ 。接入包固定到已核对的客户端提交，不带业务凭证；下载沿用原项目身份，不依赖私有 GitHub 访问。运行位置：命令行和 AI 工具连接本项目服务；数据和授权仍由原项目管理。 Windows 本次未实机验证。构建：python3 accessDelivery/build.py。
+
+## 0.2.2 运行与验证说明
+
+处理仍在当前连接的服务中完成。诊断不再仅检查程序路径：FFmpeg、FFprobe、Poppler、OCR 和 LibreOffice 必须能完成启动自检，缺动态库等情况显示“启动失败”。修复后最多30秒更新缓存。工作区清理会一起保护仍被任务引用的输入与结果，避免“继续处理”链路被拆断。
+
+PDF OCR 改用 OCRmyPDF；已有文本页保留，扫描页增加文字层。它不承诺复杂版式转Word或任意OCR质量。CLI下载校验服务端记录的大小与SHA-256，再原子发布文件；校验失败不覆盖已有文件。
+
+前端端到端测试采用Playwright，axe-core检查可访问性。运行 `npm ci && npm run test:ui` 前启动隔离测试服务并配置 `MF_BROWSER_URL`、`MF_BROWSER_TOKEN_FILE`；仅使用测试工作区。详见 `reports/audit-2026-10-06/verification.md`。
+
+已有多个FFmpeg安装时，诊断会检查当前PATH选择的程序；例如macOS可在启动命令前使用 `PATH=/opt/homebrew/opt/ffmpeg-full/bin:$PATH` 选择已安装且可运行的完整版本。不会自动改写系统PATH或替换其他项目的依赖。

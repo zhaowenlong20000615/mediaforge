@@ -3,14 +3,16 @@ from pathlib import Path
 from functools import lru_cache
 import os
 from mcp.server.fastmcp import FastMCP
-from .client import Client
+from .client import Client,resource_id
 from .errors import ForgeError
 
 mcp=FastMCP('MediaForge',instructions='先发现工具与检查依赖；只处理用户授权的文件。提交后查询任务，核实实际输出，内容质量仍需人工确认。')
 
 
 @lru_cache(maxsize=1)
-def client():return Client()
+def client():return Client(*_connection)
+
+_connection=(None,None)
 
 
 def scoped_path(value,output=False):
@@ -52,20 +54,20 @@ def create_processing_task(operation: str, file_ids: list[str], params: dict,
 @mcp.tool()
 def get_task_status(task_id: str) -> dict:
     """简明查询任务状态、阶段、进度、逐项统计和错误；终态并不代替内容质量确认。"""
-    task=client().request('GET','api/tasks/'+task_id)
+    task=client().request('GET','api/tasks/'+resource_id(task_id,'task'))
     return {k:task[k] for k in ['id','tool','status','stage','progress','counts','output_ids','error','cancel_requested']}
 
 
 @mcp.tool()
 def get_task_details(task_id: str) -> dict:
     """按需读取逐项状态、输入元数据和输出校验信息，不返回服务器文件路径或密码。"""
-    return client().request('GET','api/tasks/'+task_id)
+    return client().request('GET','api/tasks/'+resource_id(task_id,'task'))
 
 
 @mcp.tool()
 def get_task_logs(task_id: str) -> dict:
     """单独获取脱敏阶段日志，用于失败排障。"""
-    return client().request('GET','api/tasks/'+task_id+'/logs')
+    return client().request('GET','api/tasks/'+resource_id(task_id,'task')+'/logs')
 
 
 @mcp.tool()
@@ -77,21 +79,21 @@ def list_tasks(status: str = '', search: str = '', limit: int = 20, offset: int 
 @mcp.tool()
 def cancel_task(task_id: str) -> dict:
     """请求停止工作进程；继续查询直到 cancelled 后才算取消完成。"""
-    task=client().request('POST','api/tasks/'+task_id+'/cancel')
+    task=client().request('POST','api/tasks/'+resource_id(task_id,'task')+'/cancel')
     return {'id':task['id'],'status':task['status'],'cancel_requested':task['cancel_requested']}
 
 
 @mcp.tool()
 def resume_task(task_id: str) -> dict:
     """恢复失败、部分成功、已取消或重启中断任务；保留已成功项目。"""
-    task=client().request('POST','api/tasks/'+task_id+'/resume')
+    task=client().request('POST','api/tasks/'+resource_id(task_id,'task')+'/resume')
     return {'id':task['id'],'status':task['status'],'counts':task['counts']}
 
 
 @mcp.tool()
 def preview_result(file_id: str) -> dict:
     """获取当前工作区结果的预览信息；文本预览有长度上限。"""
-    c=client();result=c.request('GET','api/files/'+file_id+'/preview')
+    c=client();result=c.request('GET','api/files/'+resource_id(file_id,'file')+'/preview')
     result['download_url']=c.base+'/api/files/'+file_id+'/content'
     result['authorization_required']=True
     return result
@@ -109,5 +111,8 @@ def export_results(task_ids: list[str], idempotency_key: str) -> dict:
     return client().request('POST','api/exports',json={'task_ids':task_ids,'idempotency_key':idempotency_key})
 
 
-def main():mcp.run(transport='stdio')
+def main(server=None,token_file=None):
+    global _connection
+    _connection=(server,token_file);client.cache_clear()
+    mcp.run(transport='stdio')
 if __name__=='__main__':main()

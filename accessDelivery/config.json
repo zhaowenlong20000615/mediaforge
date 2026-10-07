@@ -7,7 +7,7 @@
   "pageUrl": "https://107.151.245.166:18081/mediaforge/access/",
   "fileBase": "/mediaforge/access/files/",
   "clientRef": "HEAD",
-  "clientVersion": "0.2.1",
+  "clientVersion": "0.2.2",
   "buildMode": "python",
   "pythonMin": [
     3,

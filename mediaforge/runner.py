@@ -199,7 +199,7 @@ def page_indices(value,total):
         for block in value.replace(' ','').split(','):
             if '-' in block:
                 start,end=map(int,block.split('-'))
-                if start>end:raise ValueError()
+                if not 1<=start<=end<=total:raise ValueError()
                 result.extend(range(start-1,end))
             else:result.append(int(block)-1)
         if not result or min(result)<0 or max(result)>=total:raise ValueError()
@@ -260,25 +260,35 @@ def pdf(c):
             out=c.work/'document.docx';doc.save(out)
         c.out(out,verification={'source_pages':len(texts),'mode':'text_reflow'})
     elif op in {'pdf-images','pdf-ocr'}:
-        # Write decrypted bytes privately; never pass a password on a process command line.
+        # Decrypt into a private job file; never put passwords on command lines.
         w=PdfWriter()
         for i in pages:w.add_page(reader.pages[i])
         decrypted=c.work/'private-input.pdf';write_pdf(w,decrypted)
-        texts=[];searchable=PdfWriter()
-        for j,i in enumerate(pages):
-            prefix=c.work/f'page-{i+1:04}';dpi=c.p.get('dpi',150)
-            c.run([binary('poppler'),'-f',str(j+1),'-l',str(j+1),'-singlefile','-r',str(dpi),'-png',decrypted,prefix])
-            image=prefix.with_suffix('.png')
-            if op=='pdf-images':c.out(image,verification={'source_page':i+1,'dpi':dpi})
-            else:
-                outbase=c.work/f'ocr-{i+1:04}'
-                texts.append(ocr(c,image,outbase,True))
-                for page in pdf_reader(outbase.with_suffix('.pdf'),'').pages:searchable.add_page(page)
-            c.progress(10+(j+1)/len(pages)*82,'逐页渲染与识别' if op=='pdf-ocr' else '渲染页面')
         if op=='pdf-ocr':
-            if not any(texts):raise ForgeError('no_text','没有识别出文字。','检查扫描清晰度和 OCR 语言设置。')
+            import ocrmypdf
+            language=c.p.get('language','eng')
+            if not set(language.split('+'))<=set(ocr_languages()):
+                raise ForgeError('ocr_language_missing','所选 OCR 语言包未安装。','在诊断页查看可用语言并选择。')
+            out=c.work/'searchable.pdf';c.progress(15,'OCRmyPDF 正在补充文字层')
+            try:
+                code=ocrmypdf.ocr(decrypted,out,language=language.split('+'),output_type='pdf',
+                    rasterizer='pypdfium',mode='skip',optimize=0,jobs=1,use_threads=True,
+                    progress_bar=False,tesseract_timeout=300)
+                if int(code)!=0:raise ValueError()
+            except Exception:
+                raise ForgeError('pdf_ocr_failed','PDF OCR 未能完成。','检查文件、语言包和 OCRmyPDF 依赖后重试。')
+            result=pdf_reader(out,'')
+            if len(result.pages)!=len(pages):raise ForgeError('verification_failed','OCR 前后页数不一致。')
+            texts=[page.extract_text() or '' for page in result.pages]
+            if not any(text.strip() for text in texts):raise ForgeError('no_text','没有识别出文字。','检查扫描清晰度和 OCR 语言设置。')
             text=c.work/'recognized.txt';text.write_text('\n\n'.join(texts),encoding='utf-8');c.out(text)
-            out=c.work/'searchable.pdf';count=write_pdf(searchable,out);c.out(out,verification={'pages':count,'searchable':True})
+            c.out(out,verification={'pages':len(result.pages),'searchable':True,'engine':'ocrmypdf','existing_text_preserved':True})
+        else:
+            for j,i in enumerate(pages):
+                prefix=c.work/f'page-{i+1:04}';dpi=c.p.get('dpi',150)
+                c.run([binary('poppler'),'-f',str(j+1),'-l',str(j+1),'-singlefile','-r',str(dpi),'-png',decrypted,prefix])
+                c.out(prefix.with_suffix('.png'),verification={'source_page':i+1,'dpi':dpi})
+                c.progress(10+(j+1)/len(pages)*82,'渲染页面')
     elif op=='pdf-tables':
         import pdfplumber
         tables=[]

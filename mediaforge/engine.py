@@ -31,6 +31,11 @@ class Engine:
                 con.execute("UPDATE tasks SET status='recoverable',stage='服务重启，可恢复',updated=? WHERE id=?",(time.time(),row['id']))
                 con.execute("UPDATE items SET status='recoverable' WHERE task_id=? AND status='running'",(row['id'],))
                 self.store.event(con,row['id'],'restart_recovery','服务上次中断；成功结果已保留，可恢复剩余项目。')
+        # The exclusive worker lease ensures these are abandoned private job
+        # directories; all published outputs live under files/, never jobs/.
+        for path in (self.store.root/'jobs').iterdir():
+            if path.is_dir() and not path.is_symlink() and path.name.startswith('task_'):
+                shutil.rmtree(path)
         self.thread=threading.Thread(target=self._loop,daemon=True,name='mediaforge-scheduler')
         self.thread.start()
 

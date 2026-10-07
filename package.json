@@ -1,0 +1,6 @@
+{
+  "name": "mediaforge-ui-verification",
+  "private": true,
+  "scripts": {"test:ui": "playwright test"},
+  "devDependencies": {"@playwright/test": "^1.56.0", "@axe-core/playwright": "^4.10.2"}
+}

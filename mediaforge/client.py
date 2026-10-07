@@ -3,10 +3,19 @@ from pathlib import Path
 from urllib.parse import urlsplit,quote
 import json
 import logging
+import hashlib
+import tempfile
+import re
 import os
 import time
 import httpx
 from .errors import ForgeError
+
+
+def resource_id(value,prefix):
+    if not isinstance(value,str) or not re.fullmatch(prefix+r'_[A-Za-z0-9]+',value):
+        raise ForgeError('invalid_id','资源编号无效。','使用文件或任务查询返回的 ID。')
+    return value
 
 
 class Client:
@@ -18,6 +27,8 @@ class Client:
         parsed=urlsplit(self.base)
         if parsed.username or parsed.password or parsed.query or parsed.fragment:
             raise ForgeError('invalid_server','服务地址不能包含凭证、查询参数或片段。')
+        if parsed.scheme not in {'http','https'} or not parsed.hostname:
+            raise ForgeError('invalid_server','请输入完整的 HTTP 或 HTTPS 服务地址。')
         if parsed.scheme!='https' and parsed.hostname not in {'127.0.0.1','localhost','::1'}:
             raise ForgeError('https_required','远程服务必须使用 HTTPS。','使用部署的 HTTPS 地址。')
         configured=token_file or os.getenv('MEDIAFORGE_TOKEN_FILE')
@@ -45,6 +56,7 @@ class Client:
             return self.request('POST','api/files?name='+quote(p.name,safe=''),content=f,headers={'Content-Length':str(p.stat().st_size),'Content-Type':'application/octet-stream'})
 
     def wait(self,tid,timeout=3600):
+        tid=resource_id(tid,'task')
         end=time.monotonic()+timeout
         while time.monotonic()<end:
             task=self.request('GET','api/tasks/'+tid)
@@ -53,16 +65,27 @@ class Client:
         raise ForgeError('wait_timeout','等待超时，任务仍可能在服务器继续执行。','查询任务状态；需要停止时显式取消。',408)
 
     def download(self,id,target):
+        id=resource_id(id,'file')
         path=Path(target).expanduser();path.parent.mkdir(parents=True,exist_ok=True)
-        if path.exists():raise ForgeError('output_exists','目标文件已经存在。','换一个输出路径，避免覆盖现有文件。',409)
-        temp=path.with_name(path.name+'.mediaforge-part')
+        if path.exists() or path.is_symlink():raise ForgeError('output_exists','目标文件已经存在。','换一个输出路径，避免覆盖现有文件。',409)
+        meta=self.request('GET','api/files/'+id)
+        temp=None;digest=hashlib.sha256();size=0
         try:
             with self.http.stream('GET',self.base+'/api/files/'+id+'/content') as response:
                 if response.status_code!=200:raise ForgeError('download_failed','下载请求未获批准。','检查文件权限或保留期。',response.status_code)
-                with temp.open('xb') as out:
-                    for chunk in response.iter_bytes():out.write(chunk)
+                with tempfile.NamedTemporaryFile(mode='wb',prefix='.mediaforge-',suffix='.part',dir=path.parent,delete=False) as out:
+                    temp=Path(out.name)
+                    for chunk in response.iter_bytes():
+                        size+=len(chunk);digest.update(chunk);out.write(chunk)
+                        if size>meta['size']:raise ForgeError('download_integrity','下载内容大小不一致。','重新下载；原文件不会被覆盖。',502)
+            if size!=meta['size'] or digest.hexdigest()!=meta['sha256']:
+                raise ForgeError('download_integrity','下载校验失败。','重新下载；原文件不会被覆盖。',502)
             # An atomic hard link avoids overwriting a concurrently created destination.
             os.link(temp,path);temp.unlink()
-        except BaseException:
-            temp.unlink(missing_ok=True);raise
-        return {'file_id':id,'output':str(path.resolve()),'size':path.stat().st_size}
+        except httpx.HTTPError:
+            raise ForgeError('download_interrupted','下载中断。','检查网络后重新下载。',503,True)
+        except FileExistsError:
+            raise ForgeError('output_exists','目标文件已经存在。','换一个输出路径。',409)
+        finally:
+            if temp is not None:temp.unlink(missing_ok=True)
+        return {'file_id':id,'output':str(path.resolve()),'size':size,'sha256':digest.hexdigest()}

@@ -9,7 +9,7 @@ import sqlite3
 import time
 import uuid
 from cryptography.fernet import Fernet
-from .catalog import validate
+from .catalog import validate,CATALOG
 from .config import Settings
 from .errors import ForgeError
 from .files import inspect
@@ -44,6 +44,7 @@ class Store:
             (self.root/name).mkdir(exist_ok=True,mode=0o700)
         self.db_path=self.root/'state.sqlite3'
         self._setup()
+        self._recover_cleanup()
         keyfile=self.root/'secret.key'
         self._exclusive_file(keyfile,Fernet.generate_key())
         self.cipher=Fernet(keyfile.read_bytes().strip())
@@ -53,6 +54,23 @@ class Store:
         with self.tx() as con:
             con.execute('INSERT OR IGNORE INTO tokens(hash,owner,label,admin) VALUES (?,?,?,1)',
                         (self.hash_token(token),'workspace_default','管理员'))
+
+    def _recover_cleanup(self):
+        """Reconcile a crash between staging deletions and the database commit."""
+        import shutil
+        with self.tx() as con:
+            for folder in (self.root/'staging').glob('cleanup_*'):
+                manifest=folder/'moves.json'
+                if not manifest.is_file():continue
+                try:rows=json.loads(manifest.read_text())
+                except (ValueError,OSError):continue
+                for row in rows:
+                    source=(self.root/row['path']).resolve();staged=folder/row['id']
+                    if not source.is_relative_to(self.root/'files') or not staged.resolve().is_relative_to(folder.resolve()):
+                        raise ForgeError('invalid_cleanup_manifest','清理恢复记录不合法。',status=500)
+                    exists=con.execute('SELECT 1 FROM files WHERE id=?',(row['id'],)).fetchone()
+                    if exists and staged.is_file() and not source.exists():staged.replace(source)
+                shutil.rmtree(folder)
 
     @staticmethod
     def _exclusive_file(path,content):
@@ -192,20 +210,21 @@ class Store:
         return [self.file(owner,r['id']) for r in ids]
 
     def submit(self,owner,operation,file_ids,params=None,idem=None,group='',timeout=None,retries=0):
-        if not isinstance(params or {},dict): raise ForgeError('invalid_parameters','参数必须是对象。')
-        tool,values=validate(operation,params or {})
-        if not isinstance(file_ids,list) or not tool['min_files']<=len(file_ids)<=tool['max_files'] or len(set(file_ids))!=len(file_ids):
+        tool,values=validate(operation,{} if params is None else params)
+        if not isinstance(file_ids,list) or not all(isinstance(f,str) for f in file_ids) or not tool['min_files']<=len(file_ids)<=tool['max_files'] or len(set(file_ids))!=len(file_ids):
             raise ForgeError('invalid_inputs',f'此工具需要 {tool["min_files"]}–{tool["max_files"]} 个不重复文件。','在文件列表调整输入。')
+        if not isinstance(group,str) or len(group)>100:
+            raise ForgeError('invalid_group','任务分组必须是 100 字以内的文字。')
         files=[self.file(owner,i,True) for i in file_ids]
         if any(f['kind'] not in tool['accept'] for f in files):
             raise ForgeError('unsupported_input','输入文件类型不适合当前工具。','根据文件类型选择工具。')
         if operation=='image-repair' and (files[0]['width'],files[0]['height'])!=(files[1]['width'],files[1]['height']):
             raise ForgeError('mask_size','修复遮罩必须与原图尺寸一致。')
-        timeout=int(timeout or self.settings.timeout)
-        if not 1<=timeout<=7200 or not 0<=retries<=3: raise ForgeError('invalid_limits','超时或重试次数超出允许范围。')
+        timeout=self.settings.timeout if timeout is None else timeout
+        if type(timeout) is not int or type(retries) is not int or not 1<=timeout<=7200 or not 0<=retries<=3: raise ForgeError('invalid_limits','超时或重试次数超出允许范围。')
         fingerprint=hashlib.sha256(json.dumps([operation,[(f['sha256'],f['name']) for f in files],values,group,timeout,retries],sort_keys=True).encode()).hexdigest()
-        id=uid('task'); now=time.time(); idem=idem or uid('key')
-        if len(idem)>200: raise ForgeError('invalid_idempotency_key','幂等键过长。')
+        id=uid('task'); now=time.time(); idem=uid('key') if idem is None else idem
+        if not isinstance(idem,str) or not 1<=len(idem)<=200: raise ForgeError('invalid_idempotency_key','幂等键必须为 1–200 字符的文字。')
         secret={k:values.pop(k) for k,s in tool['schema']['properties'].items() if s.get('sensitive') and k in values}
         sealed=self.cipher.encrypt(json.dumps(secret).encode()).decode()
         with self.tx() as con:
@@ -250,11 +269,18 @@ class Store:
         return result
 
     def tasks(self,owner,status='',search='',limit=30,offset=0,group=''):
+        if status and status not in TERMINAL|ACTIVE:raise ForgeError('invalid_status','任务状态无效。','使用工具列出的状态值。')
         terms=['owner=?']; args=[owner]
         if status: terms.append('status=?'); args.append(status)
         if group: terms.append('group_name=?'); args.append(group)
         if search:
-            terms.append('(id LIKE ? OR tool LIKE ? OR group_name LIKE ?)'); args.extend(['%'+search+'%']*3)
+            needle=search.replace('\\','\\\\').replace('%','\\%').replace('_','\\_')
+            matches=[key for key,value in CATALOG.items() if search.casefold() in value['name'].casefold()]
+            clause="(id LIKE ? ESCAPE '\\' OR tool LIKE ? ESCAPE '\\' OR group_name LIKE ? ESCAPE '\\'"
+            args.extend(['%'+needle+'%']*3)
+            if matches:
+                clause+=' OR tool IN ('+','.join('?' for _ in matches)+')';args.extend(matches)
+            terms.append(clause+')')
         where=' AND '.join(terms)
         with self.connect() as con:
             count=con.execute('SELECT COUNT(*) FROM tasks WHERE '+where,args).fetchone()[0]
@@ -284,7 +310,11 @@ class Store:
             row=con.execute('SELECT status FROM tasks WHERE id=?',(tid,)).fetchone()
             if row['status'] not in {'failed','partial','cancelled','recoverable'}:
                 raise ForgeError('cannot_resume','任务仍在执行或已经成功。','等待取消完成后重试；成功结果可直接使用。',409)
-            con.execute("UPDATE tasks SET status='accepted',stage='等待恢复',cancel=0,error=NULL,updated=? WHERE id=?",(time.time(),tid))
+            pending=con.execute("SELECT COUNT(*) FROM tasks WHERE owner=? AND status IN ('accepted','running')",(owner,)).fetchone()[0]
+            if pending>=self.settings.max_pending:raise ForgeError('queue_full','工作区队列已满。','等待任务完成后再恢复。',429)
+            total,done=con.execute("SELECT COUNT(*),SUM(status='succeeded') FROM items WHERE task_id=?",(tid,)).fetchone()
+            progress=100*(done or 0)/max(1,total)
+            con.execute("UPDATE tasks SET status='accepted',stage='等待恢复',progress=?,cancel=0,error=NULL,updated=? WHERE id=?",(progress,time.time(),tid))
             con.execute("UPDATE items SET status='accepted',error=NULL WHERE task_id=? AND status!='succeeded'",(tid,))
             self.event(con,tid,'resumed','保留成功项，重新执行其余项目。')
         return self.task(owner,tid)
@@ -301,6 +331,7 @@ class Store:
         return [{'id':r['id'],'name':r['name'],'tool':r['tool'],'params':json.loads(r['params'])} for r in rows]
 
     def save_template(self,owner,name,tool,params):
+        if not isinstance(name,str) or not name.strip() or len(name)>100:raise ForgeError('template_name','请输入 1–100 字的模板名称。')
         operation,values=validate(tool,params)
         values={k:v for k,v in values.items() if not operation['schema']['properties'].get(k,{}).get('sensitive')}
         with self.tx() as con:
@@ -310,26 +341,57 @@ class Store:
         return {'id':id,'name':name,'tool':tool,'params':values}
 
     def cleanup(self,owner,days=None,dry_run=True):
+        """Keep each connected task/file lineage together, independent of row order.
+
+        Recent files/tasks and all active tasks protect every connected ancestor
+        and descendant. A cleanup plan must not make a retained task unreadable.
+        Files are moved to a transaction-local trash directory before commit, so
+        an I/O or database failure can restore the original paths.
+        """
+        from collections import defaultdict,deque
         import shutil
-        cutoff=time.time()-86400*(self.settings.retention_days if days is None else days)
-        with self.tx() as con:
-            active=set()
-            for t in con.execute("SELECT inputs FROM tasks WHERE owner=? AND status IN ('accepted','running')",(owner,)):
-                active.update(json.loads(t['inputs']))
-            rows=[r for r in con.execute('SELECT * FROM files WHERE owner=? AND created<?',(owner,cutoff)) if r['id'] not in active]
-            ids={r['id'] for r in rows}
-            # Delete a terminal task only when its inputs/outputs are all eligible.
-            eligible=[]
-            for t in con.execute("SELECT * FROM tasks WHERE owner=? AND status NOT IN ('accepted','running')",(owner,)):
-                outputs=[f for r in con.execute('SELECT outputs FROM items WHERE task_id=?',(t['id'],)) for f in json.loads(r['outputs'])]
-                related=set(json.loads(t['inputs'])+outputs)
-                if related<=ids: eligible.append(t['id'])
-                else: ids-=related
-            rows=[r for r in rows if r['id'] in ids]
-            result={'dry_run':dry_run,'files':len(rows),'bytes':sum(r['size'] for r in rows),'tasks':len(eligible)}
-            if not dry_run:
-                for tid in eligible:
-                    con.execute('DELETE FROM events WHERE task_id=?',(tid,)); con.execute('DELETE FROM items WHERE task_id=?',(tid,)); con.execute('DELETE FROM tasks WHERE id=?',(tid,))
-                for r in rows:
-                    (self.root/r['path']).unlink(missing_ok=True); con.execute('DELETE FROM files WHERE id=?',(r['id'],))
-        return result
+        days=self.settings.retention_days if days is None else days
+        if type(days) is not int or not 0<=days<=36500:raise ForgeError('invalid_days','保留天数必须为 0–36500 的整数。')
+        cutoff=time.time()-86400*days
+        moved=[];trash=self.root/'staging'/uid('cleanup')
+        try:
+            with self.tx() as con:
+                files={r['id']:r for r in con.execute('SELECT * FROM files WHERE owner=?',(owner,))}
+                tasks={r['id']:r for r in con.execute('SELECT * FROM tasks WHERE owner=?',(owner,))}
+                related={tid:set(json.loads(t['inputs'])) for tid,t in tasks.items()}
+                for item in con.execute('SELECT i.task_id,i.outputs FROM items i JOIN tasks t ON t.id=i.task_id WHERE t.owner=?',(owner,)):
+                    related[item['task_id']].update(json.loads(item['outputs']))
+                reverse=defaultdict(set)
+                for tid,ids in related.items():
+                    for fid in ids:reverse[fid].add(tid)
+                kept_files={fid for fid,f in files.items() if f['created']>=cutoff}
+                kept_tasks={tid for tid,t in tasks.items() if t['status'] in ACTIVE or t['updated']>=cutoff}
+                queue=deque(kept_files)
+                for tid in kept_tasks:
+                    for fid in related[tid]-kept_files:kept_files.add(fid);queue.append(fid)
+                while queue:
+                    fid=queue.popleft()
+                    for tid in reverse[fid]-kept_tasks:
+                        kept_tasks.add(tid)
+                        for ref in related[tid]-kept_files:kept_files.add(ref);queue.append(ref)
+                removable=[r for fid,r in files.items() if fid not in kept_files]
+                eligible=set(tasks)-kept_tasks
+                result={'dry_run':dry_run,'files':len(removable),'bytes':sum(r['size'] for r in removable),'tasks':len(eligible)}
+                if not dry_run:
+                    trash.mkdir(mode=0o700)
+                    (trash/'moves.json').write_text(json.dumps([{'id':r['id'],'path':r['path']} for r in removable]))
+                    for row in removable:
+                        source=(self.root/row['path']).resolve()
+                        if not source.is_relative_to(self.root/'files'):raise ForgeError('invalid_file_path','文件路径超出工作区范围。',status=409)
+                        if source.exists():
+                            destination=trash/row['id'];source.replace(destination);moved.append((source,destination))
+                    for tid in eligible:
+                        con.execute('DELETE FROM events WHERE task_id=?',(tid,));con.execute('DELETE FROM items WHERE task_id=?',(tid,));con.execute('DELETE FROM tasks WHERE id=?',(tid,))
+                    for row in removable:con.execute('DELETE FROM files WHERE id=?',(row['id'],))
+            if not dry_run:shutil.rmtree(trash,ignore_errors=True)
+            return result
+        except BaseException:
+            for source,destination in reversed(moved):
+                if destination.exists():destination.replace(source)
+            if trash.exists():shutil.rmtree(trash,ignore_errors=True)
+            raise

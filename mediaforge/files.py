@@ -1,5 +1,7 @@
 """Inspect actual bytes. Paths here are internal and never serialized to clients."""
 import hashlib
+import codecs
+import filetype
 import json
 import mimetypes
 import subprocess
@@ -26,7 +28,7 @@ def probe(path):
     if not exe:
         raise ForgeError('dependency_missing','媒体检查需要 FFprobe。','安装 FFmpeg 后重试。',409)
     try:
-        r=subprocess.run([exe,'-protocol_whitelist','file,pipe','-v','error','-show_entries','format=duration:stream=index,codec_type,codec_name,width,height,sample_rate,channels:stream_disposition=attached_pic','-of','json',str(path)],capture_output=True,timeout=20)
+        r=subprocess.run([exe,'-protocol_whitelist','file,pipe','-v','error','-show_entries','format=duration,format_name:stream=index,codec_type,codec_name,width,height,sample_rate,channels:stream_disposition=attached_pic','-of','json',str(path)],capture_output=True,timeout=20)
         if r.returncode or len(r.stdout)>4*1024**2: raise ValueError()
         return json.loads(r.stdout)
     except (ValueError,OSError,subprocess.TimeoutExpired):
@@ -84,13 +86,19 @@ def inspect(path, name=None):
                     data.update(kind='subtitle',mime='text/vtt' if suffix=='.vtt' else 'text/plain',cues=len(subs))
                 except Exception: raise ForgeError('invalid_subtitle','字幕格式或编码无法识别。','使用 UTF-8 编码的 SRT、VTT 或 ASS 字幕。')
             elif suffix in {'.txt','.md','.csv','.json','.html','.htm'} and b'\x00' not in header:
-                try: header.decode('utf-8')
+                try:
+                    decoder=codecs.getincrementaldecoder('utf-8')()
+                    with p.open('rb') as text_stream:
+                        for chunk in iter(lambda:text_stream.read(65536),b''):
+                            if b'\x00' in chunk:raise UnicodeDecodeError('utf-8',chunk,0,1,'NUL')
+                            decoder.decode(chunk)
+                        decoder.decode(b'',final=True)
                 except UnicodeDecodeError: raise ForgeError('invalid_text','文本不是 UTF-8 编码。','请将文件编码转换为 UTF-8。')
                 data.update(kind='text',mime=mimetypes.guess_type(name)[0] or 'text/plain')
             else:
                 try:
-                    signatures = (header[4:8] == b'ftyp' or header.startswith((b'RIFF',b'fLaC',b'OggS',b'ID3',b'\x1aE\xdf\xa3',b'FORM',b'\x00\x00\x01')) or (len(header)>1 and header[0]==255 and header[1]&0xe0==0xe0))
-                    if not signatures: raise ValueError()
+                    detected=filetype.guess(header)
+                    if not detected or not detected.mime.startswith(('audio/','video/')):raise ValueError()
                     info=probe(p)
                     streams=info.get('streams',[])
                     # Cover artwork does not turn an audio file into a video task input.
@@ -98,7 +106,9 @@ def inspect(path, name=None):
                     audio=[s for s in streams if s.get('codec_type')=='audio']
                     if not video and not audio: raise ValueError()
                     kind='video' if video else 'audio'
-                    data.update(kind=kind,mime=mimetypes.guess_type(name)[0] or kind+'/octet-stream',
+                    mime=detected.mime
+                    if kind=='audio' and mime=='video/mp4':mime='audio/mp4'
+                    data.update(kind=kind,mime=mime,
                                 duration=float(info.get('format',{}).get('duration',0)),
                                 streams=[{k:s[k] for k in ['index','codec_type','codec_name','width','height','sample_rate','channels'] if k in s} for s in streams])
                 except (ForgeError,ValueError):

@@ -38,7 +38,8 @@ async def small_json(request):
         body.extend(chunk)
         if len(body)>65536:raise ForgeError('request_limit','请求体超过大小限制。','请减少参数或文件数量。',413)
     try:
-        value=json.loads(body)
+        def reject_constant(value):raise ValueError('non-finite JSON')
+        value=json.loads(body,parse_constant=reject_constant)
         if not isinstance(value,dict):raise ValueError()
         return value
     except (ValueError,UnicodeDecodeError):raise ForgeError('invalid_json','请求格式不正确。','请使用 JSON 对象。')
@@ -258,7 +259,7 @@ def create_app(settings=None,start_worker=True):
     @app.post('/api/exports',status_code=202)
     async def export(request:Request,who=Depends(owner)):
         data=await small_json(request);ids=data.get('task_ids',[])
-        if not isinstance(ids,list) or not 1<=len(ids)<=50:raise ForgeError('invalid_export','选择 1–50 个任务。')
+        if not isinstance(ids,list) or not 1<=len(ids)<=50 or not all(isinstance(i,str) for i in ids):raise ForgeError('invalid_export','选择 1–50 个任务。')
         files=[]
         for tid in ids:files.extend(store.task(who,tid,False)['output_ids'])
         if not files:raise ForgeError('no_results','所选任务没有可导出的结果。')
@@ -281,7 +282,7 @@ def create_app(settings=None,start_worker=True):
     @app.post('/api/cleanup')
     async def cleanup(request:Request,who=Depends(owner)):
         d=await small_json(request);days=d.get('days',settings.retention_days)
-        if not isinstance(days,int) or days<0:raise ForgeError('invalid_days','保留天数必须为非负整数。')
+        if type(days) is not int or not 0<=days<=36500:raise ForgeError('invalid_days','保留天数必须为 0–36500 的整数。')
         if type(d.get('dry_run',True)) is not bool:raise ForgeError('invalid_request','dry_run 必须是布尔值。')
         return await asyncio.to_thread(store.cleanup,who,days,d.get('dry_run',True))
 

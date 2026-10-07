@@ -3,7 +3,7 @@ import json
 import os
 from pathlib import Path
 import sys
-from .client import Client
+from .client import Client,resource_id
 from .errors import ForgeError
 
 EXIT={'succeeded':0,'partial':3,'failed':4,'cancelled':5,'recoverable':6}
@@ -12,6 +12,7 @@ EXIT={'succeeded':0,'partial':3,'failed':4,'cancelled':5,'recoverable':6}
 def parameters(args):
     try:
         value=json.loads(getattr(args,'params','{}'))
+        if not isinstance(value,dict):raise ValueError()
         for pair in getattr(args,'param',[]) or []:
             k,sep,v=pair.partition('=')
             if not sep:raise ValueError()
@@ -80,9 +81,10 @@ def main(argv=None):
             serve();return 0
         if a.resource=='mcp':
             from .mcp import main as mcp
-            mcp();return 0
+            mcp(server=a.server,token_file=a.token_file);return 0
         c=Client(a.server,a.token_file);r=a.resource;act=getattr(a,'action','')
         code=0
+        if hasattr(a,'id'):resource_id(a.id,{'tasks':'task','files':'file','templates':'template'}[r])
         if r=='tools':result=c.request('GET','api/tools')
         elif r=='doctor':result=c.request('GET','api/doctor')
         elif r=='files':
@@ -92,8 +94,9 @@ def main(argv=None):
             else:result=c.request('GET','api/files',params={'limit':a.limit})
         elif r=='tasks':
             if act=='create':
+                values=parameters(a)
                 ids=a.file_id+[c.upload(f)['id'] for f in a.paths]
-                result=c.request('POST','api/tasks',json={'tool':a.tool,'file_ids':ids,'params':parameters(a),'group':a.group,'timeout':a.timeout,'retries':a.retries,'idempotency_key':a.idempotency_key})
+                result=c.request('POST','api/tasks',json={'tool':a.tool,'file_ids':ids,'params':values,'group':a.group,'timeout':a.timeout,'retries':a.retries,'idempotency_key':a.idempotency_key})
             elif act=='list':result=c.request('GET','api/tasks',params={k:getattr(a,k) for k in ['status','search','group','limit','offset']})
             elif act=='get':result=c.request('GET','api/tasks/'+a.id)
             elif act=='logs':result=c.request('GET','api/tasks/'+a.id+'/logs')

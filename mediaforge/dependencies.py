@@ -4,6 +4,8 @@ from pathlib import Path
 import platform
 import shutil
 import subprocess
+import time
+from functools import lru_cache
 from .errors import ForgeError
 
 
@@ -42,18 +44,38 @@ def install_hint(name):
     return '请为当前操作系统安装 ' + name + '，将程序加入 PATH 后重新启动媒体服务。'
 
 
+@lru_cache(maxsize=64)
+def _probe_program(exe,arg,signature,window):
+    try:
+        proc=subprocess.run([exe,arg],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=5)
+        return proc.returncode==0
+    except (OSError,subprocess.TimeoutExpired):return False
+
+
+def binary_health(name):
+    exe=binary(name)
+    if not exe:return 'missing'
+    try:
+        stat=Path(exe).stat()
+        arg={'ffmpeg':'-version','ffprobe':'-version','poppler':'-v','tesseract':'--version','libreoffice':'--version'}[name]
+        ok=_probe_program(exe,arg,(stat.st_mtime_ns,stat.st_size),int(time.monotonic()/30))
+        return 'available' if ok else 'broken'
+    except OSError:return 'broken'
+
+
 def checks():
     result = []
     for id, command, purpose in [('ffmpeg','ffmpeg','音视频处理'),('ffprobe','ffprobe','媒体检查'),('poppler','poppler','PDF 渲染'),('tesseract','tesseract','OCR'),('libreoffice','libreoffice','Office/PDF 导出')]:
-        available = bool(binary(command))
-        result.append({'id':id,'name':command,'available':available,'status':'available' if available else 'missing',
-                       'purpose':purpose,'install':install_hint(id) if not available else '', 'details':{}})
-    for id, module in [('pillow','PIL'),('pypdf','pypdf'),('docx','docx'),('pdfplumber','pdfplumber'),('pysubs2','pysubs2'),('opencv','cv2')]:
+        status=binary_health(command);available=status=='available'
+        hint=('程序已找到但无法正常启动，请修复动态库或重新安装后重试。 ' if status=='broken' else '')+install_hint(id)
+        result.append({'id':id,'name':command,'available':available,'status':status,
+                       'purpose':purpose,'install':hint if not available else '', 'details':{'startup_verified':available}})
+    for id, module in [('pillow','PIL'),('pypdf','pypdf'),('docx','docx'),('pdfplumber','pdfplumber'),('pysubs2','pysubs2'),('opencv','cv2'),('ocrmypdf','ocrmypdf')]:
         available = installed(module)
         result.append({'id':id,'name':id,'available':available,'status':'available' if available else 'missing','purpose':'文件处理',
                        'install':'uv sync --extra repair' if id == 'opencv' else 'uv sync --frozen', 'details':{}})
     model = Path(os.getenv('MEDIAFORGE_ASR_MODEL','/nonexistent'))
-    has_model = model.is_dir() and (model/'model.bin').is_file() and (model/'config.json').is_file()
+    has_model = model.is_dir() and all((model/name).is_file() for name in ['model.bin','config.json','tokenizer.json','vocabulary.txt'])
     gpu = 0
     if installed('ctranslate2'):
         try:

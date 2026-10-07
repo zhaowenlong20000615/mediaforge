@@ -1,7 +1,7 @@
 {
   "id": "local.mediaforge",
   "name": "MediaForge 媒体与文档工作台",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "有工作区授权、真实处理与可恢复任务的本地/自托管媒体工作台",
   "capabilities": [
     "export-results",
@@ -82,7 +82,9 @@
     "Tesseract + language packs",
     "LibreOffice",
     "Python packages in uv.lock",
-    "Optional preconfigured Faster Whisper/U²-Net models"
+    "Optional preconfigured Faster Whisper/U²-Net models",
+    "OCRmyPDF 17 (preserve existing PDF text)",
+    "filetype (content-based media identification)"
   ],
   "limitations": [
     "PDF→Word uses text reflow; complex layout requires review",
