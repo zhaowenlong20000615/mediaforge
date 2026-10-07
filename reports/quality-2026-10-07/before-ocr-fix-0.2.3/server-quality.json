@@ -1,0 +1,639 @@
+{
+  "version": {
+    "name": "mediaforge",
+    "version": "0.2.3",
+    "git_commit": "0c80b1da31660cbdf24eb7e3129b1efc27462d61",
+    "artifact_sha256": "55e14a64381a8554533a8fb6e28fb32bde0dd14a844d1d8d571854348d82bcf5",
+    "built_at": "2026-10-07T08:54:36Z"
+  },
+  "cases": [
+    {
+      "operation": "media-merge",
+      "params": {
+        "kind": "video"
+      },
+      "status": "succeeded",
+      "seconds": 9.951,
+      "error": null,
+      "outputs": [
+        {
+          "path": "00-media-merge-0.mp4",
+          "meta": {
+            "id": "file_2b1f85ea56154cfb868593bd60161eaf",
+            "name": "merged.mp4",
+            "created_at": 1791363965.4310315,
+            "task_id": "task_bfeb86370ba941ba969b60dd139de025",
+            "size": 9345590,
+            "sha256": "8fd81b289842bcf8a3fc2bfa58fc0663bbfa9f5619b968b774583523c9f225fa",
+            "kind": "video",
+            "mime": "video/mp4",
+            "warnings": [],
+            "duration": 4.02322,
+            "streams": [
+              {
+                "index": 0,
+                "codec_type": "video",
+                "codec_name": "h264",
+                "width": 1920,
+                "height": 1080,
+                "avg_frame_rate": "60/1",
+                "pix_fmt": "yuv420p",
+                "sample_aspect_ratio": "1:1",
+                "extradata_hash": "SHA256:477f570166285549c1873ec6d89c6dd642a3387354ff22963baa992f6e523801",
+                "time_base": "1/15360",
+                "rotation": 0
+              },
+              {
+                "index": 1,
+                "codec_type": "audio",
+                "codec_name": "aac",
+                "sample_rate": "44100",
+                "channels": 1,
+                "avg_frame_rate": "0/0",
+                "extradata_hash": "SHA256:e1d9202ffd952e4a2732fa1093c81702a05a553570e848fb8e670c958c05c101",
+                "time_base": "1/44100",
+                "rotation": 0
+              }
+            ],
+            "verification": {
+              "merged_files": 2,
+              "order_preserved": true,
+              "stream_copy": true,
+              "target_geometry": {
+                "width": 1920,
+                "height": 1080,
+                "fps": "60"
+              },
+              "expected_duration": 4.0,
+              "actual_duration": 4.02322
+            },
+            "source_file_ids": [
+              "file_bf4c8a27941b485ca9ee354f24136620",
+              "file_41b84c7dbc9946db9681941a75aec91c"
+            ],
+            "quality_review": "required"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "image-pdf",
+      "params": {},
+      "status": "succeeded",
+      "seconds": 3.293,
+      "error": null,
+      "outputs": [
+        {
+          "path": "01-image-pdf-0.pdf",
+          "meta": {
+            "id": "file_15c268d776a146e6b1d17a05583ab714",
+            "name": "images.pdf",
+            "created_at": 1791363975.7818425,
+            "task_id": "task_9f818c022c074bcabdeebb35154801cb",
+            "size": 15579,
+            "sha256": "51bc09d6260c110a58c4db161e18e34e4d6e586cc5c212ea51436f68f2bf21a1",
+            "kind": "pdf",
+            "mime": "application/pdf",
+            "warnings": [],
+            "encrypted": false,
+            "pages": 1,
+            "verification": {
+              "pages": 1,
+              "engine": "img2pdf",
+              "image_recompression": false
+            },
+            "source_file_ids": [
+              "file_a5ad5332fe0e47e9a87f27aa70ceebc4"
+            ],
+            "quality_review": "required"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "image-process",
+      "params": {
+        "format": "jpeg"
+      },
+      "status": "succeeded",
+      "seconds": 8.394,
+      "error": null,
+      "outputs": [
+        {
+          "path": "02-image-process-0.jpeg",
+          "meta": {
+            "id": "file_9ecfcad0e3fb40df85cb8a3366639838",
+            "name": "fine-detail__image.jpeg",
+            "created_at": 1791363984.1741343,
+            "task_id": "task_57b61f3395d2493b88ff78507062c903",
+            "size": 791565,
+            "sha256": "2347eeff6f0f625d6d8aedf67d918f9abacecdf6c00fbaccfc45ee37e5a2e9c6",
+            "kind": "image",
+            "mime": "image/jpeg",
+            "warnings": [],
+            "width": 1024,
+            "height": 512,
+            "frames": 1,
+            "verification": {
+              "width": 1024,
+              "height": 512,
+              "format": "jpeg",
+              "animated_source_frames": 1,
+              "processed_frame": 0,
+              "quality": 92,
+              "lossless": false,
+              "icc_preserved": false,
+              "color_converted_to_rgb": false,
+              "engine": "pillow",
+              "edge_refined": false
+            },
+            "source_file_ids": [
+              "file_bc21af923fc94bf59a4a17ebfc05eb02"
+            ],
+            "quality_review": "required"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "office-convert",
+      "params": {
+        "format": "html"
+      },
+      "status": "succeeded",
+      "seconds": 17.772,
+      "error": null,
+      "outputs": [
+        {
+          "path": "03-office-convert-0.html",
+          "meta": {
+            "id": "file_5d566b04c5e7494fb48f3ce16a56911c",
+            "name": "quality-brief__document.html",
+            "created_at": 1791364003.4533236,
+            "task_id": "task_6ee05061097d4d05bd964a488e9aa8bf",
+            "size": 602497,
+            "sha256": "f26f84fd107d4e3c0cc281a9dcdef850c2f7aa7a0cf63136e040bbafbe9af280",
+            "kind": "text",
+            "mime": "text/html",
+            "warnings": [],
+            "verification": {
+              "engine": "mammoth",
+              "embedded_images": 1,
+              "tables": 1,
+              "headings": 2,
+              "mode": "semantic_content",
+              "conversion_notices": 0,
+              "quality_notes": []
+            },
+            "source_file_ids": [
+              "file_923058e32f664687a324f7f6d1322584"
+            ],
+            "quality_review": "required"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "office-convert",
+      "params": {
+        "format": "md"
+      },
+      "status": "succeeded",
+      "seconds": 3.715,
+      "error": null,
+      "outputs": [
+        {
+          "path": "04-office-convert-0.md",
+          "meta": {
+            "id": "file_f541cbe7db984cc18c45ad9f95210d91",
+            "name": "quality-brief__document.md",
+            "created_at": 1791364006.928705,
+            "task_id": "task_711d3b783db04810af09de925360f767",
+            "size": 601627,
+            "sha256": "c2a30c77af23d105c607869350fd1e7a8e17ed4134dcd6b3c8a9e9075d9a7c7f",
+            "kind": "text",
+            "mime": "text/markdown",
+            "warnings": [],
+            "verification": {
+              "engine": "mammoth",
+              "embedded_images": 1,
+              "tables": 1,
+              "headings": 2,
+              "mode": "semantic_content",
+              "conversion_notices": 0,
+              "quality_notes": []
+            },
+            "source_file_ids": [
+              "file_bb30570d6a724c94b44581903a786b61"
+            ],
+            "quality_review": "required"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "pdf-word",
+      "params": {},
+      "status": "succeeded",
+      "seconds": 6.76,
+      "error": null,
+      "outputs": [
+        {
+          "path": "05-pdf-word-0.docx",
+          "meta": {
+            "id": "file_031c57ce1ecb4697a2104c3c6c012492",
+            "name": "quality-brief__document.docx",
+            "created_at": 1791364013.3956954,
+            "task_id": "task_4a7ae410984a4137ac02dbf5fad99f28",
+            "size": 600366,
+            "sha256": "0f409ef5ae016859947c428dcae7da270637d7f611ce1ac9ca5ec149bf947eba",
+            "kind": "docx",
+            "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "warnings": [],
+            "verification": {
+              "engine": "pdf2docx",
+              "source_pages": 1,
+              "mode": "layout",
+              "text_character_coverage": 1.0,
+              "embedded_images": 1,
+              "tables": 1,
+              "visual_review_required": true,
+              "rendered_text_coverage": 1.0,
+              "rendered_numbers_preserved": true,
+              "rendered_pages": 1
+            },
+            "source_file_ids": [
+              "file_bdc6eb14faf44d5585d2350068501266"
+            ],
+            "quality_review": "required"
+          }
+        },
+        {
+          "path": "05-pdf-word-1.pdf",
+          "meta": {
+            "id": "file_14ea41d3f5eb42f88de9511828369aed",
+            "name": "quality-brief__document-preview.pdf",
+            "created_at": 1791364013.395814,
+            "task_id": "task_4a7ae410984a4137ac02dbf5fad99f28",
+            "size": 101611,
+            "sha256": "af63d677eb4d2c074ea6502dbd221a4b5a0e563c85d0f412cd57e1c580cfcbb7",
+            "kind": "pdf",
+            "mime": "application/pdf",
+            "warnings": [],
+            "encrypted": false,
+            "pages": 1,
+            "verification": {
+              "engine": "pdf2docx",
+              "source_pages": 1,
+              "mode": "layout",
+              "text_character_coverage": 1.0,
+              "embedded_images": 1,
+              "tables": 1,
+              "visual_review_required": true,
+              "rendered_text_coverage": 1.0,
+              "rendered_numbers_preserved": true,
+              "rendered_pages": 1,
+              "role": "layout_preview"
+            },
+            "source_file_ids": [
+              "file_bdc6eb14faf44d5585d2350068501266"
+            ],
+            "quality_review": "required"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "asr",
+      "params": {
+        "language": "zh",
+        "device": "cpu"
+      },
+      "status": "succeeded",
+      "seconds": 17.268,
+      "error": null,
+      "outputs": [
+        {
+          "path": "06-asr-0.srt",
+          "meta": {
+            "id": "file_8e2cd878b0af45e1872b2f95a566a260",
+            "name": "chinese-speech__transcript.srt",
+            "created_at": 1791364031.2661147,
+            "task_id": "task_95dcf09b87ad47dba1e2594b674bd52c",
+            "size": 353,
+            "sha256": "41dab42ad15b11c6c7c949e9d05e8499698fbe7dff64af79054265c3ab95242f",
+            "kind": "subtitle",
+            "mime": "text/plain",
+            "warnings": [],
+            "cues": 5,
+            "verification": {
+              "segments": 5,
+              "language": "zh",
+              "language_probability": 1,
+              "model": "faster-whisper-small",
+              "word_timestamps": true,
+              "vad": true,
+              "max_cue_seconds": 5.04,
+              "mean_log_probability": -0.1339,
+              "requires_review": true
+            },
+            "source_file_ids": [
+              "file_5f2c348fc7de45de8477d42b37b828c1"
+            ],
+            "quality_review": "required"
+          }
+        },
+        {
+          "path": "06-asr-1.vtt",
+          "meta": {
+            "id": "file_4a8a7e0045e74a96b505428c215f2a49",
+            "name": "chinese-speech__transcript.vtt",
+            "created_at": 1791364031.266265,
+            "task_id": "task_95dcf09b87ad47dba1e2594b674bd52c",
+            "size": 361,
+            "sha256": "9b8706f3accb1724b180792cc03822177e925f02650f0d19ee14bd74990b0c75",
+            "kind": "subtitle",
+            "mime": "text/vtt",
+            "warnings": [],
+            "cues": 5,
+            "verification": {
+              "segments": 5,
+              "language": "zh",
+              "language_probability": 1,
+              "model": "faster-whisper-small",
+              "word_timestamps": true,
+              "vad": true,
+              "max_cue_seconds": 5.04,
+              "mean_log_probability": -0.1339,
+              "requires_review": true
+            },
+            "source_file_ids": [
+              "file_5f2c348fc7de45de8477d42b37b828c1"
+            ],
+            "quality_review": "required"
+          }
+        },
+        {
+          "path": "06-asr-2.txt",
+          "meta": {
+            "id": "file_4ed509ef984341729464eb9566e7e099",
+            "name": "chinese-speech__transcript.txt",
+            "created_at": 1791364031.2663624,
+            "task_id": "task_95dcf09b87ad47dba1e2594b674bd52c",
+            "size": 181,
+            "sha256": "f988024074e6fb0002b146f67b75d8db6624733502a3e59294f2a4c4256fa8cf",
+            "kind": "text",
+            "mime": "text/plain",
+            "warnings": [],
+            "verification": {
+              "segments": 5,
+              "language": "zh",
+              "language_probability": 1,
+              "model": "faster-whisper-small",
+              "word_timestamps": true,
+              "vad": true,
+              "max_cue_seconds": 5.04,
+              "mean_log_probability": -0.1339,
+              "requires_review": true
+            },
+            "source_file_ids": [
+              "file_5f2c348fc7de45de8477d42b37b828c1"
+            ],
+            "quality_review": "required"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "image-background",
+      "params": {},
+      "status": "succeeded",
+      "seconds": 8.75,
+      "error": null,
+      "outputs": [
+        {
+          "path": "07-image-background-0.png",
+          "meta": {
+            "id": "file_6b236ff3c71a42688556e85cad76a1b7",
+            "name": "public-domain-nasa-astronaut__image.png",
+            "created_at": 1791364041.881248,
+            "task_id": "task_89d17812be8944f1aa0136cb356c9691",
+            "size": 349194,
+            "sha256": "eccde3fccfde8e050465333212de0d3c218e457007578dac4af26e0e4a6a86a0",
+            "kind": "image",
+            "mime": "image/png",
+            "warnings": [],
+            "width": 512,
+            "height": 512,
+            "frames": 1,
+            "verification": {
+              "width": 512,
+              "height": 512,
+              "format": "png",
+              "animated_source_frames": 1,
+              "processed_frame": 0,
+              "quality": 92,
+              "lossless": true,
+              "icc_preserved": false,
+              "color_converted_to_rgb": false,
+              "engine": "u2net",
+              "edge_refined": true
+            },
+            "source_file_ids": [
+              "file_0606915085bf4efeb8ee0d48242c4da3"
+            ],
+            "quality_review": "required"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "image-ocr",
+      "params": {},
+      "status": "succeeded",
+      "seconds": 2.273,
+      "error": null,
+      "outputs": [
+        {
+          "path": "08-image-ocr-0.txt",
+          "meta": {
+            "id": "file_6540b2ea781d4577a206ba300afc83d3",
+            "name": "chinese-text__recognized.txt",
+            "created_at": 1791364046.058516,
+            "task_id": "task_38b22be64c0142e8b4b8b3bbc824c887",
+            "size": 119,
+            "sha256": "7f99f36f85be3daf57e96c3183fb63d4d02c7085f993fe459ea2cbf9e0298749",
+            "kind": "text",
+            "mime": "text/plain",
+            "warnings": [],
+            "verification": {
+              "language": "chi_sim+eng"
+            },
+            "source_file_ids": [
+              "file_0f8d506967934d54944ada624ebcd0d1"
+            ],
+            "quality_review": "required"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "audio-normalize",
+      "params": {
+        "lufs": -16
+      },
+      "status": "succeeded",
+      "seconds": 4.768,
+      "error": null,
+      "outputs": [
+        {
+          "path": "09-audio-normalize-0.wav",
+          "meta": {
+            "id": "file_68dc24ab00334c1b9ddf613f2f8d93bd",
+            "name": "chinese-speech__audio.wav",
+            "created_at": 1791364049.5022972,
+            "task_id": "task_ebdbd260cfde427c8cba3e152fb430bc",
+            "size": 1455648,
+            "sha256": "fd1ad2510b006622c9bd19beae8adffc0ddfcb8c30a89676a019b3501e0ac509",
+            "kind": "audio",
+            "mime": "audio/x-wav",
+            "warnings": [],
+            "duration": 15.162188,
+            "streams": [
+              {
+                "index": 0,
+                "codec_type": "audio",
+                "codec_name": "pcm_s16le",
+                "sample_rate": "48000",
+                "channels": 1,
+                "avg_frame_rate": "0/0",
+                "time_base": "1/48000",
+                "rotation": 0
+              }
+            ],
+            "verification": {
+              "audio_codecs": [
+                "pcm_s16le"
+              ],
+              "source_track": 0,
+              "loudness_target": -16,
+              "two_pass_normalization": true
+            },
+            "source_file_ids": [
+              "file_f12b3d99f0024ef7a5043280dfac1d72"
+            ],
+            "quality_review": "required"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "asr",
+      "params": {
+        "language": "en",
+        "device": "cpu"
+      },
+      "status": "succeeded",
+      "seconds": 11.682,
+      "error": null,
+      "outputs": [
+        {
+          "path": "10-asr-0.srt",
+          "meta": {
+            "id": "file_b2b7e0c86636407486a9db19b3a91395",
+            "name": "english-speech__transcript.srt",
+            "created_at": 1791364061.4772093,
+            "task_id": "task_7d2939994302480f866d0b5618a761f4",
+            "size": 317,
+            "sha256": "329de1df155fb355c8f306e0ec7813bebe1f028a6cc21f590d70f81727cf93f5",
+            "kind": "subtitle",
+            "mime": "text/plain",
+            "warnings": [],
+            "cues": 4,
+            "verification": {
+              "segments": 4,
+              "language": "en",
+              "language_probability": 1,
+              "model": "faster-whisper-small",
+              "word_timestamps": true,
+              "vad": true,
+              "max_cue_seconds": 3.6,
+              "mean_log_probability": -0.2519,
+              "requires_review": true
+            },
+            "source_file_ids": [
+              "file_87d6bc5fdb4641759aa100002a431c8a"
+            ],
+            "quality_review": "required"
+          }
+        },
+        {
+          "path": "10-asr-1.vtt",
+          "meta": {
+            "id": "file_d749930f3c2644d5bf3b116a7f4bc89f",
+            "name": "english-speech__transcript.vtt",
+            "created_at": 1791364061.477341,
+            "task_id": "task_7d2939994302480f866d0b5618a761f4",
+            "size": 325,
+            "sha256": "08708608eae51063ab58e0981c97e49fc91762424b331e126eabc32322dc83fb",
+            "kind": "subtitle",
+            "mime": "text/vtt",
+            "warnings": [],
+            "cues": 4,
+            "verification": {
+              "segments": 4,
+              "language": "en",
+              "language_probability": 1,
+              "model": "faster-whisper-small",
+              "word_timestamps": true,
+              "vad": true,
+              "max_cue_seconds": 3.6,
+              "mean_log_probability": -0.2519,
+              "requires_review": true
+            },
+            "source_file_ids": [
+              "file_87d6bc5fdb4641759aa100002a431c8a"
+            ],
+            "quality_review": "required"
+          }
+        },
+        {
+          "path": "10-asr-2.txt",
+          "meta": {
+            "id": "file_ed50bf6f93e34eada1df6eb3dfb4c0cb",
+            "name": "english-speech__transcript.txt",
+            "created_at": 1791364061.4774272,
+            "task_id": "task_7d2939994302480f866d0b5618a761f4",
+            "size": 184,
+            "sha256": "d2c5d0bb89572187ecae8ba96062ba1072be19d8736df25d481a0e7ab4d14daa",
+            "kind": "text",
+            "mime": "text/plain",
+            "warnings": [],
+            "verification": {
+              "segments": 4,
+              "language": "en",
+              "language_probability": 1,
+              "model": "faster-whisper-small",
+              "word_timestamps": true,
+              "vad": true,
+              "max_cue_seconds": 3.6,
+              "mean_log_probability": -0.2519,
+              "requires_review": true
+            },
+            "source_file_ids": [
+              "file_87d6bc5fdb4641759aa100002a431c8a"
+            ],
+            "quality_review": "required"
+          }
+        }
+      ]
+    }
+  ],
+  "cleanup": {
+    "dry_run": false,
+    "files": 28,
+    "bytes": 25760304,
+    "tasks": 11
+  },
+  "passed": true
+}

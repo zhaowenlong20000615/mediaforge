@@ -1,0 +1,13 @@
+{
+  "tests": "83",
+  "failures": "0",
+  "errors": "0",
+  "skipped": "0",
+  "time": "70.690",
+  "version": "0.2.4",
+  "scope": "Actual local codec/converter/model execution; both Chinese OCR language packs and configuration files present",
+  "models": [
+    "faster-whisper-small CPU/int8",
+    "u2net CPU"
+  ]
+}

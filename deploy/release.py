@@ -28,6 +28,8 @@ def build():
 def package():
     if subprocess.check_output(['git','status','--porcelain'],cwd=ROOT).strip():raise SystemExit('Commit all source changes before packaging.')
     commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+    cache_commit=os.getenv('MEDIAFORGE_DEPENDENCY_CACHE_COMMIT','')
+    if cache_commit and not re.fullmatch('[0-9a-f]{40}',cache_commit):raise SystemExit('Dependency cache requires a full verified source commit.')
     version=json.loads(subprocess.check_output([str(ROOT/'.venv/bin/python'),'-c','import json,mediaforge;print(json.dumps(mediaforge.__version__))'],cwd=ROOT,text=True))
     own=list((ROOT/'dist').glob('mediaforge-'+version+'-*.whl'))
     if not own or not list((ROOT/'dist/wheels').glob('*.whl')):raise SystemExit('Build project wheel and pinned Linux dependencies first.')
@@ -60,11 +62,13 @@ def package():
     with tarfile.open(artifact,'w:gz',format=tarfile.PAX_FORMAT) as tar:
         for source in sources:
             safe(source);tar.add(ROOT/source,arcname=source,recursive=False)
-        for wheel in sorted((ROOT/'dist/wheels').glob('*.whl')):tar.add(wheel,arcname='wheels/'+wheel.name)
+        if not cache_commit:
+            for wheel in sorted((ROOT/'dist/wheels').glob('*.whl')):tar.add(wheel,arcname='wheels/'+wheel.name)
         tar.add(own[0],arcname='wheels/'+own[0].name)
         tar.add(ROOT/'dist/dependencies.txt',arcname='dependencies.txt')
     digest=hashlib.file_digest(artifact.open('rb'),'sha256').hexdigest()
     meta={'project_id':'local.mediaforge','version':version,'git_commit':commit,'artifact_sha256':digest,'built_at':built,'python':'3.12','target':'linux-x86_64'}
+    if cache_commit:meta['dependency_cache_commit']=cache_commit
     Path(str(artifact)+'.release.json').write_text(json.dumps(meta,indent=2)+'\n')
     Path(str(artifact)+'.sha256').write_text(digest+'  '+artifact.name+'\n')
     print(artifact)

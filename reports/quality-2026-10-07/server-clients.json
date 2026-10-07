@@ -1,0 +1,30 @@
+{
+  "server": "https://107.151.245.166:18081/mediaforge",
+  "checks": {
+    "secure_cookie": true,
+    "cookie_me": true,
+    "logout_revoked": true,
+    "cli_real_resize": true,
+    "cli_download": true,
+    "cli_failed_exit": true,
+    "mcp_initialize": true,
+    "mcp_tools": true,
+    "mcp_real_resize": true,
+    "mcp_preview": true,
+    "mcp_credential_rejected": true
+  },
+  "version": {
+    "name": "mediaforge",
+    "version": "0.2.3",
+    "git_commit": "0c80b1da31660cbdf24eb7e3129b1efc27462d61",
+    "artifact_sha256": "55e14a64381a8554533a8fb6e28fb32bde0dd14a844d1d8d571854348d82bcf5",
+    "built_at": "2026-10-07T08:54:36Z"
+  },
+  "cleanup": {
+    "dry_run": false,
+    "files": 5,
+    "bytes": 3071,
+    "tasks": 3
+  },
+  "passed": true
+}

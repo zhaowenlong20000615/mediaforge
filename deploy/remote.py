@@ -12,6 +12,7 @@ import subprocess
 import sys
 import tarfile
 import time
+import urllib.parse
 
 BASE=Path('/opt/mediaforge')
 CURRENT=BASE/'current'
@@ -140,9 +141,15 @@ def activate(name):
         if any(m.issym() or m.islnk() or m.isdev() for m in tar):raise RuntimeError('Links and devices are not accepted in release packages')
         tar.extractall(release,filter='data')
     (release/'release.json').write_text(json.dumps(meta,indent=2)+'\n')
+    old=target(CURRENT)
+    expected_cache=meta.get('dependency_cache_commit')
+    if expected_cache:
+        if not re.fullmatch('[0-9a-f]{40}',expected_cache) or not old or not old.is_relative_to(BASE/'releases') or not secure_release(old):
+            raise RuntimeError('Declared dependency cache is not a safe MediaForge release')
+        if json.loads((old/'release.json').read_text())['git_commit']!=expected_cache:
+            raise RuntimeError('Current release does not match the declared dependency cache; upload a full package')
     venv=release/'.venv'
     if not venv.exists():command(['python3','-m','venv',str(venv)])
-    old=target(CURRENT)
     wheel_sources=['--find-links',str(release/'wheels')]
     cached_wheels=None
     if old and old.is_relative_to(BASE/'releases') and secure_release(old) and (old/'wheels').is_dir():
@@ -154,6 +161,16 @@ def activate(name):
         command([str(venv/'bin/pip'),'install','--no-index',*wheel_sources,'--require-hashes','--report',str(release/'dependency-install.json'),'-r',str(release/'dependencies.txt')],stdout=log,stderr=log)
         wheel=next((release/'wheels').glob('mediaforge-*.whl'))
         command([str(venv/'bin/pip'),'install','--no-index','--no-deps',str(wheel)],stdout=log,stderr=log)
+    # Retain exactly the dependency wheels pip verified. Hard links reuse disk
+    # blocks while making this release a complete cache for subsequent updates.
+    if cached_wheels:
+        installed=json.loads((release/'dependency-install.json').read_text())['install']
+        for item in installed:
+            url=urllib.parse.urlsplit(item.get('download_info',{}).get('url',''))
+            source=Path(urllib.parse.unquote(url.path))
+            if url.scheme!='file' or not source.resolve().is_relative_to(cached_wheels.resolve()):continue
+            dest=release/'wheels'/source.name
+            if source.suffix=='.whl' and not source.is_symlink() and not dest.exists():os.link(source,dest)
     previous_nginx=NGINX.read_bytes() if NGINX.exists() else None
     database=BASE/'data/state.sqlite3'
     if database.exists():
@@ -194,8 +211,9 @@ def rollback():
     except BaseException:
         switch(old);command(['systemctl','restart',SERVICE]);raise
 
-if sys.argv[1]=='activate':activate(sys.argv[2])
-elif sys.argv[1]=='rollback':rollback()
-else:
-    print((BASE/'deployment.json').read_text() if (BASE/'deployment.json').exists() else '{}')
-    print(json.dumps(ready()))
+if __name__=='__main__':
+    if sys.argv[1]=='activate':activate(sys.argv[2])
+    elif sys.argv[1]=='rollback':rollback()
+    else:
+        print((BASE/'deployment.json').read_text() if (BASE/'deployment.json').exists() else '{}')
+        print(json.dumps(ready()))

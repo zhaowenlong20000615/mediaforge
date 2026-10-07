@@ -284,7 +284,8 @@ def ocr(c,image,base,searchable=False):
         raise ForgeError('ocr_language_missing','所选 OCR 语言包未安装。','在诊断页查看可用语言并选择，或请管理员安装。')
     exe=verified_binary('tesseract')
     if not exe:raise ForgeError('dependency_missing','Tesseract 目前无法启动。','打开诊断修复 OCR 工具后重试。',409)
-    args=[exe,str(image),str(base),'-l',language]
+    psm={'block':6,'auto':3,'sparse':11}[c.p.get('layout','block')]
+    args=[exe,str(image),str(base),'-l',language,'--psm',str(psm)]
     args+=['pdf','txt'] if searchable else ['txt']
     c.run(args)
     return base.with_suffix('.txt').read_text(encoding='utf-8').strip()
@@ -356,6 +357,7 @@ def pdf(c):
             try:
                 code=ocrmypdf.ocr(decrypted,out,language=language.split('+'),output_type='pdf',
                     rasterizer='pypdfium',mode='skip',optimize=0,jobs=1,use_threads=True,
+                    tesseract_pagesegmode={'block':6,'auto':3,'sparse':11}[c.p.get('layout','block')],
                     progress_bar=False,tesseract_timeout=300)
                 if int(code)!=0:raise ValueError()
             except Exception:
@@ -365,7 +367,7 @@ def pdf(c):
             texts=[page.extract_text() or '' for page in result.pages]
             if not any(text.strip() for text in texts):raise ForgeError('no_text','没有识别出文字。','检查扫描清晰度和 OCR 语言设置。')
             text=c.work/'recognized.txt';text.write_text('\n\n'.join(texts),encoding='utf-8');c.out(text)
-            c.out(out,verification={'pages':len(result.pages),'searchable':True,'engine':'ocrmypdf','existing_text_preserved':True})
+            c.out(out,verification={'pages':len(result.pages),'searchable':True,'engine':'ocrmypdf','existing_text_preserved':True,'language':language,'layout':c.p.get('layout','block')})
         else:
             for j,i in enumerate(pages):
                 prefix=c.work/f'page-{i+1:04}';dpi=c.p.get('dpi',150)
@@ -463,7 +465,7 @@ def image(c):
     if op=='image-ocr':
         c.progress(20,'识别图片文字');text=ocr(c,c.files[0]['path'],c.work/'recognized')
         if not text:raise ForgeError('no_text','没有识别出文字。','检查图片清晰度或切换 OCR 语言。')
-        c.out(c.work/'recognized.txt',verification={'language':p['language']});return
+        c.out(c.work/'recognized.txt',verification={'language':p['language'],'layout':p.get('layout','block')});return
     if op=='image-pdf':
         import img2pdf
         images=[]

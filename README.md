@@ -1,4 +1,4 @@
-# MediaForge 0.2.3
+# MediaForge 0.2.4
 
 媒体与文档工作台：选择文件与工具、设置参数、观察任务、核对结果，再下载或继续处理。Web、CLI 和标准 MCP 使用同一个有认证的 API；服务端只接受工作区内的文件 ID。
 
@@ -119,3 +119,5 @@ PDF OCR 改用 OCRmyPDF；已有文本页保留，扫描页增加文字层。它
 Word 的 HTML/Markdown 正文导出使用 Mammoth、markdownify，保留标题、列表、表格和内嵌图片；样式与页眉页脚限制显示在结果中，完整外观使用 PDF。PDF→Word 使用固定版本 pdf2docx，并以 LibreOffice 渲染后复查可见文字和数字；发现明显丢字/漏数会失败，成功结果附排版预览。
 
 服务器语音默认使用 small 模型，逐词对齐并限制字幕两行/六秒；OCR 默认中英文；音量标准化采用两遍测量。模型选择以实测为准：BiRefNet-lite 在验收人像中漏掉头盔，故保留 U²-Net 并使用边缘细化。质量证据见 [质量验收报告](reports/quality-2026-10-07/verification.md)，组件来源与许可见 [第三方说明](docs/THIRD_PARTY.md)。
+
+0.2.4补充OCR版面选择：默认block连续文字，避免本轮中文样张漏掉整行；多栏用auto、散落标签用sparse。图片与扫描PDF共用该设置。

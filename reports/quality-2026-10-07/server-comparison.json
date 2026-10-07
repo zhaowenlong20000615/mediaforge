@@ -1,0 +1,99 @@
+{
+  "scope": "Same generated fixtures; metrics describe these fixtures, not universal model accuracy.",
+  "source_version": "0.2.2",
+  "target_version": "0.2.3",
+  "target_location": "after-server",
+  "jpeg": {
+    "before_ssim": 0.839369,
+    "after_ssim": 0.990526
+  },
+  "image_pdf": {
+    "before": {
+      "pixel_exact": false,
+      "ssim": 0.785734
+    },
+    "after": {
+      "pixel_exact": true,
+      "ssim": 1.0
+    }
+  },
+  "video_merge": {
+    "source": {
+      "width": 1920,
+      "height": 1080,
+      "fps": "60/1",
+      "duration": "2.000000"
+    },
+    "before": {
+      "width": 1280,
+      "height": 720,
+      "fps": "1843200/61747",
+      "duration": "4.061333"
+    },
+    "after": {
+      "width": 1920,
+      "height": 1080,
+      "fps": "60/1",
+      "duration": "4.023220"
+    },
+    "after_decoded_frames_exact": true,
+    "after_frame_count": 240
+  },
+  "word_exports": {
+    "before": {
+      "html_images": 0,
+      "html_tables": 1,
+      "html_lists": 0,
+      "md_embedded_images": 0,
+      "pdf_word_images": 0,
+      "pdf_word_tables": 0
+    },
+    "after": {
+      "html_images": 1,
+      "html_tables": 1,
+      "html_lists": 1,
+      "md_embedded_images": 1,
+      "pdf_word_images": 1,
+      "pdf_word_tables": 1
+    }
+  },
+  "asr": {
+    "sample": "Mac Tingting synthetic Mandarin, not recorded human speech",
+    "before": "歡迎使用媒體工具箱\n請將視頻轉換圍高清格式\n保持原來的畫面尺寸\n字幕需要準確\n文件編號是一二三四五\n我們將在明天下午三點檢查結果",
+    "after": "欢迎使用媒体工具箱。请将视频转换为高清格式,保持原来的画面尺寸。字幕需要准确。文件编号是12345。我们将在明天下午3点检查结果。",
+    "before_subtitle": {
+      "cues": 6,
+      "max_seconds": 3.48,
+      "max_lines": 1
+    },
+    "after_subtitle": {
+      "cues": 5,
+      "max_seconds": 5.04,
+      "max_lines": 2
+    }
+  },
+  "background": {
+    "method": "U2Net + alpha matting; BiRefNet-lite candidate rejected after visual review",
+    "helmet_roi": [
+      370,
+      380,
+      440,
+      460
+    ],
+    "before_helmet_opaque_fraction": 1.0,
+    "after_helmet_opaque_fraction": 1.0
+  },
+  "audio_normalize": {
+    "target_lufs": -16,
+    "measured_lufs": -15.94,
+    "true_peak_dbtp": -1.5
+  },
+  "ocr": {
+    "expected_chinese": "媒体工具箱质量验收合同编号应付金额元交付要求画面清晰文字完整",
+    "before": "PRL A A ea\nia» MF-2026-1007\n\nMHS : 1,280.50\n\nWord / PDF / OCR - Quality 12345\n",
+    "after": "媒体工具箱质量验收\n合同编号 : MF-2026-1007\n\n应付金额 : 1,280.50 元\n\nWord / PDF / OCR - Quality 12345\n",
+    "before_chinese_character_error_rate": 1.0,
+    "after_chinese_character_error_rate": 0.4
+  },
+  "passed": true
+}

@@ -1,0 +1,13 @@
+{
+  "client_version": "0.2.3",
+  "client_commit": "0c80b1da31660cbdf24eb7e3129b1efc27462d61",
+  "authenticated_download": 200,
+  "anonymous_download": 401,
+  "zip_sha256": "b9db288b10d7a2186e99f6dec090d202a60bd72558c14c7afb07110ba9096f9e",
+  "zip_crc_ok": true,
+  "includes_third_party_notices": true,
+  "installed_version": "0.2.3",
+  "installed_package_inside_download": true,
+  "cli_help_ok": true,
+  "real_cli_mcp_workflows_passed": true
+}

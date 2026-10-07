@@ -65,3 +65,7 @@ PDF→Word默认layout，保留图片/有框表格并附document-preview.pdf；�
 - Word HTML/Markdown保留正文语义与图片；quality_notes有样式/页眉页脚限制时必须告知使用者，完整外观导出PDF。
 - 字幕默认28格行宽（中文约两格）、每条至多两行和六秒；核对专名、时间和数字，不能把模型概率当准确率。OCR默认chi_sim+eng，缺语言包时按doctor选择已安装语言。
 - hdr_requires_conversion明确提示当前不支持HDR重编码；不要绕过后宣称色彩正确。
+
+## 0.2.4 OCR版面
+
+图片与PDF OCR默认layout=block（连续文字）。多栏材料显式layout=auto，零散文字layout=sparse。核对整行内容、编号与金额；非空TXT不等于识别完整。本轮真实服务器样张曾在auto模式漏掉一整行，因此不以任务succeeded作为质量判定。

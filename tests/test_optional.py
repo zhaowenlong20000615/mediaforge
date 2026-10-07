@@ -3,7 +3,7 @@ from pathlib import Path
 import subprocess
 import pytest
 from PIL import Image,ImageDraw,ImageFont
-from mediaforge.dependencies import checks,binary
+from mediaforge.dependencies import checks,binary,ocr_languages,font_path
 from .test_core import job,output_path
 
 
@@ -21,6 +21,28 @@ def test_ocr_actual_text(running,tmp_path):
     if binary('poppler'):
         t=job(s,'pdf-ocr',[pdf],{'language':'eng'});assert t['status']=='succeeded',t['error'];assert len(t['outputs'])==2
         assert '12345' in output_path(s,t).read_text()
+
+
+def test_chinese_ocr_retains_spaced_lines_and_amounts(running,tmp_path):
+    import img2pdf
+    if not {'chi_sim','eng'}<=set(ocr_languages()):pytest.skip('Chinese and English OCR language packs not configured')
+    font=font_path()
+    if not font:pytest.skip('Chinese OCR fixture font not available')
+    source=tmp_path/'chinese.png';image=Image.new('RGB',(1024,768),'white')
+    draw=ImageDraw.Draw(image);font=ImageFont.truetype(font,38)
+    lines=['媒体工具箱质量验收','合同编号：MF-2026-1007','应付金额：1,280.50 元','交付要求：画面清晰，文字完整。','Word / PDF / OCR - Quality 12345']
+    for i,line in enumerate(lines):draw.text((45,55+i*105),line,font=font,fill='#172b45')
+    image.save(source)
+    pdf=tmp_path/'chinese.pdf';pdf.write_bytes(img2pdf.convert(str(source)))
+    store,_=running
+    for operation,path in [('image-ocr',source),('pdf-ocr',pdf)]:
+        t=job(store,operation,[path]);assert t['status']=='succeeded',t['error']
+        text=''.join(output_path(store,t).read_text().split())
+        assert all(value in text for value in ['媒体工具箱质量验收','合同编号','MF-2026-1007','应付金额','1,280.50','交付要求','画面清晰','文字完整','12345']),text
+        if operation=='pdf-ocr':
+            from pypdf import PdfReader
+            searchable=''.join(PdfReader(output_path(store,t,1)).pages[0].extract_text().split())
+            assert '交付要求' in searchable and '1,280.50' in searchable
 
 
 def test_asr_local_model(running):

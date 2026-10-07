@@ -48,6 +48,19 @@ test('PDF 无效页码、调整参数、旋转预览与中文筛选',async({page
  await expect(page.locator('.task-table tbody')).toContainText('处理失败');expect(await page.locator('.task-table tbody .tag').allTextContents()).toEqual(expect.arrayContaining(['处理失败']));expect((await page.locator('.task-table tbody .tag').allTextContents()).every(x=>x==='处理失败')).toBe(true);
 });
 
+test('PDF 转 Word 生成文档和实际排版预览，预览可见',async({page})=>{
+ await tool(page,'PDF 转 Word');await choose(page,['三页.pdf']);
+ await page.getByRole('button',{name:'创建任务 →',exact:true}).click();await finished(page);
+ const task=await(await page.request.get('./api/tasks/'+page.url().split('/').pop())).json();
+ expect(task.outputs).toHaveLength(2);
+ expect(task.outputs[0].kind).toBe('docx');expect(task.outputs[0].verification.rendered_numbers_preserved).toBe(true);
+ const preview=page.locator('.result').filter({hasText:'document-preview.pdf'});
+ await expect(preview).toContainText('Word 实际排版预览');
+ await preview.getByRole('button',{name:'预览',exact:true}).click();
+ await expect.poll(()=>page.locator('#preview-panel img').evaluate(x=>x.complete&&x.naturalWidth>0)).toBe(true);
+ await expect(page.locator('#preview-panel')).toContainText('1 / 3 页');
+});
+
 test('并发上传按选择顺序排列，不按网络完成顺序',async({page})=>{
  await page.route('**/api/files?name=*',async route=>{
   const response=await route.fetch();

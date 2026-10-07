@@ -19,6 +19,7 @@ def choice(title, values, default):
 FORMAT_IMAGE = choice('输出格式', ['png', 'jpeg', 'webp', 'tiff', 'bmp'], 'png')
 QUALITY = field('integer', '画质（1–100）', 92, minimum=1, maximum=100)
 LANG = field('string', 'OCR 语言（如 eng、chi_sim）', 'chi_sim+eng', pattern=r'^[A-Za-z_+]{2,50}$')
+OCR_LAYOUT = choice('OCR 版面（block 连续文字 / auto 多栏 / sparse 零散文字）', ['block','auto','sparse'], 'block')
 PASSWORD = field('string', 'PDF 打开密码（可选）', '', maxLength=200, format='password', sensitive=True)
 RIGHTS = field('boolean', '我拥有素材编辑权', False, const=True)
 PAGES = field('string', '页码（留空为全部，如 1-3,5）', '', maxLength=200, pattern=r'^[0-9,\- ]*$')
@@ -75,7 +76,7 @@ OPS = [
     op('pdf-images','PDF 转图片','PDF / Word',['pdf'],['pypdf','poppler'],'将选定页面渲染成 PNG。',{'pages':PAGES,'dpi':field('integer','渲染 DPI',120,minimum=72,maximum=300),'password':PASSWORD}),
     op('pdf-text','PDF 提取文本','PDF / Word',['pdf'],['pypdf'],'按页提取可选中的文字。',{'pages':PAGES,'password':PASSWORD},note='扫描 PDF 没有文本层时，请使用 PDF OCR。'),
     op('pdf-word','PDF 转 Word','PDF / Word',['pdf'],['pypdf','docx','pdf2docx'],'转换为可编辑 Word，附实际排版的 PDF 预览。',{'password':PASSWORD,'mode':choice('转换方式',['layout','text'],'layout')},note='layout 保留图片与有框表格，并检查渲染后的文字与数字；text 仅提取文字。扫描件请先 OCR；多栏、公式及无框表格请核对预览。'),
-    op('pdf-ocr','PDF OCR','PDF / Word',['pdf'],['pypdf','ocrmypdf','tesseract'],'保留已有文本与页面内容，为扫描页补 OCR 文字层。',{'pages':PAGES,'language':LANG,'password':PASSWORD}),
+    op('pdf-ocr','PDF OCR','PDF / Word',['pdf'],['pypdf','ocrmypdf','tesseract'],'保留已有文本与页面内容，为扫描页补 OCR 文字层。',{'pages':PAGES,'language':LANG,'layout':OCR_LAYOUT,'password':PASSWORD},note='默认按连续文字识别；多栏页面选择 auto，零散标签选择 sparse。请核对金额、编号与是否漏行。'),
     op('pdf-tables','PDF 表格提取','PDF / Word',['pdf'],['pypdf','pdfplumber'],'提取可检测的表格为 CSV 和 JSON。',{'password':PASSWORD},note='扫描表格与跨页复杂布局可能无法可靠还原；请检查行列与合并单元格。'),
     op('office-convert','Word 转换','PDF / Word',['docx','doc'],['office-dynamic'],'Word 转 PDF、HTML、Markdown 或文本。',{
         'format':choice('输出格式',['pdf','html','md','txt'],'pdf')},note='旧版 .doc 及 PDF 导出需要 LibreOffice；HTML/Markdown 保留标题、列表、格式、表格与图片；它们采用语义排版，视觉版式需要 PDF。'),
@@ -91,7 +92,7 @@ OPS = [
         'x':field('integer','左边距',0,minimum=0),'y':field('integer','上边距',0,minimum=0),
         'width':field('integer','裁剪宽度',500,minimum=1,maximum=16000),
         'height':field('integer','裁剪高度',500,minimum=1,maximum=16000)}),
-    op('image-ocr','图片 OCR','图片',['image'],['tesseract'],'识别图片文字，输出 TXT。',{'language':LANG}),
+    op('image-ocr','图片 OCR','图片',['image'],['tesseract'],'识别图片文字，输出 TXT。',{'language':LANG,'layout':OCR_LAYOUT},note='默认按连续文字识别；多栏页面选择 auto，零散标签选择 sparse。请核对金额、编号与是否漏行。'),
     op('image-pdf','图片合成 PDF','图片',['image'],['pillow','img2pdf'],'无损嵌入图片，按列表顺序合成多页 PDF。',{},combine=True),
     op('image-rename','图片批量重命名','图片',['image'],['pillow'],'以自定义前缀与序号导出副本，保留原文件。',{
         'prefix':field('string','文件名前缀','image',minLength=1,maxLength=60,pattern=r'^[^/\\\x00-\x1f]+$'),

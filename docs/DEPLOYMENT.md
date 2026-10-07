@@ -53,3 +53,7 @@ DRY_RUN=1 ./deploy/activate.sh
 TLS证书由主机已有证书续期机制维护，本项目复用证书路径。发布验收需要检查证书有效期、未授权401、授权主流程、可用依赖、真实业务输出、MCP、CLI及回滚，不仅检查healthz。
 
 0.2.3默认PDF→Word需LibreOffice做渲染核验；可编辑DOCX与PDF排版预览一同返回。模型部署默认small（详见MODELS.md）；已有runtime.env不会被activate静默覆盖，模型切换需要项目内独立备份/校验。升级依赖后将不再属于uv.lock的旧wheel移到dist/previous-wheels再打包，完整性检查会拒绝混入未锁定依赖。
+
+## 复用已上传的依赖（可选）
+
+第三方依赖未改变、当前服务器发布有完整wheel缓存时，可以设置`MEDIAFORGE_DEPENDENCY_CACHE_COMMIT`为该发布的完整40位Git提交后运行package。本机构建仍检查完整锁定wheelhouse；发布包携带该缓存来源，不重复携带第三方wheel。服务器在安装前强制核对当前发布commit，pip仍使用incoming requirements的require-hashes离线校验；任何缺包/不匹配都在切换current前失败。pip实际验证并安装的缓存wheel会以硬链接保留在新发布目录，共用磁盘块，可供下次更新使用。新安装、当前缓存不完整或无法确认时不设置此变量，使用完整包；回滚点仍保留。
