@@ -8,7 +8,7 @@ import subprocess
 import warnings
 import zipfile
 from pathlib import Path
-from .dependencies import binary
+from .dependencies import verified_binary
 from .errors import ForgeError
 
 
@@ -24,7 +24,7 @@ def sha256(path):
 
 
 def probe(path):
-    exe=binary('ffprobe')
+    exe=verified_binary('ffprobe')
     if not exe:
         raise ForgeError('dependency_missing','媒体检查需要 FFprobe。','安装 FFmpeg 后重试。',409)
     try:

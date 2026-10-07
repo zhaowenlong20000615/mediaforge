@@ -14,6 +14,7 @@ import tempfile
 import time
 from datetime import datetime,timezone
 import httpx
+from mediaforge.dependencies import verified_binary
 from PIL import Image,ImageDraw,ImageFont
 from pypdf import PdfReader
 from docx import Document
@@ -51,7 +52,9 @@ def main():
             c.save()
             doc=Document();doc.add_paragraph('Hello MediaForge World');doc.add_table(rows=1,cols=2).cell(0,0).text='Table text';doc.save(folder/'word.docx')
             (folder/'captions.srt').write_text('1\n00:00:00,000 --> 00:00:01,000\nMEDIAFORGE TEST\n\n2\n00:00:01,000 --> 00:00:02,000\nSECOND LINE\n')
-            def ff(args):subprocess.run(['ffmpeg','-y','-v','error',*map(str,args)],check=True,capture_output=True,timeout=30)
+            ffmpeg=verified_binary('ffmpeg')
+            if not ffmpeg:raise SystemExit('A working ffmpeg is required to generate synthetic smoke fixtures')
+            def ff(args):subprocess.run([ffmpeg,'-y','-v','error',*map(str,args)],check=True,capture_output=True,timeout=30)
             ff(['-f','lavfi','-i','sine=frequency=440:duration=2',folder/'sound.wav'])
             ff(['-f','lavfi','-i','color=c=blue:s=320x240:d=2','-i',folder/'sound.wav','-c:v','libx264','-c:a','aac',folder/'video.mp4'])
             ff(['-i',folder/'video.mp4','-i',folder/'sound.wav','-i',folder/'captions.srt','-map','0:v','-map','0:a','-map','1:a','-map','2:s','-c:v','copy','-c:a','aac','-c:s','mov_text',folder/'tracks.mp4'])
@@ -103,7 +106,7 @@ def main():
                 export=client.request('POST','api/exports',json={'task_ids':finished[:3],'idempotency_key':'smoke-export'})
                 t=client.wait(export['id'],60);report['operations'].append({'operation':'export-results','id':t['id'],'status':t['status'],'error':t['error'],'outputs':t['outputs']})
                 print('export-results',t['status'],flush=True)
-            report['passed']=all(x['status']=='succeeded' for x in report['operations']) and len(report['operations'])==31
+            report['passed']=all(x['status']=='succeeded' and x['outputs'] for x in report['operations']) and len(report['operations'])==31
         finally:
             try:report['cleanup']=client.request('POST','api/cleanup',json={'days':0,'dry_run':False})
             except Exception:report['cleanup']={'failed':True}

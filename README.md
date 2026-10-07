@@ -110,4 +110,4 @@ PDF OCR 改用 OCRmyPDF；已有文本页保留，扫描页增加文字层。它
 
 前端端到端测试采用Playwright，axe-core检查可访问性。运行 `npm ci && npm run test:ui` 前启动隔离测试服务并配置 `MF_BROWSER_URL`、`MF_BROWSER_TOKEN_FILE`；仅使用测试工作区。详见 `reports/audit-2026-10-06/verification.md`。
 
-已有多个FFmpeg安装时，诊断会检查当前PATH选择的程序；例如macOS可在启动命令前使用 `PATH=/opt/homebrew/opt/ffmpeg-full/bin:$PATH` 选择已安装且可运行的完整版本。不会自动改写系统PATH或替换其他项目的依赖。
+已有多个FFmpeg安装时，诊断与执行共用已核验的程序路径；macOS默认安装损坏时，会尝试已安装的Homebrew完整版本。启动检查最多缓存30秒。不会改写系统PATH、安装系统软件或替换其他项目的依赖。

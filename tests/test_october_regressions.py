@@ -121,6 +121,7 @@ def test_doctor_does_not_call_crashing_binary_available(tmp_path,monkeypatch):
     path=tmp_path/'ffmpeg';path.write_text('#!/bin/sh\nexit 23\n');path.chmod(0o755)
     monkeypatch.setattr(deps,'binary',lambda name:str(path) if name in {'ffmpeg','ffprobe'} else None)
     monkeypatch.setattr(deps,'installed',lambda name:False)
+    monkeypatch.setattr(deps.platform, 'system', lambda: 'FreeBSD')
     result={x['id']:x for x in deps.checks()}
     assert not result['ffmpeg']['available'] and result['ffmpeg']['status']=='broken'
     assert 'stderr' not in result['ffmpeg']['details']

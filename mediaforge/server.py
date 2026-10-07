@@ -207,12 +207,12 @@ def create_app(settings=None,start_worker=True):
     def pdf_page(id:str,page:int=Query(1,ge=1,le=500),who=Depends(owner)):
         import tempfile
         import subprocess
-        from .dependencies import binary
+        from .dependencies import verified_binary
         f=store.file(who,id,True)
         if f['kind']!='pdf':raise ForgeError('not_pdf','此文件不是 PDF。')
         if f.get('encrypted') and not f.get('pages'):raise ForgeError('password_required','此 PDF 需要密码。','先以正确密码处理，再预览结果。',409)
         if page>f.get('pages',0):raise ForgeError('page_range','页码超出范围。')
-        exe=binary('poppler')
+        exe=verified_binary('poppler')
         if not exe:raise ForgeError('dependency_missing','PDF 预览需要 Poppler。','在诊断页配置 PDF 渲染工具。',409)
         with tempfile.TemporaryDirectory(prefix='preview-',dir=store.root/'staging') as folder:
             prefix=Path(folder)/'page'

@@ -12,7 +12,7 @@ import subprocess
 import sys
 import warnings
 from .errors import ForgeError,safe_error
-from .dependencies import binary,ocr_languages,font_path
+from .dependencies import verified_binary,ocr_languages,font_path
 from .files import probe
 
 
@@ -55,7 +55,9 @@ class Context:
         return output
 
     def ffmpeg(self,args,duration=0):
-        return self.run([binary('ffmpeg'),'-hide_banner','-loglevel','error','-nostdin','-y','-threads','2','-filter_threads','2','-protocol_whitelist','file,pipe',*args,'-progress','pipe:1','-nostats'],progress=True,duration=duration)
+        exe=verified_binary('ffmpeg')
+        if not exe:raise ForgeError('dependency_missing','FFmpeg 目前无法启动。','打开诊断修复 FFmpeg 动态库后重试。',409)
+        return self.run([exe,'-hide_banner','-loglevel','error','-nostdin','-y','-threads','2','-filter_threads','2','-protocol_whitelist','file,pipe',*args,'-progress','pipe:1','-nostats'],progress=True,duration=duration)
 
 
 def check_track(file,kind,track=0):
@@ -217,7 +219,9 @@ def ocr(c,image,base,searchable=False):
     language=c.p.get('language','eng')
     if not set(language.split('+'))<=set(ocr_languages()):
         raise ForgeError('ocr_language_missing','所选 OCR 语言包未安装。','在诊断页查看可用语言并选择，或请管理员安装。')
-    args=[binary('tesseract'),str(image),str(base),'-l',language]
+    exe=verified_binary('tesseract')
+    if not exe:raise ForgeError('dependency_missing','Tesseract 目前无法启动。','打开诊断修复 OCR 工具后重试。',409)
+    args=[exe,str(image),str(base),'-l',language]
     args+=['pdf','txt'] if searchable else ['txt']
     c.run(args)
     return base.with_suffix('.txt').read_text(encoding='utf-8').strip()
@@ -286,7 +290,9 @@ def pdf(c):
         else:
             for j,i in enumerate(pages):
                 prefix=c.work/f'page-{i+1:04}';dpi=c.p.get('dpi',150)
-                c.run([binary('poppler'),'-f',str(j+1),'-l',str(j+1),'-singlefile','-r',str(dpi),'-png',decrypted,prefix])
+                exe=verified_binary('poppler')
+                if not exe:raise ForgeError('dependency_missing','Poppler 目前无法启动。','打开诊断修复 PDF 渲染工具后重试。',409)
+                c.run([exe,'-f',str(j+1),'-l',str(j+1),'-singlefile','-r',str(dpi),'-png',decrypted,prefix])
                 c.out(prefix.with_suffix('.png'),verification={'source_page':i+1,'dpi':dpi})
                 c.progress(10+(j+1)/len(pages)*82,'渲染页面')
     elif op=='pdf-tables':
@@ -324,7 +330,9 @@ def office(c):
         profile=c.work/'lo-profile';output=c.work/'lo-output';output.mkdir()
         fmt='pdf' if p['format']=='pdf' else 'docx'
         c.progress(15,'使用独立 Office 进程转换')
-        c.run([binary('libreoffice'),'-env:UserInstallation='+profile.as_uri(),'--headless','--convert-to',fmt,'--outdir',output,src])
+        exe=verified_binary('libreoffice')
+        if not exe:raise ForgeError('dependency_missing','LibreOffice 目前无法启动。','打开诊断修复 Office 工具后重试。',409)
+        c.run([exe,'-env:UserInstallation='+profile.as_uri(),'--headless','--convert-to',fmt,'--outdir',output,src])
         converted=output/(src.stem+'.'+fmt)
         if not converted.exists():raise ForgeError('office_conversion_failed','Office 转换没有生成结果。','检查文档是否加密或损坏。')
         if fmt=='pdf':
