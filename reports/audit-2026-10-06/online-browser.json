@@ -1,0 +1,85 @@
+{
+  "server": "https://107.151.245.166:18081/mediaforge/",
+  "version_commit": "0c00918d0e9cde2d915511c9e8a0417c100f3eff",
+  "stats": {
+    "startTime": "2026-10-07T07:32:36.511Z",
+    "duration": 81272.092,
+    "expected": 7,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "cases": [
+    {
+      "title": "上传、处理、下载校验、图片预览与可访问性",
+      "passed": true,
+      "runs": [
+        {
+          "status": "passed",
+          "duration_ms": 11744
+        }
+      ]
+    },
+    {
+      "title": "PDF 无效页码、调整参数、旋转预览与中文筛选",
+      "passed": true,
+      "runs": [
+        {
+          "status": "passed",
+          "duration_ms": 15139
+        }
+      ]
+    },
+    {
+      "title": "并发上传按选择顺序排列，不按网络完成顺序",
+      "passed": true,
+      "runs": [
+        {
+          "status": "passed",
+          "duration_ms": 10692
+        }
+      ]
+    },
+    {
+      "title": "慢响应不会覆盖新页面，窄屏保留导航且无横向溢出",
+      "passed": true,
+      "runs": [
+        {
+          "status": "passed",
+          "duration_ms": 8314
+        }
+      ]
+    },
+    {
+      "title": "断网有明确状态，重新连接后可恢复使用",
+      "passed": true,
+      "runs": [
+        {
+          "status": "passed",
+          "duration_ms": 15846
+        }
+      ]
+    },
+    {
+      "title": "退出后不再接收旧会话中的上传结果",
+      "passed": true,
+      "runs": [
+        {
+          "status": "passed",
+          "duration_ms": 10407
+        }
+      ]
+    },
+    {
+      "title": "修改高级参数后不会错误复用上一次请求的幂等键",
+      "passed": true,
+      "runs": [
+        {
+          "status": "passed",
+          "duration_ms": 8390
+        }
+      ]
+    }
+  ],
+  "scope": "Isolated synthetic review workspace; upload/processing/download use real service; delayed/offline tests intentionally inject browser transport conditions."
+}

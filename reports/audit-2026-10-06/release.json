@@ -1,0 +1,44 @@
+{
+  "project_id": "local.mediaforge",
+  "version": "0.2.2",
+  "git_commit": "0c00918d0e9cde2d915511c9e8a0417c100f3eff",
+  "artifact_sha256": "0fbbf81c3719d6e959029b82e30d884836ae5410964f298cc0af0b583f4774fc",
+  "built_at": "2026-10-07T07:26:05Z",
+  "python": "3.12",
+  "target": "linux-x86_64",
+  "artifact_name": "mediaforge-0.2.2-0c00918d0e9c-20261007T072605Z.tar.gz",
+  "validated_on": "2026-10-07",
+  "timezone": "America/Los_Angeles",
+  "source_push": "origin/main and exact application commit verified",
+  "delivery_commit": "0c00918d0e9cde2d915511c9e8a0417c100f3eff",
+  "public_checks": {
+    "/version": {
+      "status": 200,
+      "body": {
+        "name": "mediaforge",
+        "version": "0.2.2",
+        "git_commit": "0c00918d0e9cde2d915511c9e8a0417c100f3eff",
+        "artifact_sha256": "0fbbf81c3719d6e959029b82e30d884836ae5410964f298cc0af0b583f4774fc",
+        "built_at": "2026-10-07T07:26:05Z"
+      }
+    },
+    "/healthz": {
+      "status": 200
+    },
+    "/readyz": {
+      "status": 200,
+      "body": {
+        "status": "ready",
+        "worker_ready": true,
+        "optional_or_external_dependencies_missing": [],
+        "meaning": "服务就绪不代表所有工具或模型已配置；工具目录给出每项可用性。"
+      }
+    },
+    "/mediaforge/api/tasks": {
+      "status": 401
+    },
+    "/mediaforge/access/": {
+      "status": 200
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-07",
+  "checks": {
+    "guide_available": true,
+    "anonymous_package_denied": true,
+    "download_hash_matches": true,
+    "valid_zip": true,
+    "source_version_matches": true,
+    "installed_help": true,
+    "installed_remote_doctor": true
+  },
+  "installation_mode": "provided installer; first install requires package-registry network, as documented",
+  "version": "0.2.2",
+  "source_commit": "0c00918d0e9cde2d915511c9e8a0417c100f3eff",
+  "package": {
+    "name": "mediaforge-0.2.2-client.zip",
+    "size": 81705,
+    "sha256": "343a24c37a9ccff6906439da98e2df4100df2da61abda88448cb11617e3d1f4b"
+  },
+  "passed": true
+}

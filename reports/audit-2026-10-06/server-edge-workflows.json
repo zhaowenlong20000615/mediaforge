@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-07",
+  "version": {
+    "name": "mediaforge",
+    "version": "0.2.2",
+    "git_commit": "0c00918d0e9cde2d915511c9e8a0417c100f3eff",
+    "artifact_sha256": "0fbbf81c3719d6e959029b82e30d884836ae5410964f298cc0af0b583f4774fc",
+    "built_at": "2026-10-07T07:26:05Z"
+  },
+  "fixture": "Synthetic files only, isolated review workspace",
+  "checks": {
+    "mixed_pdf_vector_and_scan": true,
+    "live_cancel_and_resume": true
+  },
+  "cancel_resume": {
+    "status_after_cancel": "cancelled",
+    "status_after_resume": "succeeded",
+    "retained_outputs": 3,
+    "completed_items": 6
+  },
+  "passed": true,
+  "cleanup": {
+    "dry_run": false,
+    "files": 36,
+    "bytes": 1202902,
+    "tasks": 7
+  }
+}
