@@ -1,0 +1,996 @@
+{
+  "tested_at": "2026-10-07T07:08:05.193237+00:00",
+  "server": "https://107.151.245.166:18081/mediaforge",
+  "fixture": "Synthetic files generated locally and processed over real HTTPS; no user documents",
+  "operations": [
+    {
+      "operation": "image-process",
+      "id": "task_4c1785b6979940a79ba83b6ed78cae1f",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "image__image.webp",
+          "size": 988,
+          "sha256": "366c6bd550fde6df255b4addb411c04fc1eb0975e94c6b1204e2a3e41b17ce84",
+          "kind": "image",
+          "width": 160,
+          "height": 120,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "width": 160,
+            "height": 120,
+            "format": "webp",
+            "animated_source_frames": 1,
+            "processed_frame": 0
+          }
+        }
+      ]
+    },
+    {
+      "operation": "image-crop",
+      "id": "task_16a75b5a841944a0b593e383dccc3b83",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "image__image.png",
+          "size": 169,
+          "sha256": "b550dab6992b826997efdb672091b47cafae2ac90dc1b503d4452ffff1b458bc",
+          "kind": "image",
+          "width": 80,
+          "height": 90,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "width": 80,
+            "height": 90,
+            "format": "png",
+            "animated_source_frames": 1,
+            "processed_frame": 0
+          }
+        }
+      ]
+    },
+    {
+      "operation": "image-rename",
+      "id": "task_0fcb7f103ca3455bab69bafb480a573d",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "测试图片-0001.png",
+          "size": 4359,
+          "sha256": "22c9b07a2f5c3102b64662c5e0ee8c71e807dbc088e895d045a8cbf41ef361d6",
+          "kind": "image",
+          "width": 800,
+          "height": 600,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "operation": "rename_copy",
+            "content_unchanged": true
+          }
+        }
+      ]
+    },
+    {
+      "operation": "watermark",
+      "id": "task_fa2573e660624c38867e9fbf99d3c90c",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "image__image.png",
+          "size": 10119,
+          "sha256": "520f9f0b32db3d5622488d025a112fb6e70fb61f398dd17245a43a6f9c1395d9",
+          "kind": "image",
+          "width": 800,
+          "height": 600,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "width": 800,
+            "height": 600,
+            "format": "png",
+            "animated_source_frames": 1,
+            "processed_frame": 0
+          }
+        }
+      ]
+    },
+    {
+      "operation": "image-pdf",
+      "id": "task_f9e7cf6a0b9b4fbbae7c88a1c3b48c22",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "images.pdf",
+          "size": 28014,
+          "sha256": "f6d08dbc641278be0dbe53706dabd5d714c0e5c8d565d2286102386b471b96ef",
+          "kind": "pdf",
+          "width": null,
+          "height": null,
+          "pages": 2,
+          "duration": null,
+          "verification": {
+            "pages": 2
+          }
+        }
+      ]
+    },
+    {
+      "operation": "image-ocr",
+      "id": "task_8464cd77537e45a18e4f5f46026d6052",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "text__recognized.txt",
+          "size": 22,
+          "sha256": "45d4f728eb39ade1fd2c86a79672a635c4187a4e5df8e067c0d7108bb8bc18f0",
+          "kind": "text",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "language": "eng"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "image-background",
+      "id": "task_63292b70bdb04477adfcebe37448b986",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "image__image.png",
+          "size": 44343,
+          "sha256": "3e949a7199355e4e87008ced8174c7acef845a7d83e38fce77759261eb2fe11f",
+          "kind": "image",
+          "width": 800,
+          "height": 600,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "width": 800,
+            "height": 600,
+            "format": "png",
+            "animated_source_frames": 1,
+            "processed_frame": 0
+          }
+        }
+      ]
+    },
+    {
+      "operation": "image-repair",
+      "id": "task_00da2d5f2676405aab50f7c82fc395f5",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "image.png",
+          "size": 4266,
+          "sha256": "35ff3e928fe2bb2c3826c782908d3d1ce98967117b7211213c491e654dffc4f4",
+          "kind": "image",
+          "width": 800,
+          "height": 600,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "width": 800,
+            "height": 600,
+            "format": "png",
+            "animated_source_frames": 1,
+            "processed_frame": 0
+          }
+        }
+      ]
+    },
+    {
+      "operation": "pdf-split",
+      "id": "task_35bb03e16bda4829ad6bf8ab7fe3bda9",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "pages__page-0001.pdf",
+          "size": 1044,
+          "sha256": "799ebf3fd036508034059384a298649bcbd4c13b8f1e53f421af53c8c53eed8b",
+          "kind": "pdf",
+          "width": null,
+          "height": null,
+          "pages": 1,
+          "duration": null,
+          "verification": {
+            "pages": 1,
+            "source_page": 1
+          }
+        },
+        {
+          "name": "pages__page-0003.pdf",
+          "size": 939,
+          "sha256": "1655d53a710e6b00f852a1f1137262ed6fdbd016c93cd73948033ec056b4d1dc",
+          "kind": "pdf",
+          "width": null,
+          "height": null,
+          "pages": 1,
+          "duration": null,
+          "verification": {
+            "pages": 1,
+            "source_page": 3
+          }
+        }
+      ]
+    },
+    {
+      "operation": "pdf-merge",
+      "id": "task_a88a39316a204cdf81883e0fdec5d6d8",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "merge.pdf",
+          "size": 3602,
+          "sha256": "a7ee17ff2a7e7baf37608e755591c08de9f0fa4faa5b0c6332faf76e997a6d98",
+          "kind": "pdf",
+          "width": null,
+          "height": null,
+          "pages": 6,
+          "duration": null,
+          "verification": {
+            "pages": 6,
+            "source_pages": 6
+          }
+        }
+      ]
+    },
+    {
+      "operation": "pdf-rotate",
+      "id": "task_2481cadd3c894378877ad428af688dfd",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "pages__rotate.pdf",
+          "size": 1952,
+          "sha256": "bd07b1b00be6f84506f1304c1b229f0025443d97d3a708d374e98232e61b5320",
+          "kind": "pdf",
+          "width": null,
+          "height": null,
+          "pages": 3,
+          "duration": null,
+          "verification": {
+            "pages": 3,
+            "source_pages": 3,
+            "rotations": [
+              0,
+              90,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "operation": "pdf-compress",
+      "id": "task_11eba354d95d423fbc53b74dff9b84fb",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "pages__compress.pdf",
+          "size": 1796,
+          "sha256": "f182ddec0adcd5d658393a1de950b883faa02a40e76a31c9be23ba75075a94db",
+          "kind": "pdf",
+          "width": null,
+          "height": null,
+          "pages": 3,
+          "duration": null,
+          "verification": {
+            "pages": 3,
+            "source_pages": 3
+          }
+        }
+      ]
+    },
+    {
+      "operation": "pdf-images",
+      "id": "task_23647c3601a844738eddf065430b26ee",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "pages__page-0001.png",
+          "size": 6983,
+          "sha256": "6db9e12a0388d7778a88cf7fd1f4df30f9ae176ed524fe4167f32406cdbe7106",
+          "kind": "image",
+          "width": 596,
+          "height": 842,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "source_page": 1,
+            "dpi": 72
+          }
+        }
+      ]
+    },
+    {
+      "operation": "pdf-text",
+      "id": "task_b4658ce40a0c458cab48800b5ba5f60a",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "pages__document.txt",
+          "size": 93,
+          "sha256": "46521a1b369f9423694fefc01d63086225de9a28ab650b34630ac4dba213292a",
+          "kind": "text",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "source_pages": 3,
+            "mode": "text_reflow"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "pdf-word",
+      "id": "task_b2fdf1ab9f6542fa93c128dabf4c9b63",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "pages__document.docx",
+          "size": 36644,
+          "sha256": "2370b49555bc41b89fba7087967bb27ef35f9ee0464408ae74a084102ec83ee6",
+          "kind": "docx",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "source_pages": 3,
+            "mode": "text_reflow"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "pdf-tables",
+      "id": "task_c52967d0b48644fda0fbc2570e6b0cfd",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "pages__table-001.csv",
+          "size": 25,
+          "sha256": "64925907a9a19b092a0d196100654014eb7e82088d1b4cd674eb17bb271877fc",
+          "kind": "text",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "source_page": 1,
+            "rows": 2
+          }
+        },
+        {
+          "name": "pages__tables.json",
+          "size": 59,
+          "sha256": "643311f91c0eee3abc64041af85aeea04b8a0998890dbe3c7d5844153fc3fcfe",
+          "kind": "text",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "tables": 1
+          }
+        }
+      ]
+    },
+    {
+      "operation": "pdf-ocr",
+      "id": "task_bf3e47718a4f450e8ba9f1ba21de0196",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "pages__recognized.txt",
+          "size": 43,
+          "sha256": "bf4c7e40f46485912cb66fa6529167836493392d907b77f2f7422cf8b0cbdfdd",
+          "kind": "text",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "readable": true
+          }
+        },
+        {
+          "name": "pages__searchable.pdf",
+          "size": 1915,
+          "sha256": "29230e5d1d4a844549e147c73313c904f4c1b22cddab03501900f43a1986ec34",
+          "kind": "pdf",
+          "width": null,
+          "height": null,
+          "pages": 1,
+          "duration": null,
+          "verification": {
+            "pages": 1,
+            "searchable": true,
+            "engine": "ocrmypdf",
+            "existing_text_preserved": true
+          }
+        }
+      ]
+    },
+    {
+      "operation": "office-convert",
+      "id": "task_4ba18e7c04d74dcfbd340ead18607205",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "word__document.pdf",
+          "size": 11584,
+          "sha256": "b40db192060b8a8a4dbfcce8961f60f758b638e267f1a0ee6d3c353438665434",
+          "kind": "pdf",
+          "width": null,
+          "height": null,
+          "pages": 1,
+          "duration": null,
+          "verification": {
+            "pages": 1
+          }
+        }
+      ]
+    },
+    {
+      "operation": "word-replace",
+      "id": "task_b4a352659e9e4080bdcb712dfa142447",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "word__replaced.docx",
+          "size": 39812,
+          "sha256": "e8ceed5c0bc1bc66ae21d17698ca8b03ca28e4cf59622bd4e9d77935d6abaca1",
+          "kind": "docx",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "replacements": 1
+          }
+        }
+      ]
+    },
+    {
+      "operation": "video-transcode",
+      "id": "task_2b1c4077588640b0b2d766ef7b3853bc",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "video__video.mp4",
+          "size": 22374,
+          "sha256": "b6dbf9dd26f781941578ed70f500f79a43fd0b523c731d074f7b510a2a7db921",
+          "kind": "video",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": 2.02,
+          "verification": {
+            "operation": "video-transcode",
+            "expected_container": "mp4",
+            "codec": "libx264"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "audio-extract",
+      "id": "task_af54a14f9a214acead84c953e91bd22a",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "tracks__audio.flac",
+          "size": 107846,
+          "sha256": "4fb7f23feb03a5dfd21c2607531e45353a375aee139a531a439acacd8ef40a55",
+          "kind": "audio",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": 2.020136,
+          "verification": {
+            "audio_codecs": [
+              "flac"
+            ],
+            "source_track": 1
+          }
+        }
+      ]
+    },
+    {
+      "operation": "media-trim",
+      "id": "task_06070220dae0455eb0ca540a260f0ead",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "video__clip.mp4",
+          "size": 9433,
+          "sha256": "f795b3f52ede5c79932a7c8960ec411386a15c01956366cdc8b663a03a398c98",
+          "kind": "video",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": 0.72,
+          "verification": {
+            "requested_start": 0.5,
+            "expected_duration": 0.7,
+            "actual_duration": 0.72
+          }
+        }
+      ]
+    },
+    {
+      "operation": "media-merge",
+      "id": "task_f1ec8c8840754944a43bda996b7e779f",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "merged.mp4",
+          "size": 78007,
+          "sha256": "ae4f25c33d40ada81654e91f9be004d21f5a89addd0b0a2cded7a6a8e3f37499",
+          "kind": "video",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": 4.061333,
+          "verification": {
+            "merged_files": 2,
+            "order_preserved": true
+          }
+        }
+      ]
+    },
+    {
+      "operation": "media-compress",
+      "id": "task_0aec4c8ab6cf4ac1a9165f30326305fb",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "video__video.mp4",
+          "size": 22384,
+          "sha256": "52918c5104c30e9e36842da260f2610d2e3a40e0dd382a5f41cb39521ae8183d",
+          "kind": "video",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": 2.02,
+          "verification": {
+            "operation": "media-compress",
+            "expected_container": "mp4",
+            "codec": "libx264"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "video-frames",
+      "id": "task_a19ef20e090847489d47a18e963adae6",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "video__frame-0001.png",
+          "size": 886,
+          "sha256": "e113685ccc2119e9040231f91f6cdc4205af57798d7cf1c4b80bbcb5e4e4776b",
+          "kind": "image",
+          "width": 320,
+          "height": 240,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "decoded_frame": true
+          }
+        },
+        {
+          "name": "video__frame-0002.png",
+          "size": 886,
+          "sha256": "e113685ccc2119e9040231f91f6cdc4205af57798d7cf1c4b80bbcb5e4e4776b",
+          "kind": "image",
+          "width": 320,
+          "height": 240,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "decoded_frame": true
+          }
+        }
+      ]
+    },
+    {
+      "operation": "audio-normalize",
+      "id": "task_ed1d2f055bc944acb767f6eba50fd23e",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "sound__audio.wav",
+          "size": 192078,
+          "sha256": "346814818d815af48a0842fb0ce2c786a84dc0c4cbddfc089f8bede429b96a98",
+          "kind": "audio",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": 2.0,
+          "verification": {
+            "audio_codecs": [
+              "pcm_s16le"
+            ],
+            "source_track": 0
+          }
+        }
+      ]
+    },
+    {
+      "operation": "audio-denoise",
+      "id": "task_bec7a5045ce74c799b66cf988baef80b",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "sound__audio.wav",
+          "size": 176478,
+          "sha256": "5adae24848f1909348d0b882c20b0e669916bfbc08a17977f667e2757d078e0a",
+          "kind": "audio",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": 2.0,
+          "verification": {
+            "audio_codecs": [
+              "pcm_s16le"
+            ],
+            "source_track": 0
+          }
+        }
+      ]
+    },
+    {
+      "operation": "subtitle-convert",
+      "id": "task_d289ed3b9278480483ef76eed08a317f",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "captions__subtitles.vtt",
+          "size": 102,
+          "sha256": "0a620b520709091e2236455ac05b6ad2ace3290ee3cb7c0f04bf4b832c9aeefc",
+          "kind": "subtitle",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "cues": 2,
+            "format": "vtt"
+          }
+        }
+      ]
+    },
+    {
+      "operation": "subtitle-extract",
+      "id": "task_1cdd0101a9f44be7a6fa12452994d11d",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "tracks__subtitles.srt",
+          "size": 94,
+          "sha256": "8d4b8f8958fc6ddff2fe722e4410f99a7c379e217a46647cfffea9def2ce70c2",
+          "kind": "subtitle",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "cues": 2,
+            "source_track": 0
+          }
+        }
+      ]
+    },
+    {
+      "operation": "asr",
+      "id": "task_b69f34b784e745ea9aed2b08315c18de",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "name": "speech__transcript.srt",
+          "size": 137,
+          "sha256": "c1315c4f33f9ff0076cfa2503c64a0d818952e95f966271a5c37511ab2ba9801",
+          "kind": "subtitle",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "segments": 1,
+            "language": "en"
+          }
+        },
+        {
+          "name": "speech__transcript.vtt",
+          "size": 145,
+          "sha256": "eb17f5bb0215521be5b682cbd769c095b1073642a0099b6f5d3a90aa7cf38ebd",
+          "kind": "subtitle",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "segments": 1,
+            "language": "en"
+          }
+        },
+        {
+          "name": "speech__transcript.txt",
+          "size": 103,
+          "sha256": "c839bd301940c64b47ad200740b52676922d142dcdc8c365ff6f23289aa3cd32",
+          "kind": "text",
+          "width": null,
+          "height": null,
+          "pages": null,
+          "duration": null,
+          "verification": {
+            "segments": 1
+          }
+        }
+      ]
+    },
+    {
+      "operation": "export-results",
+      "id": "task_ddb6bd46d4d349a3b897a5884982f0e6",
+      "status": "succeeded",
+      "error": null,
+      "outputs": [
+        {
+          "id": "file_e4cada11395b46208b7bcd7bc57111a2",
+          "name": "results.zip",
+          "created_at": 1791357007.9036057,
+          "task_id": "task_ddb6bd46d4d349a3b897a5884982f0e6",
+          "size": 4426,
+          "sha256": "98f9e8a0977edefdf7400c8a27abbd887f4633b5fdb503c9a2762bcc3e7822b4",
+          "kind": "zip",
+          "mime": "application/zip",
+          "warnings": [],
+          "verification": {
+            "files": 3,
+            "crc_checked": true
+          },
+          "source_file_ids": [
+            "file_ee9fed1be9424e18b039c5ecc4ffb2e2",
+            "file_1e81d97dd658404ca05c29c301b4b2e9",
+            "file_aad55e8d33b641668076d2a90b9c5879"
+          ],
+          "quality_review": "required"
+        }
+      ]
+    }
+  ],
+  "workspace": "workspace_23613c4b3f83451dbc5a00cb5091179f",
+  "unauthorized_status": 401,
+  "version": {
+    "name": "mediaforge",
+    "version": "0.2.2",
+    "git_commit": "1494a7de62ae2ee69f5fdcc040354d9c8121b0bc",
+    "artifact_sha256": "f9c6af0f13f65ea79da139133043e0c96af7c54e8e26714ecb82665dc0ec9a2f",
+    "built_at": "2026-10-07T06:58:21Z"
+  },
+  "diagnostics": {
+    "checks": [
+      {
+        "id": "ffmpeg",
+        "name": "ffmpeg",
+        "available": true,
+        "status": "available",
+        "purpose": "音视频处理",
+        "install": "",
+        "details": {
+          "startup_verified": true
+        }
+      },
+      {
+        "id": "ffprobe",
+        "name": "ffprobe",
+        "available": true,
+        "status": "available",
+        "purpose": "媒体检查",
+        "install": "",
+        "details": {
+          "startup_verified": true
+        }
+      },
+      {
+        "id": "poppler",
+        "name": "poppler",
+        "available": true,
+        "status": "available",
+        "purpose": "PDF 渲染",
+        "install": "",
+        "details": {
+          "startup_verified": true
+        }
+      },
+      {
+        "id": "tesseract",
+        "name": "tesseract",
+        "available": true,
+        "status": "available",
+        "purpose": "OCR",
+        "install": "",
+        "details": {
+          "startup_verified": true
+        }
+      },
+      {
+        "id": "libreoffice",
+        "name": "libreoffice",
+        "available": true,
+        "status": "available",
+        "purpose": "Office/PDF 导出",
+        "install": "",
+        "details": {
+          "startup_verified": true
+        }
+      },
+      {
+        "id": "pillow",
+        "name": "pillow",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "pypdf",
+        "name": "pypdf",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "docx",
+        "name": "docx",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "pdfplumber",
+        "name": "pdfplumber",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "pysubs2",
+        "name": "pysubs2",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "opencv",
+        "name": "opencv",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --extra repair",
+        "details": {}
+      },
+      {
+        "id": "ocrmypdf",
+        "name": "ocrmypdf",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "asr-model",
+        "name": "Faster Whisper",
+        "available": true,
+        "status": "available",
+        "purpose": "离线语音转写",
+        "install": "uv sync --extra asr；配置 MEDIAFORGE_ASR_MODEL 为已下载的 CTranslate2 模型目录。",
+        "details": {
+          "library": true,
+          "model_configured": true,
+          "cpu": true,
+          "cuda_devices": 0
+        }
+      },
+      {
+        "id": "background-model",
+        "name": "U²-Net",
+        "available": true,
+        "status": "available",
+        "purpose": "离线去背景",
+        "install": "uv sync --extra background；在 U2NET_HOME 配置 u2net.onnx。",
+        "details": {
+          "model_configured": true
+        }
+      },
+      {
+        "id": "font",
+        "name": "水印字体",
+        "available": true,
+        "status": "available",
+        "purpose": "文字水印",
+        "install": "配置 MEDIAFORGE_FONT，或安装 Noto CJK 字体。",
+        "details": {}
+      }
+    ],
+    "ocr_languages": [
+      "chi_sim",
+      "eng",
+      "osd"
+    ],
+    "storage": {
+      "files": 0,
+      "used_bytes": 0,
+      "quota_bytes": 10737418240,
+      "max_file_bytes": 536870912,
+      "retention_days": 7,
+      "concurrency": 2,
+      "timeout": 1800,
+      "max_pending": 100,
+      "location": "service_workspace",
+      "content_quality": "处理完成不代表内容质量审核通过。"
+    },
+    "server_platform": {
+      "system": "Linux",
+      "architecture": "x86_64"
+    },
+    "worker_ready": true
+  },
+  "passed": true,
+  "cleanup": {
+    "dry_run": false,
+    "files": 48,
+    "bytes": 1304590,
+    "tasks": 31
+  }
+}

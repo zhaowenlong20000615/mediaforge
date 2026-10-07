@@ -1,0 +1,23 @@
+{
+  "server": "https://107.151.245.166:18081/mediaforge",
+  "checks": {
+    "secure_cookie": true,
+    "cookie_me": true,
+    "logout_revoked": true,
+    "cli_real_resize": true,
+    "cli_download": true,
+    "cli_failed_exit": true,
+    "mcp_initialize": true,
+    "mcp_tools": true,
+    "mcp_real_resize": true,
+    "mcp_preview": true,
+    "mcp_credential_rejected": true
+  },
+  "cleanup": {
+    "dry_run": false,
+    "files": 5,
+    "bytes": 3071,
+    "tasks": 3
+  },
+  "passed": true
+}
