@@ -87,7 +87,7 @@
     "filetype (content-based media identification)"
   ],
   "limitations": [
-    "PDF→Word uses text reflow; complex layout requires review",
+    "PDF→Word defaults to editable layout with a rendered PDF preview; complex columns, formulas and borderless tables require review",
     "Image subtitles require a separate OCR workflow",
     "Animated images process the first frame",
     "OCR/ASR/table extraction/repair quality requires review",

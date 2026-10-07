@@ -14,6 +14,12 @@ def convert_word_semantics(source,target,format):
     from markdownify import markdownify
     from PIL import Image
     from bs4 import BeautifulSoup
+    from docx import Document
+    document=Document(source)
+    has_title=any(p.style and p.style.name=='Title' and p.text.strip() for p in document.paragraphs)
+    style_map="p[style-name='Title'] => h1:fresh\np[style-name='Subtitle'] => p:fresh"
+    if has_title:
+        style_map+='\n'+'\n'.join(f"p[style-name='Heading {level}'] => h{min(6,level+1)}:fresh" for level in range(1,7))
     image_count=0
     def inline_image(image):
         nonlocal image_count
@@ -29,7 +35,7 @@ def convert_word_semantics(source,target,format):
         return {'src':'data:image/png;base64,'+base64.b64encode(out.getvalue()).decode()}
     try:
         with Path(source).open('rb') as inp:
-            result=mammoth.convert_to_html(inp,convert_image=mammoth.images.img_element(inline_image),external_file_access=False,include_embedded_style_map=False)
+            result=mammoth.convert_to_html(inp,convert_image=mammoth.images.img_element(inline_image),style_map=style_map,external_file_access=False,include_embedded_style_map=False)
     except ForgeError:raise
     except Exception:raise ForgeError('document_conversion','Word 内容无法可靠转换。','请重新保存为 DOCX，或尝试 PDF 导出。')
     def attribute(tag,name,value):
@@ -40,7 +46,7 @@ def convert_word_semantics(source,target,format):
     soup=BeautifulSoup(clean,'html.parser')
     if not soup.get_text(strip=True) and not image_count:raise ForgeError('no_content','文档没有可转换的内容。')
     if format=='html':
-        style='body{max-width:900px;margin:3rem auto;padding:0 1.5rem;font-family:Arial,"Noto Sans CJK SC",sans-serif;line-height:1.6;color:#20272b}img{max-width:100%;height:auto}table{border-collapse:collapse;width:100%}td,th{border:1px solid #bbb;padding:.5rem}h1,h2,h3{line-height:1.25}'
+        style='body{max-width:900px;margin:3rem auto;padding:0 1.5rem;font-family:Arial,"Noto Sans CJK SC",sans-serif;line-height:1.6;color:#20272b}img{max-width:100%;height:auto}table{border-collapse:collapse;width:100%}td,th{border:1px solid #bbb;padding:.5rem}td p,th p{margin:0}h1,h2,h3{line-height:1.25}'
         text='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; img-src data:; style-src \'unsafe-inline\'; base-uri \'none\'"><title>Converted document</title><style>'+style+'</style></head><body>'+clean+'</body></html>'
     elif format=='md':
         text=markdownify(clean,heading_style='ATX',bullets='-',table_infer_header=True)
@@ -48,8 +54,6 @@ def convert_word_semantics(source,target,format):
     Path(target).write_text(text,encoding='utf-8')
     notes=[]
     if result.messages:notes.append('部分 Word 样式未映射，请与原文核对。')
-    from docx import Document
-    document=Document(source)
     if any(p.text.strip() for section in document.sections for part in [section.header,section.footer,section.first_page_header,section.first_page_footer,section.even_page_header,section.even_page_footer] for p in part.paragraphs):
         notes.append('此格式导出正文；原文含页眉或页脚，完整外观请导出 PDF。')
     return {'engine':'mammoth','embedded_images':image_count,'tables':len(soup.select('table')),'headings':len(soup.select('h1,h2,h3,h4,h5,h6')),'mode':'semantic_content','conversion_notices':len(result.messages),'quality_notes':notes}

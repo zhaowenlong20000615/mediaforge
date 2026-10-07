@@ -42,12 +42,12 @@ def test_image_default_webp_is_lossless_and_icc_retained(running,tmp_path):
 def test_word_semantic_export_keeps_images_lists_tables_styles(running,tmp_path):
     store,_=running
     image=tmp_path/'figure.png';Image.new('RGB',(80,60),'red').save(image)
-    d=Document();d.add_heading('Quality Title',1);d.add_paragraph('First item',style='List Bullet');p=d.add_paragraph();p.add_run('Important').bold=True
+    d=Document();d.add_heading('Quality Title',0);d.add_heading('Important section',1);d.add_paragraph('First item',style='List Bullet');p=d.add_paragraph();p.add_run('Important').bold=True
     table=d.add_table(rows=2,cols=2);table.cell(0,0).text='Amount';table.cell(1,0).text='1234.56';d.add_picture(str(image),width=Inches(1));source=tmp_path/'document.docx';d.save(source)
     for fmt in ['html','md']:
         t=job(store,'office-convert',[source],{'format':fmt});assert t['status']=='succeeded',t['error']
         text=output_path(store,t).read_text();assert '1234.56' in text and 'data:image/png;base64,' in text
-        if fmt=='html':assert '<h1>' in text and '<strong>' in text and '<ul>' in text and '<table>' in text
+        if fmt=='html':assert '<h1>Quality Title</h1>' in text and '<h2>Important section</h2>' in text and '<strong>' in text and '<ul>' in text and '<table>' in text
         else:assert '# Quality Title' in text and '**Important**' in text and '- First item' in text
         assert t['outputs'][0]['verification']['embedded_images']==1
 
