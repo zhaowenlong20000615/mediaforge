@@ -1,8 +1,24 @@
 """Build this project's credential-free delivery component from committed client files."""
 import hashlib,io,json,os,re,shutil,subprocess,tarfile,tempfile,zipfile
 from pathlib import Path
+from urllib.parse import urlsplit
 root=Path(__file__).resolve().parents[1]
 config=json.loads((root/'accessDelivery/config.json').read_text())
+public_home=os.environ.get('MEDIAFORGE_DELIVERY_PUBLIC_URL',config['home'])
+if public_home!=config['home']:
+ # A migrated component may be built from a clean source checkout while local
+ # migration edits are still uncommitted. Keep generated connection examples
+ # consistent without including unrelated working-tree changes in the package.
+ if public_home!='https://103.236.60.28:18081/mediaforge/':
+  raise ValueError('MediaForge delivery override must use the registered 103 HTTPS entrypoint')
+ old=urlsplit(config['home']);new=urlsplit(public_home)
+ old_origin=old.scheme+'://'+old.netloc;new_origin=new.scheme+'://'+new.netloc
+ def public_examples(value):
+  if isinstance(value,str):return value.replace(old_origin,new_origin)
+  if isinstance(value,list):return [public_examples(x) for x in value]
+  if isinstance(value,dict):return {k:public_examples(v) for k,v in value.items()}
+  return value
+ config=public_examples(config)
 output=root/'dist/accessDelivery';output.mkdir(parents=True,exist_ok=True)
 site=output/'site';site.mkdir(exist_ok=True);files=output/'files';files.mkdir(exist_ok=True)
 for name in ['index.html','app.js','style.css']:shutil.copyfile(root/'accessDelivery'/name,site/name)
@@ -21,6 +37,15 @@ with tempfile.TemporaryDirectory() as folder:
    data=archive.extractfile(m).read()
    if re.search(rb'-----BEGIN (?:OPENSSH |RSA |EC )?PRIVATE KEY-----|gh[pousr]_[A-Za-z0-9]{30,}',data):raise ValueError('secret material in client')
    dest=client/p;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(data);dest.chmod(m.mode&0o755)
+ # These are active installation instructions in the client archive, rather
+ # than historical evidence. Render them for the selected deployed endpoint.
+ rewritten=[]
+ if public_home=='https://103.236.60.28:18081/mediaforge/':
+  for name in ['README.md','docs/DEPLOYMENT.md']:
+   doc=client/name
+   if not doc.is_file():continue
+   before=doc.read_text();after=before.replace('107.151.245.166','103.236.60.28')
+   if before!=after:doc.write_text(after);rewritten.append(name)
  if config['buildMode']=='bun':
   for rel in ['node_modules','packages/mcp/node_modules']:
    if (root/rel).exists():
@@ -43,7 +68,7 @@ with tempfile.TemporaryDirectory() as folder:
    binary.unlink()
  else:
   (stage/'使用说明.txt').write_text(config['title']+'\n\n'+'\n'.join(config['steps']+config['checks']+config['limits'])+'\n\n'+'\n'.join(c['title']+'\n'+c.get('windows',c.get('any',''))+'\n'+c.get('unix','') for c in config['commands']))
-  (stage/'clientSource.json').write_text(json.dumps({'project_id':config['projectId'],'version':config['clientVersion'],'git_commit':ref},indent=2))
+  (stage/'clientSource.json').write_text(json.dumps({'project_id':config['projectId'],'version':config['clientVersion'],'git_commit':ref,'public_url':public_home,'generated_endpoint_documents':rewritten},indent=2))
   target=files/(config['slug']+'-'+config['clientVersion']+'-client.zip')
   with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED,6) as z:
    for p in sorted(stage.rglob('*')):
@@ -54,7 +79,7 @@ with tempfile.TemporaryDirectory() as folder:
   with zipfile.ZipFile(p) as z:assert z.testzip() is None
   manifest['files'].append({'name':p.name,'label':config['title']+' · '+(p.stem.split(config['clientVersion']+'-')[-1] if config['buildMode']=='go' else config['packageLabel']),'description':config['packageDescription'],'size':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'url':config['fileBase']+p.name,'verification':'已核对包完整性；Windows 实机尚未验证'})
  (site/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2))
-component={'schema_version':1,'project_id':config['projectId'],'component':'access_delivery','version':'1','client_commit':ref,'source_commit':git('rev-parse','HEAD').decode().strip(),'entrypoints':{k:config['pageUrl']+'#'+anchor for k,anchor in {'downloads':'download','install':'install','cli_docs':'cli','mcp_docs':'mcp','skill':'skill','skill_docs':'skill','docs':'install'}.items()}}
+component={'schema_version':1,'project_id':config['projectId'],'component':'access_delivery','version':'1','client_commit':ref,'source_commit':git('rev-parse','HEAD').decode().strip(),'public_url':public_home,'generated_endpoint_documents':rewritten,'entrypoints':{k:config['pageUrl']+'#'+anchor for k,anchor in {'downloads':'download','install':'install','cli_docs':'cli','mcp_docs':'mcp','skill':'skill','skill_docs':'skill','docs':'install'}.items()}}
 (output/'entrypoints.json').write_text(json.dumps(component,ensure_ascii=False,indent=2))
 (output/'release.json').write_text(json.dumps(component,ensure_ascii=False,indent=2))
 if (root/'accessDelivery/nginx.conf').exists():shutil.copyfile(root/'accessDelivery/nginx.conf',output/'nginx.conf')

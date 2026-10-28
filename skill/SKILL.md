@@ -9,6 +9,8 @@ description: 使用 MediaForge 对授权文件进行音视频、字幕、PDF、W
 
 ## 连接与发现
 
+当前云端地址为 `https://103.236.60.28:18081/mediaforge`。浏览器、CLI、MCP 和下载链接使用此公开 HTTPS 入口；不要将用户电脑的 `127.0.0.1` 当成服务器地址。迁移前的 107 入口独立保留，不能把旧任务的编号或授权当成新机任务使用。
+
 1. 配置 `MEDIAFORGE_URL` 和 `MEDIAFORGE_TOKEN_FILE`；令牌只从受控文件读取。
 2. MCP 调用 `discover_operations`、`diagnose_workspace`；CLI 用 `mediaforge tools --json`、`mediaforge doctor --json`。
 3. 读取工具的schema、输入类型和依赖状态。模型/语言包未配置时说明缺失项，不能使用其他文件复制冒充处理。
