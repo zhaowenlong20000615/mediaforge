@@ -1,0 +1,167 @@
+{
+  "checked_at": "2026-10-28T05:38:25.203742+00:00",
+  "hostname": "ser693712513899",
+  "ip": "103.236.60.28",
+  "ssh_identity": "103.236.60.28_root_ed25519",
+  "route": [
+    {
+      "type": "local",
+      "dst": "103.236.60.28",
+      "dev": "lo",
+      "table": "local",
+      "prefsrc": "103.236.60.28",
+      "flags": [],
+      "uid": 0,
+      "cache": [
+        "local"
+      ]
+    }
+  ],
+  "runtime": {
+    "MEDIAFORGE_DATA": "/opt/mediaforge/data",
+    "MEDIAFORGE_UNIX_SOCKET": "/run/mediaforge/api.sock",
+    "MEDIAFORGE_ASR_MODEL": "/opt/mediaforge/models/faster-whisper-small",
+    "U2NET_HOME": "/opt/mediaforge/models/u2net",
+    "MEDIAFORGE_PUBLIC_URL": "https://103.236.60.28:18081",
+    "MEDIAFORGE_COOKIE_PATH": "/mediaforge/",
+    "MEDIAFORGE_SECURE_COOKIE": "1"
+  },
+  "proxy_environment": {
+    "HTTP_PROXY": false,
+    "HTTPS_PROXY": false,
+    "ALL_PROXY": false,
+    "NO_PROXY": false,
+    "http_proxy": false,
+    "https_proxy": false,
+    "all_proxy": false,
+    "no_proxy": false
+  },
+  "paths": [
+    {
+      "path": "/opt/mediaforge/data",
+      "mode": "drwx------",
+      "uid": 995,
+      "gid": 995
+    },
+    {
+      "path": "/opt/mediaforge/data/admin.token",
+      "mode": "-rw-------",
+      "uid": 995,
+      "gid": 995
+    },
+    {
+      "path": "/opt/mediaforge/data/state.sqlite3",
+      "mode": "-rw-------",
+      "uid": 995,
+      "gid": 995
+    },
+    {
+      "path": "/opt/mediaforge/runtime.env",
+      "mode": "-rw-------",
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "path": "/run/mediaforge/api.sock",
+      "mode": "srw-rw-rw-",
+      "uid": 995,
+      "gid": 33
+    }
+  ],
+  "releases": [
+    {
+      "role": "current",
+      "path": "/opt/mediaforge/releases/0.2.6-f159f8fbb4c8-ac032e52",
+      "python_exists": true,
+      "metadata": {
+        "project_id": "local.mediaforge",
+        "version": "0.2.6",
+        "git_commit": "f159f8fbb4c8a6767622d8e9b3bedf326dedad1b",
+        "artifact_sha256": "ac032e520e4e07fa105c729415773e75d7411c0a2e8f80aaa632f0e2cce3516f",
+        "built_at": "2026-10-07T10:46:12Z",
+        "python": "3.12",
+        "target": "linux-x86_64",
+        "dependency_cache_commit": "8120bd517ff797f2041659b0f54b292e20e8eceb"
+      },
+      "wheel_count": 99
+    },
+    {
+      "role": "rollback",
+      "path": "/opt/mediaforge/releases/0.2.5-8120bd517ff7-0b2afbb6",
+      "python_exists": true,
+      "metadata": {
+        "project_id": "local.mediaforge",
+        "version": "0.2.5",
+        "git_commit": "8120bd517ff797f2041659b0f54b292e20e8eceb",
+        "artifact_sha256": "0b2afbb6aaff580bd7027a3cd2044b411adc617fd2d53703fdb9504df2efa81d",
+        "built_at": "2026-10-07T10:04:13Z",
+        "python": "3.12",
+        "target": "linux-x86_64",
+        "dependency_cache_commit": "1de87e711200ea26981915b1904ac56458f21b46"
+      },
+      "wheel_count": 99
+    }
+  ],
+  "models": [
+    {
+      "path": "/opt/mediaforge/models/u2net/u2net.onnx",
+      "bytes": 175997641,
+      "sha256": "8d10d2f3bb75ae3b6d527c77944fc5e7dcd94b29809d47a739a7a728a912b491"
+    },
+    {
+      "path": "/opt/mediaforge/models/faster-whisper-small/model.bin",
+      "bytes": 483546902,
+      "sha256": "3e305921506d8872816023e4c273e75d2419fb89b24da97b4fe7bce14170d671"
+    }
+  ],
+  "font": "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+  "systemd": [
+    "User=mediaforge",
+    "Group=www-data",
+    "ProtectHome=yes",
+    "ProtectSystem=strict",
+    "NoNewPrivileges=yes",
+    "RestrictAddressFamilies=AF_UNIX",
+    "ActiveState=active",
+    "SubState=running"
+  ],
+  "db_quick_check": "ok",
+  "task_status_counts": {
+    "failed": 1,
+    "succeeded": 10
+  },
+  "request_log_count": 878,
+  "request_log_status_counts": {
+    "200": 779,
+    "201": 31,
+    "401": 16,
+    "202": 46,
+    "403": 1,
+    "409": 1,
+    "206": 1,
+    "404": 2,
+    "400": 1
+  },
+  "logged_task_ids_present": false,
+  "nginx_config_sha256": "cf9a37144178b2ddb47b5a23b3365613a1b6edb4c197b14480ccf704bc466e2e",
+  "nginx_config": "# MediaForge owned; no other virtual host is modified.\nserver {\n    include /opt/mediaforge/access/current/nginx.conf;\n    listen 18081 ssl;\n    server_name 103.236.60.28;\n    ssl_certificate /etc/letsencrypt/live/homeward-ip/fullchain.pem;\n    ssl_certificate_key /etc/letsencrypt/live/homeward-ip/privkey.pem;\n    ssl_protocols TLSv1.2 TLSv1.3;\n    client_max_body_size 512m;\n    error_page 497 =301 https://$host:18081$request_uri;\n    location = / { return 302 /mediaforge/; }\n    location /mediaforge/ {\n        proxy_pass http://unix:/run/mediaforge/api.sock:/;\n        proxy_set_header Host $http_host;\n        proxy_set_header X-Forwarded-Proto https;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_request_buffering off;\n        proxy_buffering off;\n        proxy_read_timeout 120s;\n    }\n    location = /healthz { proxy_pass http://unix:/run/mediaforge/api.sock:/healthz; }\n    location = /readyz { proxy_pass http://unix:/run/mediaforge/api.sock:/readyz; }\n    location = /version { proxy_pass http://unix:/run/mediaforge/api.sock:/version; }\n}\n",
+  "nginx_global_access_log_directives": [
+    "access_log /var/log/nginx/access.log;"
+  ],
+  "nginx_mediaforge_recent_access_rows": 1014,
+  "nginx_mediaforge_origin_403_observed": true,
+  "local_client_proxy": {
+    "trust_env": false,
+    "explicit_proxy_configured": false,
+    "local_environment_variables_set": {
+      "HTTP_PROXY": false,
+      "HTTPS_PROXY": false,
+      "ALL_PROXY": false,
+      "NO_PROXY": false,
+      "http_proxy": false,
+      "https_proxy": false,
+      "all_proxy": false,
+      "no_proxy": false
+    }
+  }
+}

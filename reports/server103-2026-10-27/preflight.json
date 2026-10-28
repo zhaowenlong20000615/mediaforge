@@ -1,0 +1,1530 @@
+{
+  "server": "https://103.236.60.28:18081/mediaforge",
+  "version": {
+    "name": "mediaforge",
+    "version": "0.2.6",
+    "git_commit": "f159f8fbb4c8a6767622d8e9b3bedf326dedad1b",
+    "artifact_sha256": "ac032e520e4e07fa105c729415773e75d7411c0a2e8f80aaa632f0e2cce3516f",
+    "built_at": "2026-10-07T10:46:12Z"
+  },
+  "doctor": {
+    "checks": [
+      {
+        "id": "ffmpeg",
+        "name": "ffmpeg",
+        "available": true,
+        "status": "available",
+        "purpose": "音视频处理",
+        "install": "",
+        "details": {
+          "startup_verified": true,
+          "path": "/usr/bin/ffmpeg"
+        }
+      },
+      {
+        "id": "ffprobe",
+        "name": "ffprobe",
+        "available": true,
+        "status": "available",
+        "purpose": "媒体检查",
+        "install": "",
+        "details": {
+          "startup_verified": true,
+          "path": "/usr/bin/ffprobe"
+        }
+      },
+      {
+        "id": "poppler",
+        "name": "poppler",
+        "available": true,
+        "status": "available",
+        "purpose": "PDF 渲染",
+        "install": "",
+        "details": {
+          "startup_verified": true,
+          "path": "/usr/bin/pdftoppm"
+        }
+      },
+      {
+        "id": "tesseract",
+        "name": "tesseract",
+        "available": true,
+        "status": "available",
+        "purpose": "OCR",
+        "install": "",
+        "details": {
+          "startup_verified": true,
+          "path": "/usr/bin/tesseract"
+        }
+      },
+      {
+        "id": "libreoffice",
+        "name": "libreoffice",
+        "available": true,
+        "status": "available",
+        "purpose": "Office/PDF 导出",
+        "install": "",
+        "details": {
+          "startup_verified": true,
+          "path": "/usr/bin/libreoffice"
+        }
+      },
+      {
+        "id": "pillow",
+        "name": "pillow",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "pypdf",
+        "name": "pypdf",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "pymupdf",
+        "name": "pymupdf",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "docx",
+        "name": "docx",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "pdfplumber",
+        "name": "pdfplumber",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "pysubs2",
+        "name": "pysubs2",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "opencv",
+        "name": "opencv",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --extra repair",
+        "details": {}
+      },
+      {
+        "id": "ocrmypdf",
+        "name": "ocrmypdf",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "mammoth",
+        "name": "mammoth",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "img2pdf",
+        "name": "img2pdf",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "pdf2docx",
+        "name": "pdf2docx",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "asr-model",
+        "name": "Faster Whisper",
+        "available": true,
+        "status": "available",
+        "purpose": "离线语音转写",
+        "install": "uv sync --extra asr；配置 MEDIAFORGE_ASR_MODEL 为已下载的 CTranslate2 模型目录。",
+        "details": {
+          "library": true,
+          "model_configured": true,
+          "cpu": true,
+          "cuda_devices": 0,
+          "model": "faster-whisper-small"
+        }
+      },
+      {
+        "id": "background-model",
+        "name": "u2net",
+        "available": true,
+        "status": "available",
+        "purpose": "离线去背景",
+        "install": "uv sync --extra background；在 U2NET_HOME 配置 u2net.onnx。",
+        "details": {
+          "model_configured": true,
+          "model": "u2net"
+        }
+      },
+      {
+        "id": "font",
+        "name": "水印字体",
+        "available": true,
+        "status": "available",
+        "purpose": "文字水印",
+        "install": "配置 MEDIAFORGE_FONT，或安装 Noto CJK 字体。",
+        "details": {}
+      }
+    ],
+    "ocr_languages": [
+      "chi_sim",
+      "eng",
+      "osd"
+    ],
+    "storage": {
+      "files": 0,
+      "used_bytes": 0,
+      "quota_bytes": 10737418240,
+      "max_file_bytes": 536870912,
+      "retention_days": 7,
+      "concurrency": 2,
+      "timeout": 1800,
+      "max_pending": 100,
+      "location": "service_workspace",
+      "content_quality": "处理完成不代表内容质量审核通过。"
+    },
+    "server_platform": {
+      "system": "Linux",
+      "architecture": "x86_64"
+    },
+    "worker_ready": true,
+    "worker_error": null
+  },
+  "catalog": {
+    "tools": [
+      {
+        "id": "export-results",
+        "name": "结果打包",
+        "category": "批量",
+        "accept": [
+          "image",
+          "video",
+          "audio",
+          "pdf",
+          "docx",
+          "doc",
+          "text",
+          "subtitle",
+          "zip"
+        ],
+        "dependencies": [],
+        "description": "将已完成的结果打包为 ZIP。",
+        "note": "",
+        "combine": true,
+        "min_files": 1,
+        "max_files": 500,
+        "schema": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "video-transcode",
+        "name": "视频转码",
+        "category": "视频 / 音频",
+        "accept": [
+          "video"
+        ],
+        "dependencies": [
+          "ffmpeg"
+        ],
+        "description": "转换视频格式与分辨率。",
+        "note": "",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "format": {
+              "type": "string",
+              "title": "输出格式",
+              "enum": [
+                "mp4",
+                "mkv",
+                "webm"
+              ],
+              "default": "mp4"
+            },
+            "width": {
+              "type": "integer",
+              "title": "输出宽度（0 保持原尺寸）",
+              "minimum": 0,
+              "maximum": 7680,
+              "anyOf": [
+                {
+                  "const": 0
+                },
+                {
+                  "minimum": 2
+                }
+              ],
+              "default": 0
+            },
+            "crf": {
+              "type": "integer",
+              "title": "压缩强度（越大体积越小）",
+              "minimum": 16,
+              "maximum": 40,
+              "default": 18
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "audio-extract",
+        "name": "提取 / 转换音频",
+        "category": "视频 / 音频",
+        "accept": [
+          "video",
+          "audio"
+        ],
+        "dependencies": [
+          "ffmpeg"
+        ],
+        "description": "导出指定音轨，或转换音频格式。",
+        "note": "",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "format": {
+              "type": "string",
+              "title": "输出格式",
+              "enum": [
+                "mp3",
+                "wav",
+                "flac",
+                "m4a",
+                "ogg"
+              ],
+              "default": "mp3"
+            },
+            "track": {
+              "type": "integer",
+              "title": "音轨序号（从 0 开始）",
+              "minimum": 0,
+              "maximum": 31,
+              "default": 0
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "media-trim",
+        "name": "裁剪音视频",
+        "category": "视频 / 音频",
+        "accept": [
+          "video",
+          "audio"
+        ],
+        "dependencies": [
+          "ffmpeg"
+        ],
+        "description": "按开始时间和时长裁剪。",
+        "note": "",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": "number",
+              "title": "开始时间（秒）",
+              "minimum": 0,
+              "default": 0
+            },
+            "duration": {
+              "type": "number",
+              "title": "保留时长（秒）",
+              "exclusiveMinimum": 0,
+              "maximum": 86400,
+              "default": 10
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "duration"
+          ]
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "media-merge",
+        "name": "合并音视频",
+        "category": "视频 / 音频",
+        "accept": [
+          "video",
+          "audio"
+        ],
+        "dependencies": [
+          "ffmpeg"
+        ],
+        "description": "按列表顺序合并，优先保留原始画面质量。",
+        "note": "默认沿用第一段视频的分辨率与帧率；相容视频直接拼接，其他视频高质量重编码；缺音轨补静音。",
+        "combine": true,
+        "min_files": 2,
+        "max_files": 30,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "title": "合并类型",
+              "enum": [
+                "video",
+                "audio"
+              ],
+              "default": "video"
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "media-compress",
+        "name": "压缩音视频",
+        "category": "视频 / 音频",
+        "accept": [
+          "video",
+          "audio"
+        ],
+        "dependencies": [
+          "ffmpeg"
+        ],
+        "description": "重编码减少体积，可预览后比较大小。",
+        "note": "已经高度压缩的源文件不保证进一步变小。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "crf": {
+              "type": "integer",
+              "title": "视频压缩强度",
+              "minimum": 16,
+              "maximum": 40,
+              "default": 23
+            },
+            "audio_kbps": {
+              "type": "integer",
+              "title": "音频码率 kbps",
+              "minimum": 32,
+              "maximum": 320,
+              "default": 192
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "video-frames",
+        "name": "视频抽帧",
+        "category": "视频 / 音频",
+        "accept": [
+          "video"
+        ],
+        "dependencies": [
+          "ffmpeg"
+        ],
+        "description": "定间隔提取 PNG 帧。",
+        "note": "",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "interval": {
+              "type": "number",
+              "title": "抽帧间隔（秒）",
+              "minimum": 0.1,
+              "maximum": 86400,
+              "default": 5
+            },
+            "count": {
+              "type": "integer",
+              "title": "最多帧数",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 20
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "audio-normalize",
+        "name": "音量标准化",
+        "category": "视频 / 音频",
+        "accept": [
+          "video",
+          "audio"
+        ],
+        "dependencies": [
+          "ffmpeg"
+        ],
+        "description": "统一感知响度，输出 WAV。",
+        "note": "",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "lufs": {
+              "type": "number",
+              "title": "目标响度 LUFS",
+              "minimum": -30,
+              "maximum": -9,
+              "default": -16
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "audio-denoise",
+        "name": "音频降噪",
+        "category": "视频 / 音频",
+        "accept": [
+          "video",
+          "audio"
+        ],
+        "dependencies": [
+          "ffmpeg"
+        ],
+        "description": "使用 FFmpeg 频谱降噪，输出 WAV。",
+        "note": "适合稳定底噪；不等同于人声与音乐分离。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "strength": {
+              "type": "number",
+              "title": "降噪强度 dB",
+              "minimum": 1,
+              "maximum": 40,
+              "default": 8
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "subtitle-convert",
+        "name": "字幕格式转换",
+        "category": "字幕 / 语音",
+        "accept": [
+          "subtitle"
+        ],
+        "dependencies": [
+          "pysubs2"
+        ],
+        "description": "SRT、VTT、ASS 字幕互转。",
+        "note": "转为 SRT/VTT 时会丢失 ASS 的样式效果。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "format": {
+              "type": "string",
+              "title": "输出格式",
+              "enum": [
+                "srt",
+                "vtt",
+                "ass"
+              ],
+              "default": "srt"
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "subtitle-extract",
+        "name": "提取内嵌字幕",
+        "category": "字幕 / 语音",
+        "accept": [
+          "video"
+        ],
+        "dependencies": [
+          "ffmpeg"
+        ],
+        "description": "导出视频中的文本字幕轨。",
+        "note": "图片字幕需 OCR；不支持的轨道会明确报错。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "track": {
+              "type": "integer",
+              "title": "字幕轨序号（从 0 开始）",
+              "minimum": 0,
+              "maximum": 31,
+              "default": 0
+            },
+            "format": {
+              "type": "string",
+              "title": "输出格式",
+              "enum": [
+                "srt",
+                "vtt",
+                "ass"
+              ],
+              "default": "srt"
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "asr",
+        "name": "语音转文字与字幕",
+        "category": "字幕 / 语音",
+        "accept": [
+          "video",
+          "audio"
+        ],
+        "dependencies": [
+          "asr-model"
+        ],
+        "description": "本机或服务器离线模型转写，生成文本、SRT 与 VTT。",
+        "note": "每条字幕最多两行、六秒；模型需要管理员预先配置，不在任务执行中自动下载。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "language": {
+              "type": "string",
+              "title": "语言（留空自动识别，如 zh、en）",
+              "pattern": "^[a-z]{0,3}$",
+              "default": ""
+            },
+            "device": {
+              "type": "string",
+              "title": "计算设备",
+              "enum": [
+                "cpu",
+                "cuda"
+              ],
+              "default": "cpu"
+            },
+            "max_line_chars": {
+              "type": "integer",
+              "title": "字幕行宽（中文约占两格）",
+              "minimum": 12,
+              "maximum": 60,
+              "default": 28
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "pdf-split",
+        "name": "PDF 拆分",
+        "category": "PDF / Word",
+        "accept": [
+          "pdf"
+        ],
+        "dependencies": [
+          "pypdf"
+        ],
+        "description": "选择页码，每页保存为独立 PDF。",
+        "note": "",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "pages": {
+              "type": "string",
+              "title": "页码（留空为全部，如 1-3,5）",
+              "maxLength": 200,
+              "pattern": "^[0-9,\\- ]*$",
+              "default": ""
+            },
+            "password": {
+              "type": "string",
+              "title": "PDF 打开密码（可选）",
+              "maxLength": 200,
+              "format": "password",
+              "sensitive": true,
+              "default": ""
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "pdf-merge",
+        "name": "PDF 合并",
+        "category": "PDF / Word",
+        "accept": [
+          "pdf"
+        ],
+        "dependencies": [
+          "pypdf"
+        ],
+        "description": "按文件顺序合并所有页面。",
+        "note": "",
+        "combine": true,
+        "min_files": 2,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "password": {
+              "type": "string",
+              "title": "PDF 打开密码（可选）",
+              "maxLength": 200,
+              "format": "password",
+              "sensitive": true,
+              "default": ""
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "pdf-rotate",
+        "name": "PDF 旋转",
+        "category": "PDF / Word",
+        "accept": [
+          "pdf"
+        ],
+        "dependencies": [
+          "pypdf"
+        ],
+        "description": "旋转选定页面。",
+        "note": "",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "pages": {
+              "type": "string",
+              "title": "页码（留空为全部，如 1-3,5）",
+              "maxLength": 200,
+              "pattern": "^[0-9,\\- ]*$",
+              "default": ""
+            },
+            "angle": {
+              "type": "string",
+              "title": "旋转角度",
+              "enum": [
+                "90",
+                "180",
+                "270"
+              ],
+              "default": "90"
+            },
+            "password": {
+              "type": "string",
+              "title": "PDF 打开密码（可选）",
+              "maxLength": 200,
+              "format": "password",
+              "sensitive": true,
+              "default": ""
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "pdf-compress",
+        "name": "PDF 无损压缩",
+        "category": "PDF / Word",
+        "accept": [
+          "pdf"
+        ],
+        "dependencies": [
+          "pypdf"
+        ],
+        "description": "压缩内容流并复用重复对象。",
+        "note": "不降低图片分辨率；源文件已优化时体积可能不减。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "password": {
+              "type": "string",
+              "title": "PDF 打开密码（可选）",
+              "maxLength": 200,
+              "format": "password",
+              "sensitive": true,
+              "default": ""
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "pdf-images",
+        "name": "PDF 转图片",
+        "category": "PDF / Word",
+        "accept": [
+          "pdf"
+        ],
+        "dependencies": [
+          "pypdf",
+          "poppler"
+        ],
+        "description": "将选定页面渲染成 PNG。",
+        "note": "",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "pages": {
+              "type": "string",
+              "title": "页码（留空为全部，如 1-3,5）",
+              "maxLength": 200,
+              "pattern": "^[0-9,\\- ]*$",
+              "default": ""
+            },
+            "dpi": {
+              "type": "integer",
+              "title": "渲染 DPI",
+              "minimum": 72,
+              "maximum": 300,
+              "default": 120
+            },
+            "password": {
+              "type": "string",
+              "title": "PDF 打开密码（可选）",
+              "maxLength": 200,
+              "format": "password",
+              "sensitive": true,
+              "default": ""
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "pdf-text",
+        "name": "PDF 提取文本",
+        "category": "PDF / Word",
+        "accept": [
+          "pdf"
+        ],
+        "dependencies": [
+          "pypdf",
+          "pymupdf"
+        ],
+        "description": "按页提取可选中的文字。",
+        "note": "扫描 PDF 没有文本层时，请使用 PDF OCR。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "pages": {
+              "type": "string",
+              "title": "页码（留空为全部，如 1-3,5）",
+              "maxLength": 200,
+              "pattern": "^[0-9,\\- ]*$",
+              "default": ""
+            },
+            "password": {
+              "type": "string",
+              "title": "PDF 打开密码（可选）",
+              "maxLength": 200,
+              "format": "password",
+              "sensitive": true,
+              "default": ""
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "pdf-word",
+        "name": "PDF 转 Word",
+        "category": "PDF / Word",
+        "accept": [
+          "pdf"
+        ],
+        "dependencies": [
+          "pypdf",
+          "pymupdf",
+          "docx",
+          "pdf2docx"
+        ],
+        "description": "转换为可编辑 Word，附实际排版的 PDF 预览。",
+        "note": "layout 保留图片与有框表格，并检查渲染后的文字与数字；text 仅提取文字。扫描件请先 OCR；多栏、公式及无框表格请核对预览。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "password": {
+              "type": "string",
+              "title": "PDF 打开密码（可选）",
+              "maxLength": 200,
+              "format": "password",
+              "sensitive": true,
+              "default": ""
+            },
+            "mode": {
+              "type": "string",
+              "title": "转换方式",
+              "enum": [
+                "layout",
+                "text"
+              ],
+              "default": "layout"
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "pdf-ocr",
+        "name": "PDF OCR",
+        "category": "PDF / Word",
+        "accept": [
+          "pdf"
+        ],
+        "dependencies": [
+          "pypdf",
+          "pymupdf",
+          "ocrmypdf",
+          "tesseract"
+        ],
+        "description": "保留已有文本与页面内容，为扫描页补 OCR 文字层。",
+        "note": "默认按连续文字识别；多栏页面选择 auto，零散标签选择 sparse。请核对金额、编号与是否漏行。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "pages": {
+              "type": "string",
+              "title": "页码（留空为全部，如 1-3,5）",
+              "maxLength": 200,
+              "pattern": "^[0-9,\\- ]*$",
+              "default": ""
+            },
+            "language": {
+              "type": "string",
+              "title": "OCR 语言（如 eng、chi_sim）",
+              "pattern": "^[A-Za-z_+]{2,50}$",
+              "default": "chi_sim+eng"
+            },
+            "layout": {
+              "type": "string",
+              "title": "OCR 版面（block 连续文字 / auto 多栏 / sparse 零散文字）",
+              "enum": [
+                "block",
+                "auto",
+                "sparse"
+              ],
+              "default": "block"
+            },
+            "password": {
+              "type": "string",
+              "title": "PDF 打开密码（可选）",
+              "maxLength": 200,
+              "format": "password",
+              "sensitive": true,
+              "default": ""
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "pdf-tables",
+        "name": "PDF 表格提取",
+        "category": "PDF / Word",
+        "accept": [
+          "pdf"
+        ],
+        "dependencies": [
+          "pypdf",
+          "pdfplumber"
+        ],
+        "description": "提取可检测的表格为 CSV 和 JSON。",
+        "note": "扫描表格与跨页复杂布局可能无法可靠还原；请检查行列与合并单元格。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "password": {
+              "type": "string",
+              "title": "PDF 打开密码（可选）",
+              "maxLength": 200,
+              "format": "password",
+              "sensitive": true,
+              "default": ""
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "office-convert",
+        "name": "Word 转换",
+        "category": "PDF / Word",
+        "accept": [
+          "docx",
+          "doc"
+        ],
+        "dependencies": [
+          "office-dynamic"
+        ],
+        "description": "Word 转 PDF、HTML、Markdown 或文本。",
+        "note": "旧版 .doc 及 PDF 导出需要 LibreOffice；HTML/Markdown 保留标题、列表、格式、表格与图片；它们采用语义排版，视觉版式需要 PDF。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "format": {
+              "type": "string",
+              "title": "输出格式",
+              "enum": [
+                "pdf",
+                "html",
+                "md",
+                "txt"
+              ],
+              "default": "pdf"
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "word-replace",
+        "name": "Word 批量替换",
+        "category": "PDF / Word",
+        "accept": [
+          "docx"
+        ],
+        "dependencies": [
+          "docx"
+        ],
+        "description": "替换段落、表格、页眉与页脚中的文字。",
+        "note": "跨格式片段的匹配保留首片段格式；请检查复杂排版。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "find": {
+              "type": "string",
+              "title": "查找文本",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "replace": {
+              "type": "string",
+              "title": "替换为",
+              "maxLength": 5000,
+              "default": ""
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "find"
+          ]
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "image-process",
+        "name": "图片转换与调整",
+        "category": "图片",
+        "accept": [
+          "image"
+        ],
+        "dependencies": [
+          "pillow"
+        ],
+        "description": "格式转换、压缩和等比缩放。",
+        "note": "JPEG 不支持透明背景，会合成到白色。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "format": {
+              "type": "string",
+              "title": "输出格式",
+              "enum": [
+                "png",
+                "jpeg",
+                "webp",
+                "tiff",
+                "bmp"
+              ],
+              "default": "png"
+            },
+            "quality": {
+              "type": "integer",
+              "title": "画质（1–100）",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 92
+            },
+            "lossless": {
+              "type": "boolean",
+              "title": "WebP 使用无损编码（其他格式忽略）",
+              "default": true
+            },
+            "width": {
+              "type": "integer",
+              "title": "最大宽度（0 不限制）",
+              "minimum": 0,
+              "maximum": 16000,
+              "default": 0
+            },
+            "height": {
+              "type": "integer",
+              "title": "最大高度（0 不限制）",
+              "minimum": 0,
+              "maximum": 16000,
+              "default": 0
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "image-crop",
+        "name": "图片裁剪",
+        "category": "图片",
+        "accept": [
+          "image"
+        ],
+        "dependencies": [
+          "pillow"
+        ],
+        "description": "从左上角坐标开始裁剪指定区域。",
+        "note": "",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "integer",
+              "title": "左边距",
+              "minimum": 0,
+              "default": 0
+            },
+            "y": {
+              "type": "integer",
+              "title": "上边距",
+              "minimum": 0,
+              "default": 0
+            },
+            "width": {
+              "type": "integer",
+              "title": "裁剪宽度",
+              "minimum": 1,
+              "maximum": 16000,
+              "default": 500
+            },
+            "height": {
+              "type": "integer",
+              "title": "裁剪高度",
+              "minimum": 1,
+              "maximum": 16000,
+              "default": 500
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "image-ocr",
+        "name": "图片 OCR",
+        "category": "图片",
+        "accept": [
+          "image"
+        ],
+        "dependencies": [
+          "tesseract"
+        ],
+        "description": "识别图片文字，输出 TXT。",
+        "note": "默认按连续文字识别；多栏页面选择 auto，零散标签选择 sparse。请核对金额、编号与是否漏行。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "language": {
+              "type": "string",
+              "title": "OCR 语言（如 eng、chi_sim）",
+              "pattern": "^[A-Za-z_+]{2,50}$",
+              "default": "chi_sim+eng"
+            },
+            "layout": {
+              "type": "string",
+              "title": "OCR 版面（block 连续文字 / auto 多栏 / sparse 零散文字）",
+              "enum": [
+                "block",
+                "auto",
+                "sparse"
+              ],
+              "default": "block"
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "image-pdf",
+        "name": "图片合成 PDF",
+        "category": "图片",
+        "accept": [
+          "image"
+        ],
+        "dependencies": [
+          "pillow",
+          "img2pdf"
+        ],
+        "description": "无损嵌入图片，按列表顺序合成多页 PDF。",
+        "note": "",
+        "combine": true,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "image-rename",
+        "name": "图片批量重命名",
+        "category": "图片",
+        "accept": [
+          "image"
+        ],
+        "dependencies": [
+          "pillow"
+        ],
+        "description": "以自定义前缀与序号导出副本，保留原文件。",
+        "note": "",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "prefix": {
+              "type": "string",
+              "title": "文件名前缀",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[^/\\\\\\x00-\\x1f]+$",
+              "default": "image"
+            },
+            "start": {
+              "type": "integer",
+              "title": "起始序号",
+              "minimum": 0,
+              "maximum": 999999,
+              "default": 1
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "image-background",
+        "name": "图片去背景",
+        "category": "图片",
+        "accept": [
+          "image"
+        ],
+        "dependencies": [
+          "background-model"
+        ],
+        "description": "使用本地抠图模型输出透明 PNG。",
+        "note": "需预先配置模型；头发、透明物体等细节需人工检查。",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "refine_edges": {
+              "type": "boolean",
+              "title": "精修半透明边缘",
+              "default": true
+            }
+          },
+          "additionalProperties": false,
+          "required": []
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "image-repair",
+        "name": "修复自有图片瑕疵",
+        "category": "图片",
+        "accept": [
+          "image"
+        ],
+        "dependencies": [
+          "opencv"
+        ],
+        "description": "按第二张图片的白色遮罩修复第一张图片。",
+        "note": "仅用于有编辑权的自有图片；禁止处理 DRM、平台版权标识或保护措施。",
+        "combine": true,
+        "min_files": 2,
+        "max_files": 2,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "rights_confirmed": {
+              "type": "boolean",
+              "title": "我拥有素材编辑权",
+              "const": true,
+              "default": false
+            },
+            "radius": {
+              "type": "integer",
+              "title": "修复半径",
+              "minimum": 1,
+              "maximum": 20,
+              "default": 3
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "rights_confirmed"
+          ]
+        },
+        "available": true,
+        "missing": []
+      },
+      {
+        "id": "watermark",
+        "name": "添加文字水印",
+        "category": "图片",
+        "accept": [
+          "image"
+        ],
+        "dependencies": [
+          "pillow",
+          "font"
+        ],
+        "description": "给自有素材叠加可配置的文字。",
+        "note": "",
+        "combine": false,
+        "min_files": 1,
+        "max_files": 100,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "title": "水印文字",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "position": {
+              "type": "string",
+              "title": "位置",
+              "enum": [
+                "bottom-right",
+                "bottom-left",
+                "top-right",
+                "top-left",
+                "center"
+              ],
+              "default": "bottom-right"
+            },
+            "opacity": {
+              "type": "integer",
+              "title": "不透明度 %",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 65
+            },
+            "size": {
+              "type": "integer",
+              "title": "文字尺寸 px",
+              "minimum": 12,
+              "maximum": 200,
+              "default": 32
+            },
+            "rights_confirmed": {
+              "type": "boolean",
+              "title": "我拥有素材编辑权",
+              "const": true,
+              "default": false
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "text",
+            "rights_confirmed"
+          ]
+        },
+        "available": true,
+        "missing": []
+      }
+    ]
+  }
+}

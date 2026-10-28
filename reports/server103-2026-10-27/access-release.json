@@ -1,0 +1,12 @@
+{
+  "project_id": "local.mediaforge",
+  "source_commit": "d395e7ca0aab4811d9da439cfb936f3f6f72bb5f",
+  "artifact_sha256": "6b01eb5807fe5044ed92fcc1ad3aca0d35c52147ba79ef2fcbf6a0d3ea2e1aa0",
+  "previous": "/opt/mediaforge/access/releases/f159f8fbb4c8a6767622d8e9b3bedf326dedad1b",
+  "current": "/opt/mediaforge/access/releases/d395e7ca0aab4811d9da439cfb936f3f6f72bb5f",
+  "deployed_at": "2026-10-28T05:39:21.584376+00:00",
+  "nginx_rules_sha256": "e0b368970d97466c2bd4297e77e27a64df2b3af854603cff327bf3bed93429e1",
+  "nginx_rules_unchanged": true,
+  "shared_service_reload": false,
+  "backend_release_changed": false
+}

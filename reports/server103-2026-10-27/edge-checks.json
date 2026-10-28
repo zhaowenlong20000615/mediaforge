@@ -1,0 +1,963 @@
+{
+  "started_at": "2026-10-28T05:31:48.199595+00:00",
+  "server": "https://103.236.60.28:18081/mediaforge",
+  "workspace": "workspace_526d4310e3eb408f80027c4cab01a04a",
+  "checks": {
+    "anonymous_rejected": {
+      "passed": true,
+      "details": null
+    },
+    "nonadmin_workspace_creation_denied": {
+      "passed": true,
+      "details": null
+    },
+    "cross_origin_denied": {
+      "passed": true,
+      "details": null
+    },
+    "same_key_same_task": {
+      "passed": true,
+      "details": "task_6f09b0c839ef4fb6a7ad847dbb39765b"
+    },
+    "same_key_different_request_conflict": {
+      "passed": true,
+      "details": null
+    },
+    "resize_business_completed": {
+      "passed": true,
+      "details": null
+    },
+    "resize_decodes_and_matches_hash": {
+      "passed": true,
+      "details": {
+        "sha256": "5818f7c1756fecef1f2af7d5ee259f415d39673756467802e8920b0807bc8413",
+        "bytes": 157
+      }
+    },
+    "authorized_range_download": {
+      "passed": true,
+      "details": {
+        "content_range": "bytes 0-15/157"
+      }
+    },
+    "workspace_file_isolation": {
+      "passed": true,
+      "details": null
+    },
+    "workspace_task_isolation": {
+      "passed": true,
+      "details": null
+    },
+    "actionable_invalid_status": {
+      "passed": true,
+      "details": null
+    },
+    "cancel_confirmed_with_completed_results": {
+      "passed": true,
+      "details": {
+        "task_id": "task_c9559d4bd482447d821d04a7446a25f3",
+        "counts": {
+          "accepted": 0,
+          "running": 0,
+          "succeeded": 1,
+          "failed": 0,
+          "cancelled": 3,
+          "recoverable": 0
+        }
+      }
+    },
+    "resume_finishes_same_task": {
+      "passed": true,
+      "details": null
+    },
+    "resume_preserves_completed_results_and_attempts": {
+      "passed": true,
+      "details": null
+    },
+    "resumed_asr_has_recognized_speech": {
+      "passed": true,
+      "details": null
+    },
+    "task_audit_records_cancel_resume": {
+      "passed": true,
+      "details": null
+    },
+    "download_manifest_uses_103": {
+      "passed": true,
+      "details": null
+    },
+    "protected_client_download_hash": {
+      "passed": true,
+      "details": null
+    },
+    "client_archive_integrity": {
+      "passed": true,
+      "details": null
+    },
+    "client_download_anonymous_rejected": {
+      "passed": true,
+      "details": null
+    }
+  },
+  "requests": [
+    {
+      "method": "POST",
+      "path": "api/workspaces",
+      "status": 403,
+      "request_id": "341e91b8bdc85599"
+    },
+    {
+      "method": "POST",
+      "path": "api/tasks",
+      "status": 403,
+      "request_id": null
+    },
+    {
+      "method": "POST",
+      "path": "api/tasks",
+      "status": 202,
+      "request_id": "3f2d3143f6254427"
+    },
+    {
+      "method": "POST",
+      "path": "api/tasks",
+      "status": 202,
+      "request_id": "73f7c9eaa08be0ba"
+    },
+    {
+      "method": "POST",
+      "path": "api/tasks",
+      "status": 409,
+      "request_id": "d4c7671a8628205d"
+    },
+    {
+      "method": "GET",
+      "path": "api/files/file_cac5bdaa8b6c40498bee5d1a958a8c67/content",
+      "status": 206,
+      "request_id": "629f719c7c9a4077"
+    },
+    {
+      "method": "GET",
+      "path": "api/tasks",
+      "status": 400,
+      "request_id": "004a29fea0e50f9d"
+    },
+    {
+      "method": "POST",
+      "path": "api/tasks",
+      "status": 202,
+      "request_id": "b37c1e59815256ad"
+    },
+    {
+      "method": "POST",
+      "path": "api/tasks/task_c9559d4bd482447d821d04a7446a25f3/cancel",
+      "status": 200,
+      "request_id": "79b042395063589e"
+    },
+    {
+      "method": "POST",
+      "path": "api/tasks/task_c9559d4bd482447d821d04a7446a25f3/resume",
+      "status": 200,
+      "request_id": "cedf51e4a4b66ae4"
+    },
+    {
+      "method": "GET",
+      "path": "api/tasks/task_c9559d4bd482447d821d04a7446a25f3/logs",
+      "status": 200,
+      "request_id": "28012d249df32cda"
+    },
+    {
+      "method": "GET",
+      "path": "access/manifest.json",
+      "status": 200,
+      "request_id": null
+    }
+  ],
+  "tls": {
+    "version": "TLSv1.3",
+    "expires": "Nov  2 18:00:37 2026 GMT",
+    "subject_alt_name": [
+      [
+        "IP Address",
+        "103.236.60.28"
+      ]
+    ],
+    "strict_verified": true
+  },
+  "origin_rejection_has_request_id": false,
+  "task_log": {
+    "task_id": "task_c9559d4bd482447d821d04a7446a25f3",
+    "events": [
+      {
+        "time": 1793165518.2221422,
+        "code": "accepted",
+        "message": "任务已受理，等待执行。"
+      },
+      {
+        "time": 1793165518.3272655,
+        "code": "item_started",
+        "message": "正在处理第 1 项。"
+      },
+      {
+        "time": 1793165533.3784053,
+        "code": "item_succeeded",
+        "message": "第 1 项完成；结果可读取，需人工确认质量。"
+      },
+      {
+        "time": 1793165533.3936598,
+        "code": "item_started",
+        "message": "正在处理第 2 项。"
+      },
+      {
+        "time": 1793165533.4805152,
+        "code": "cancel_requested",
+        "message": "已请求取消；正在执行的进程停止后确认。"
+      },
+      {
+        "time": 1793165533.5180826,
+        "code": "cancelled",
+        "message": "处理已停止。"
+      },
+      {
+        "time": 1793165533.5243423,
+        "code": "cancelled",
+        "message": "已取消；已完成结果保留"
+      },
+      {
+        "time": 1793165533.6074982,
+        "code": "resumed",
+        "message": "保留成功项，重新执行其余项目。"
+      },
+      {
+        "time": 1793165533.7084239,
+        "code": "item_started",
+        "message": "正在处理第 2 项。"
+      },
+      {
+        "time": 1793165548.2279603,
+        "code": "item_succeeded",
+        "message": "第 2 项完成；结果可读取，需人工确认质量。"
+      },
+      {
+        "time": 1793165548.2387438,
+        "code": "item_started",
+        "message": "正在处理第 3 项。"
+      },
+      {
+        "time": 1793165563.2491987,
+        "code": "item_succeeded",
+        "message": "第 3 项完成；结果可读取，需人工确认质量。"
+      },
+      {
+        "time": 1793165563.2718754,
+        "code": "item_started",
+        "message": "正在处理第 4 项。"
+      },
+      {
+        "time": 1793165577.9499986,
+        "code": "item_succeeded",
+        "message": "第 4 项完成；结果可读取，需人工确认质量。"
+      },
+      {
+        "time": 1793165577.9572363,
+        "code": "succeeded",
+        "message": "处理完成，请检查结果"
+      }
+    ],
+    "progress_samples": [
+      {
+        "status": "accepted",
+        "progress": 0.0,
+        "counts": {
+          "accepted": 4,
+          "running": 0,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 0.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 0.5,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 0.5,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 0.5,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 2.0,
+        "counts": {
+          "accepted": 3,
+          "running": 1,
+          "succeeded": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      },
+      {
+        "status": "running",
+        "progress": 24.25,
+        "counts": {
+          "accepted": 2,
+          "running": 1,
+          "succeeded": 1,
+          "failed": 0,
+          "cancelled": 0,
+          "recoverable": 0
+        }
+      }
+    ]
+  },
+  "download_manifest": {
+    "projectId": "local.mediaforge",
+    "slug": "mediaforge",
+    "title": "媒体工具箱",
+    "accent": "#80542b",
+    "home": "https://103.236.60.28:18081/mediaforge/",
+    "pageUrl": "https://103.236.60.28:18081/mediaforge/access/",
+    "fileBase": "/mediaforge/access/files/",
+    "clientVersion": "0.2.6",
+    "runtime": "Python 3.11–3.14；首次安装依赖需要联网。",
+    "scope": "命令行和 AI 工具连接本项目服务；数据和授权仍由原项目管理。",
+    "description": "网页可直接使用云端处理；本包用于 CLI／MCP 调用，不是已配齐系统工具的本机媒体安装器。",
+    "packageLabel": "命令行与 AI 调用包",
+    "packageDescription": "本项目客户端脚本与技能说明；运行环境另行安装，不包含业务凭证。",
+    "authHelp": "先在本项目登录，或使用本项目已有的访问令牌。不会使用运营工作台令牌代替项目授权。",
+    "skillPath": "client/skill/SKILL.md",
+    "skillSummary": "技能包随接入包提供，包含本项目真实工具、步骤、结果判定与失败处理。",
+    "steps": [
+      "将本项目接入包完整解压到独立目录，先检查本页的运行环境要求。",
+      "按照本页命令安装依赖或运行帮助，随后配置该项目自己的服务地址和受限授权。",
+      "需要 AI 调用时，将下方 MCP 模板中的绝对路径和身份配置替换为自己的值。"
+    ],
+    "checks": [
+      "先核对 CLI 帮助及 MCP 工具发现，再执行一个有权限的只读查询。",
+      "查询返回错误、未配置、模拟或待验证时，按原项目结果处理，不当作业务成功。",
+      "需要实际业务验证时，在原项目核对任务状态和最终产物。"
+    ],
+    "limits": [
+      "接入云端时，上传的文件在服务器处理；安装 CLI 不等于本地媒体引擎就绪。",
+      "本地处理需要原项目的系统依赖及模型，按 client/docs/DEPLOYMENT.md 与 MODELS.md 配置并运行 doctor。",
+      "可选语音、抠图和修复模型未随接入包安装；Windows 本次未实机验证。"
+    ],
+    "commands": [
+      {
+        "title": "安装与帮助",
+        "windows": "py -3 install.py\n.venv\\Scripts\\mediaforge.exe --help",
+        "unix": "python3 install.py\n.venv/bin/mediaforge --help"
+      },
+      {
+        "title": "连接已授权的云端工作区",
+        "windows": "$env:MEDIAFORGE_URL=\"https://103.236.60.28:18081/mediaforge\"\n$env:MEDIAFORGE_TOKEN_FILE=\"C:\\私有目录\\媒体工作区令牌.txt\"",
+        "unix": "export MEDIAFORGE_URL=https://103.236.60.28:18081/mediaforge\nexport MEDIAFORGE_TOKEN_FILE=/私有目录/媒体工作区令牌.txt"
+      }
+    ],
+    "mcp": {
+      "windows": {
+        "mcpServers": {
+          "mediaforge": {
+            "command": "C:\\替换为解压目录\\.venv\\Scripts\\mediaforge.exe",
+            "args": [
+              "mcp"
+            ],
+            "env": {
+              "MEDIAFORGE_URL": "https://103.236.60.28:18081/mediaforge",
+              "MEDIAFORGE_TOKEN_FILE": "C:\\私有目录\\媒体工作区令牌.txt"
+            }
+          }
+        }
+      },
+      "unix": {
+        "mcpServers": {
+          "mediaforge": {
+            "command": "/替换为解压目录/.venv/bin/mediaforge",
+            "args": [
+              "mcp"
+            ],
+            "env": {
+              "MEDIAFORGE_URL": "https://103.236.60.28:18081/mediaforge",
+              "MEDIAFORGE_TOKEN_FILE": "/私有目录/媒体工作区令牌.txt"
+            }
+          }
+        }
+      }
+    },
+    "clientCommit": "f159f8fbb4c8a6767622d8e9b3bedf326dedad1b",
+    "files": [
+      {
+        "name": "mediaforge-0.2.6-client.zip",
+        "label": "媒体工具箱 · 命令行与 AI 调用包",
+        "description": "本项目客户端脚本与技能说明；运行环境另行安装，不包含业务凭证。",
+        "size": 96641,
+        "sha256": "43427ca99f5eef9b7e893e7c5068f0ec0ef1da4ceffd9506bd32005c8d82d944",
+        "url": "/mediaforge/access/files/mediaforge-0.2.6-client.zip",
+        "verification": "已核对包完整性；Windows 实机尚未验证"
+      }
+    ]
+  },
+  "download_archive_stale_ip_files": [
+    "client/README.md",
+    "client/docs/DEPLOYMENT.md"
+  ],
+  "passed": true,
+  "finished_at": "2026-10-28T05:32:53.231993+00:00"
+}

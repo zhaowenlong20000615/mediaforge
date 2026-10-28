@@ -1,0 +1,67 @@
+{
+  "cases": [
+    {
+      "tool": "image-ocr",
+      "task_id": "task_32011530cb654e7096bb7b2eba3537d7",
+      "outputs": [
+        {
+          "kind": "text",
+          "bytes": 167,
+          "sha256": "82f08db65ec6fa7d438a4a3b57247783c1ae46db6d88239ae3bf8adff784dd73",
+          "checks": {
+            "媒体工具箱质量验收": true,
+            "MF-2026-1007": true,
+            "1,280.50": true,
+            "交付要求": true,
+            "画面清晰": true,
+            "文字完整": true,
+            "12345": true,
+            "no_nul": true
+          }
+        }
+      ]
+    },
+    {
+      "tool": "pdf-ocr",
+      "task_id": "task_26fb9ac89d394bc88372966f7d54a9df",
+      "outputs": [
+        {
+          "kind": "text",
+          "bytes": 224,
+          "sha256": "a73a6c0e55e82a77d2c69029544b41af22e7a6db5f5ba5e472101ef4dc1c2333",
+          "checks": {
+            "媒体工具箱质量验收": true,
+            "MF-2026-1007": true,
+            "1,280.50": true,
+            "交付要求": true,
+            "画面清晰": true,
+            "文字完整": true,
+            "12345": true,
+            "no_nul": true
+          }
+        },
+        {
+          "kind": "pdf",
+          "bytes": 71499,
+          "sha256": "5b65fe24d90d00f2e6d37f03a8fbd2c0f2249bb23e13c6d0942eb1e0661b497b",
+          "checks": {
+            "search_chinese": true,
+            "媒体工具箱质量验收": true,
+            "MF-2026-1007": true,
+            "1,280.50": true,
+            "交付要求": true,
+            "画面清晰": true,
+            "文字完整": true,
+            "12345": true,
+            "no_nul": true
+          }
+        }
+      ],
+      "chained_pdf_text": {
+        "task_id": "task_d8aeb16315344a59b543220cc9c2c765",
+        "passed": true
+      }
+    }
+  ],
+  "passed": true
+}

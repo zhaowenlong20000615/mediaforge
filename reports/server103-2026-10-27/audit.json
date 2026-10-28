@@ -1,0 +1,170 @@
+{
+  "requests": [
+    {
+      "method": "POST",
+      "path": "api/workspaces",
+      "status": 403,
+      "request_id": "341e91b8bdc85599",
+      "journal_match": true
+    },
+    {
+      "method": "POST",
+      "path": "api/tasks",
+      "status": 403,
+      "request_id": null,
+      "journal_match": false
+    },
+    {
+      "method": "POST",
+      "path": "api/tasks",
+      "status": 202,
+      "request_id": "3f2d3143f6254427",
+      "journal_match": true
+    },
+    {
+      "method": "POST",
+      "path": "api/tasks",
+      "status": 202,
+      "request_id": "73f7c9eaa08be0ba",
+      "journal_match": true
+    },
+    {
+      "method": "POST",
+      "path": "api/tasks",
+      "status": 409,
+      "request_id": "d4c7671a8628205d",
+      "journal_match": true
+    },
+    {
+      "method": "GET",
+      "path": "api/files/file_cac5bdaa8b6c40498bee5d1a958a8c67/content",
+      "status": 206,
+      "request_id": "629f719c7c9a4077",
+      "journal_match": true
+    },
+    {
+      "method": "GET",
+      "path": "api/tasks",
+      "status": 400,
+      "request_id": "004a29fea0e50f9d",
+      "journal_match": true
+    },
+    {
+      "method": "POST",
+      "path": "api/tasks",
+      "status": 202,
+      "request_id": "b37c1e59815256ad",
+      "journal_match": true
+    },
+    {
+      "method": "POST",
+      "path": "api/tasks/task_c9559d4bd482447d821d04a7446a25f3/cancel",
+      "status": 200,
+      "request_id": "79b042395063589e",
+      "journal_match": true
+    },
+    {
+      "method": "POST",
+      "path": "api/tasks/task_c9559d4bd482447d821d04a7446a25f3/resume",
+      "status": 200,
+      "request_id": "cedf51e4a4b66ae4",
+      "journal_match": true
+    },
+    {
+      "method": "GET",
+      "path": "api/tasks/task_c9559d4bd482447d821d04a7446a25f3/logs",
+      "status": 200,
+      "request_id": "28012d249df32cda",
+      "journal_match": true
+    }
+  ],
+  "all_returned_api_request_ids_found": true,
+  "api_requests_with_ids": 10,
+  "api_requests_without_ids": 1,
+  "task_events": [
+    {
+      "time": 1793165518.2221422,
+      "code": "accepted",
+      "message": "任务已受理，等待执行。"
+    },
+    {
+      "time": 1793165518.3272655,
+      "code": "item_started",
+      "message": "正在处理第 1 项。"
+    },
+    {
+      "time": 1793165533.3784053,
+      "code": "item_succeeded",
+      "message": "第 1 项完成；结果可读取，需人工确认质量。"
+    },
+    {
+      "time": 1793165533.3936598,
+      "code": "item_started",
+      "message": "正在处理第 2 项。"
+    },
+    {
+      "time": 1793165533.4805152,
+      "code": "cancel_requested",
+      "message": "已请求取消；正在执行的进程停止后确认。"
+    },
+    {
+      "time": 1793165533.5180826,
+      "code": "cancelled",
+      "message": "处理已停止。"
+    },
+    {
+      "time": 1793165533.5243423,
+      "code": "cancelled",
+      "message": "已取消；已完成结果保留"
+    },
+    {
+      "time": 1793165533.6074982,
+      "code": "resumed",
+      "message": "保留成功项，重新执行其余项目。"
+    },
+    {
+      "time": 1793165533.7084239,
+      "code": "item_started",
+      "message": "正在处理第 2 项。"
+    },
+    {
+      "time": 1793165548.2279603,
+      "code": "item_succeeded",
+      "message": "第 2 项完成；结果可读取，需人工确认质量。"
+    },
+    {
+      "time": 1793165548.2387438,
+      "code": "item_started",
+      "message": "正在处理第 3 项。"
+    },
+    {
+      "time": 1793165563.2491987,
+      "code": "item_succeeded",
+      "message": "第 3 项完成；结果可读取，需人工确认质量。"
+    },
+    {
+      "time": 1793165563.2718754,
+      "code": "item_started",
+      "message": "正在处理第 4 项。"
+    },
+    {
+      "time": 1793165577.9499986,
+      "code": "item_succeeded",
+      "message": "第 4 项完成；结果可读取，需人工确认质量。"
+    },
+    {
+      "time": 1793165577.9572363,
+      "code": "succeeded",
+      "message": "处理完成，请检查结果"
+    }
+  ],
+  "task_id": "task_c9559d4bd482447d821d04a7446a25f3",
+  "workspace": "workspace_526d4310e3eb408f80027c4cab01a04a",
+  "known_limitations": [
+    "Cross-Origin early rejection has no application request ID or application JSON log; the 403 is present in the existing Nginx access log.",
+    "Application HTTP JSON log task_id is always null and contains no workspace identity. Task-owner relation and lifecycle events remain in SQLite and scoped task APIs."
+  ],
+  "nginx_origin_rejection_logged": true,
+  "loopback_optimization_applied": false,
+  "existing_public_https_auth_and_log_path_retained": true
+}
