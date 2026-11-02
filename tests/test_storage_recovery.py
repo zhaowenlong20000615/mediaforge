@@ -92,3 +92,24 @@ def test_browse_derivative_keeps_original_and_real_stream_metadata(running,sampl
     assert video['width']<=960 and video['height']<=540 and video['avg_frame_rate']=='30/1'
     assert any(s['codec_type']=='audio' for s in out['streams']) and abs(out['duration']-f['duration'])<.2
     assert sha256(store.file('workspace_default',f['id'],True)['path'])==before
+
+
+def test_committed_cleanup_io_failure_is_visible_and_next_run_recovers(store,samples,monkeypatch):
+    import shutil
+    f=store.import_file('workspace_default',samples/'图片 sample.png')
+    with store.tx() as c:c.execute('UPDATE files SET created=0 WHERE id=?',(f['id'],))
+    real=shutil.rmtree
+    def fail_retirement(path,*args,**kwargs):
+        if Path(path).parent==store.root/'staging' and Path(path).name.startswith('cleanup_'):
+            raise PermissionError('injected physical retirement failure')
+        return real(path,*args,**kwargs)
+    from pathlib import Path
+    monkeypatch.setattr(shutil,'rmtree',fail_retirement)
+    m=Maintenance(store);m.run_once();status=m.status('workspace_default')
+    assert status['state']=='failed' and status['error']['code']=='cleanup_permission'
+    with store.connect() as c:assert c.execute('SELECT COUNT(*) FROM files').fetchone()[0]==0
+    assert list((store.root/'staging').glob('cleanup_*/moves.json'))
+    assert not list((store.root/'files').iterdir())  # No restored orphan after DB commit.
+    monkeypatch.setattr(shutil,'rmtree',real);m.run_once()
+    assert m.status('workspace_default')['state']=='ok' and m.status('workspace_default')['last_failure']
+    assert not list((store.root/'staging').glob('cleanup_*'))

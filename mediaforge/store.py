@@ -70,7 +70,9 @@ class Store:
                         raise ForgeError('invalid_cleanup_manifest','清理恢复记录不合法。',status=500)
                     exists=con.execute('SELECT 1 FROM files WHERE id=?',(row['id'],)).fetchone()
                     if exists and staged.is_file() and not source.exists():staged.replace(source)
-                shutil.rmtree(folder)
+                try:shutil.rmtree(folder)
+                except FileNotFoundError:
+                    if folder.exists():raise
 
     @staticmethod
     def _exclusive_file(path,content):
@@ -353,7 +355,7 @@ class Store:
         days=self.settings.retention_days if days is None else days
         if type(days) is not int or not 0<=days<=36500:raise ForgeError('invalid_days','保留天数必须为 0–36500 的整数。')
         cutoff=time.time()-86400*days
-        moved=[];trash=self.root/'staging'/uid('cleanup')
+        moved=[];trash=self.root/'staging'/uid('cleanup');committed=False
         try:
             with self.tx() as con:
                 files={r['id']:r for r in con.execute('SELECT * FROM files WHERE owner=?',(owner,))}
@@ -388,10 +390,17 @@ class Store:
                     for tid in eligible:
                         con.execute('DELETE FROM events WHERE task_id=?',(tid,));con.execute('DELETE FROM items WHERE task_id=?',(tid,));con.execute('DELETE FROM tasks WHERE id=?',(tid,))
                     for row in removable:con.execute('DELETE FROM files WHERE id=?',(row['id'],))
-            if not dry_run:shutil.rmtree(trash,ignore_errors=True)
+            committed=True
+            if not dry_run:
+                try:shutil.rmtree(trash)
+                except FileNotFoundError:
+                    if trash.exists():raise
             return result
         except BaseException:
-            for source,destination in reversed(moved):
-                if destination.exists():destination.replace(source)
-            if trash.exists():shutil.rmtree(trash,ignore_errors=True)
+            # After commit, these are retired files. Keep the recovery manifest
+            # and report failure; restoring them would create untracked orphans.
+            if not committed:
+                for source,destination in reversed(moved):
+                    if destination.exists():destination.replace(source)
+                if trash.exists():shutil.rmtree(trash,ignore_errors=True)
             raise

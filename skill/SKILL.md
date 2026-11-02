@@ -85,3 +85,5 @@ readyz在任务调度存储故障时返回503，doctor的worker_error说明原�
 `diagnose_workspace` / CLI `doctor --json` 的maintenance仅对应当前工作区。先看state、last_success、last_failure、error及backlog.measured_at；null积压表示未测得，不能报告为零。清理失败不会停止活动任务；状态保存失败时告知管理员。
 
 仅用户需要浏览代理时提交video-transcode，params中设profile=browse-540p；默认custom不变。该预设固定最大960×540/30fps/CRF23，不采用width/crf自定义值。完成后核对derivation.parents中的SHA、output的尺寸/帧率/音轨、time_mapping及verification.fully_decoded。profile=browse-540p只适合浏览；精确编辑应选择derivation.parents的原件。生成或验证代理不授权删除原件，时间关系不是逐帧精确映射。
+
+0.2.8：清理失败可能发生在索引提交后的物理删除阶段；maintenance失败不代表索引已回滚。不要自行把暂存文件搬回原位置，下一轮维护会按恢复清单核对后重试。

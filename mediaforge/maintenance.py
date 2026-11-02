@@ -51,6 +51,7 @@ class Maintenance:
             if self.running:return
             self.running=True
         try:
+            self.store._recover_cleanup()
             with self.store.connect() as con:owners=[r[0] for r in con.execute('SELECT DISTINCT owner FROM tokens')]
             self.discovery_error=None
             with self.lock:self.rows['_service']={'last_success':time.time(),'error':None};self._save()
