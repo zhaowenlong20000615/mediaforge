@@ -1,0 +1,197 @@
+{
+  "sequential_repeats": 2,
+  "new_environments": 0,
+  "results": [
+    {
+      "already_active": "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1",
+      "health": {
+        "status": "ready",
+        "worker_ready": true,
+        "worker_error": null,
+        "optional_or_external_dependencies_missing": [],
+        "meaning": "\u670d\u52a1\u5c31\u7eea\u4e0d\u4ee3\u8868\u6240\u6709\u5de5\u5177\u6216\u6a21\u578b\u5df2\u914d\u7f6e\uff1b\u5de5\u5177\u76ee\u5f55\u7ed9\u51fa\u6bcf\u9879\u53ef\u7528\u6027\u3002"
+      }
+    },
+    {
+      "retention_preview": {
+        "project_id": "local.mediaforge",
+        "created_at": 1793595102.410624,
+        "kept": {
+          "/opt/mediaforge/access/releases/555469449e3ba0fcffb5dccd0d42bc40cbd57302": [
+            "current"
+          ],
+          "/opt/mediaforge/access/releases/d395e7ca0aab4811d9da439cfb936f3f6f72bb5f": [
+            "rollback"
+          ],
+          "/opt/mediaforge/releases/0.2.6-f159f8fbb4c8-ac032e52": [
+            "rollback",
+            "shebang/pth/runtime config",
+            "runtime symlink"
+          ],
+          "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1": [
+            "current",
+            "process 2183974",
+            "mapped 2183974",
+            "shebang/pth/runtime config",
+            "runtime symlink"
+          ]
+        },
+        "candidates": [],
+        "skipped": [
+          "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.sha256",
+          "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.release.json"
+        ],
+        "applied": false,
+        "deleted": [],
+        "disk_before": {
+          "free": 11920957440,
+          "used": 112740491264
+        }
+      }
+    },
+    {
+      "retention": {
+        "project_id": "local.mediaforge",
+        "created_at": 1793595109.2672937,
+        "kept": {
+          "/opt/mediaforge/access/releases/555469449e3ba0fcffb5dccd0d42bc40cbd57302": [
+            "current"
+          ],
+          "/opt/mediaforge/access/releases/d395e7ca0aab4811d9da439cfb936f3f6f72bb5f": [
+            "rollback"
+          ],
+          "/opt/mediaforge/releases/0.2.6-f159f8fbb4c8-ac032e52": [
+            "rollback",
+            "shebang/pth/runtime config",
+            "runtime symlink"
+          ],
+          "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1": [
+            "current",
+            "process 2183974",
+            "mapped 2183974",
+            "shebang/pth/runtime config",
+            "runtime symlink"
+          ]
+        },
+        "candidates": [],
+        "skipped": [
+          "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.sha256",
+          "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.release.json"
+        ],
+        "applied": true,
+        "deleted": [],
+        "disk_before": {
+          "free": 11920654336,
+          "used": 112740794368
+        },
+        "disk_after": {
+          "free": 11919581184,
+          "used": 112741867520
+        }
+      },
+      "health": {
+        "status": "ready",
+        "worker_ready": true,
+        "worker_error": null,
+        "optional_or_external_dependencies_missing": [],
+        "meaning": "\u670d\u52a1\u5c31\u7eea\u4e0d\u4ee3\u8868\u6240\u6709\u5de5\u5177\u6216\u6a21\u578b\u5df2\u914d\u7f6e\uff1b\u5de5\u5177\u76ee\u5f55\u7ed9\u51fa\u6bcf\u9879\u53ef\u7528\u6027\u3002"
+      }
+    },
+    {
+      "already_active": "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1",
+      "health": {
+        "status": "ready",
+        "worker_ready": true,
+        "worker_error": null,
+        "optional_or_external_dependencies_missing": [],
+        "meaning": "\u670d\u52a1\u5c31\u7eea\u4e0d\u4ee3\u8868\u6240\u6709\u5de5\u5177\u6216\u6a21\u578b\u5df2\u914d\u7f6e\uff1b\u5de5\u5177\u76ee\u5f55\u7ed9\u51fa\u6bcf\u9879\u53ef\u7528\u6027\u3002"
+      }
+    },
+    {
+      "retention_preview": {
+        "project_id": "local.mediaforge",
+        "created_at": 1793595160.168704,
+        "kept": {
+          "/opt/mediaforge/access/releases/555469449e3ba0fcffb5dccd0d42bc40cbd57302": [
+            "current"
+          ],
+          "/opt/mediaforge/access/releases/d395e7ca0aab4811d9da439cfb936f3f6f72bb5f": [
+            "rollback"
+          ],
+          "/opt/mediaforge/releases/0.2.6-f159f8fbb4c8-ac032e52": [
+            "rollback",
+            "shebang/pth/runtime config",
+            "runtime symlink"
+          ],
+          "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1": [
+            "current",
+            "process 2183974",
+            "mapped 2183974",
+            "shebang/pth/runtime config",
+            "runtime symlink"
+          ]
+        },
+        "candidates": [],
+        "skipped": [
+          "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.sha256",
+          "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.release.json"
+        ],
+        "applied": false,
+        "deleted": [],
+        "disk_before": {
+          "free": 11917860864,
+          "used": 112743587840
+        }
+      }
+    },
+    {
+      "retention": {
+        "project_id": "local.mediaforge",
+        "created_at": 1793595167.387118,
+        "kept": {
+          "/opt/mediaforge/access/releases/555469449e3ba0fcffb5dccd0d42bc40cbd57302": [
+            "current"
+          ],
+          "/opt/mediaforge/access/releases/d395e7ca0aab4811d9da439cfb936f3f6f72bb5f": [
+            "rollback"
+          ],
+          "/opt/mediaforge/releases/0.2.6-f159f8fbb4c8-ac032e52": [
+            "rollback",
+            "shebang/pth/runtime config",
+            "runtime symlink"
+          ],
+          "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1": [
+            "current",
+            "process 2183974",
+            "mapped 2183974",
+            "shebang/pth/runtime config",
+            "runtime symlink"
+          ]
+        },
+        "candidates": [],
+        "skipped": [
+          "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.sha256",
+          "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.release.json"
+        ],
+        "applied": true,
+        "deleted": [],
+        "disk_before": {
+          "free": 11918266368,
+          "used": 112743182336
+        },
+        "disk_after": {
+          "free": 11916849152,
+          "used": 112744599552
+        }
+      },
+      "health": {
+        "status": "ready",
+        "worker_ready": true,
+        "worker_error": null,
+        "optional_or_external_dependencies_missing": [],
+        "meaning": "\u670d\u52a1\u5c31\u7eea\u4e0d\u4ee3\u8868\u6240\u6709\u5de5\u5177\u6216\u6a21\u578b\u5df2\u914d\u7f6e\uff1b\u5de5\u5177\u76ee\u5f55\u7ed9\u51fa\u6bcf\u9879\u53ef\u7528\u6027\u3002"
+      }
+    }
+  ],
+  "concurrent_lock_rejections_observed": true
+}

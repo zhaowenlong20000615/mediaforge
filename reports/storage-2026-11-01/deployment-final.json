@@ -1,0 +1,62 @@
+{
+  "retention": {
+    "project_id": "local.mediaforge",
+    "created_at": 1793595415.4081154,
+    "kept": {
+      "/opt/mediaforge/access/releases/555469449e3ba0fcffb5dccd0d42bc40cbd57302": [
+        "current"
+      ],
+      "/opt/mediaforge/access/releases/d395e7ca0aab4811d9da439cfb936f3f6f72bb5f": [
+        "rollback"
+      ],
+      "/opt/mediaforge/releases/0.2.7-1d498b35a8e3-d6cebaac": [
+        "current",
+        "process 2205831",
+        "mapped 2205831",
+        "shebang/pth/runtime config",
+        "runtime symlink"
+      ],
+      "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1": [
+        "rollback",
+        "shebang/pth/runtime config",
+        "runtime symlink"
+      ]
+    },
+    "candidates": [
+      {
+        "path": "/opt/mediaforge/releases/0.2.6-f159f8fbb4c8-ac032e52",
+        "reason": "unreferenced MediaForge release",
+        "sha256_tree": "6d5b6f1dc27e05355c7262972d3a9f390a493c578bada8065ae85979ceca7f64",
+        "logical_bytes": 1557250333
+      }
+    ],
+    "skipped": [
+      "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.sha256",
+      "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.release.json"
+    ],
+    "applied": true,
+    "deleted": [
+      {
+        "path": "/opt/mediaforge/releases/0.2.6-f159f8fbb4c8-ac032e52",
+        "reason": "unreferenced MediaForge release",
+        "sha256_tree": "6d5b6f1dc27e05355c7262972d3a9f390a493c578bada8065ae85979ceca7f64",
+        "logical_bytes": 1557250333
+      }
+    ],
+    "disk_before": {
+      "free": 25106513920,
+      "used": 99554934784
+    },
+    "disk_after": {
+      "free": 26297122816,
+      "used": 98364325888
+    }
+  },
+  "health": {
+    "status": "ready",
+    "worker_ready": true,
+    "worker_error": null,
+    "optional_or_external_dependencies_missing": [],
+    "meaning": "\u670d\u52a1\u5c31\u7eea\u4e0d\u4ee3\u8868\u6240\u6709\u5de5\u5177\u6216\u6a21\u578b\u5df2\u914d\u7f6e\uff1b\u5de5\u5177\u76ee\u5f55\u7ed9\u51fa\u6bcf\u9879\u53ef\u7528\u6027\u3002"
+  }
+}

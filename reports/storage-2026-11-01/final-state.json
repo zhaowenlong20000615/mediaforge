@@ -1,0 +1,355 @@
+{
+  "cleanup_final_preview": {
+    "dry_run": false,
+    "files": 2,
+    "bytes": 8679711,
+    "tasks": 1
+  },
+  "version": {
+    "name": "mediaforge",
+    "version": "0.2.7",
+    "git_commit": "1d498b35a8e3beb6fd0d696e2e18c3d80b9715c2",
+    "artifact_sha256": "d6cebaacf0a01b0a2b3c8dc13943000bde3ebefde7d244ff88c7fa2e2960a5bb",
+    "built_at": "2026-11-02T04:54:11Z"
+  },
+  "doctor": {
+    "checks": [
+      {
+        "id": "ffmpeg",
+        "name": "ffmpeg",
+        "available": true,
+        "status": "available",
+        "purpose": "音视频处理",
+        "install": "",
+        "details": {
+          "startup_verified": true,
+          "path": "/usr/bin/ffmpeg"
+        }
+      },
+      {
+        "id": "ffprobe",
+        "name": "ffprobe",
+        "available": true,
+        "status": "available",
+        "purpose": "媒体检查",
+        "install": "",
+        "details": {
+          "startup_verified": true,
+          "path": "/usr/bin/ffprobe"
+        }
+      },
+      {
+        "id": "poppler",
+        "name": "poppler",
+        "available": true,
+        "status": "available",
+        "purpose": "PDF 渲染",
+        "install": "",
+        "details": {
+          "startup_verified": true,
+          "path": "/usr/bin/pdftoppm"
+        }
+      },
+      {
+        "id": "tesseract",
+        "name": "tesseract",
+        "available": true,
+        "status": "available",
+        "purpose": "OCR",
+        "install": "",
+        "details": {
+          "startup_verified": true,
+          "path": "/usr/bin/tesseract"
+        }
+      },
+      {
+        "id": "libreoffice",
+        "name": "libreoffice",
+        "available": true,
+        "status": "available",
+        "purpose": "Office/PDF 导出",
+        "install": "",
+        "details": {
+          "startup_verified": true,
+          "path": "/usr/bin/libreoffice"
+        }
+      },
+      {
+        "id": "pillow",
+        "name": "pillow",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "pypdf",
+        "name": "pypdf",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "pymupdf",
+        "name": "pymupdf",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "docx",
+        "name": "docx",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "pdfplumber",
+        "name": "pdfplumber",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "pysubs2",
+        "name": "pysubs2",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "opencv",
+        "name": "opencv",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --extra repair",
+        "details": {}
+      },
+      {
+        "id": "ocrmypdf",
+        "name": "ocrmypdf",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "mammoth",
+        "name": "mammoth",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "img2pdf",
+        "name": "img2pdf",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "pdf2docx",
+        "name": "pdf2docx",
+        "available": true,
+        "status": "available",
+        "purpose": "文件处理",
+        "install": "uv sync --frozen",
+        "details": {}
+      },
+      {
+        "id": "asr-model",
+        "name": "Faster Whisper",
+        "available": true,
+        "status": "available",
+        "purpose": "离线语音转写",
+        "install": "uv sync --extra asr；配置 MEDIAFORGE_ASR_MODEL 为已下载的 CTranslate2 模型目录。",
+        "details": {
+          "library": true,
+          "model_configured": true,
+          "cpu": true,
+          "cuda_devices": 0,
+          "model": "faster-whisper-small"
+        }
+      },
+      {
+        "id": "background-model",
+        "name": "u2net",
+        "available": true,
+        "status": "available",
+        "purpose": "离线去背景",
+        "install": "uv sync --extra background；在 U2NET_HOME 配置 u2net.onnx。",
+        "details": {
+          "model_configured": true,
+          "model": "u2net"
+        }
+      },
+      {
+        "id": "font",
+        "name": "水印字体",
+        "available": true,
+        "status": "available",
+        "purpose": "文字水印",
+        "install": "配置 MEDIAFORGE_FONT，或安装 Noto CJK 字体。",
+        "details": {}
+      }
+    ],
+    "ocr_languages": [
+      "chi_sim",
+      "eng",
+      "osd"
+    ],
+    "storage": {
+      "files": 2,
+      "used_bytes": 255,
+      "quota_bytes": 10737418240,
+      "max_file_bytes": 536870912,
+      "retention_days": 7,
+      "concurrency": 2,
+      "timeout": 1800,
+      "max_pending": 100,
+      "location": "service_workspace",
+      "content_quality": "处理完成不代表内容质量审核通过。"
+    },
+    "server_platform": {
+      "system": "Linux",
+      "architecture": "x86_64"
+    },
+    "worker_ready": true,
+    "worker_error": null,
+    "maintenance": {
+      "last_success": 1793595427.9717746,
+      "last_failure": null,
+      "backlog": {
+        "dry_run": true,
+        "files": 0,
+        "bytes": 0,
+        "tasks": 0,
+        "measured_at": 1793595427.9717765
+      },
+      "state": "ok",
+      "last_attempt": 1793595427.9556403,
+      "error": null,
+      "last_result": {
+        "dry_run": false,
+        "files": 0,
+        "bytes": 0,
+        "tasks": 0
+      },
+      "interval_seconds": 3600,
+      "retention_days": 7,
+      "persistence_error": null,
+      "discovery_error": null
+    }
+  },
+  "readyz": {
+    "status": "ready",
+    "worker_ready": true,
+    "worker_error": null,
+    "optional_or_external_dependencies_missing": [],
+    "meaning": "服务就绪不代表所有工具或模型已配置；工具目录给出每项可用性。"
+  },
+  "manifest": {
+    "projectId": "local.mediaforge",
+    "slug": "mediaforge",
+    "title": "媒体工具箱",
+    "accent": "#80542b",
+    "home": "https://103.236.60.28:18081/mediaforge/",
+    "pageUrl": "https://103.236.60.28:18081/mediaforge/access/",
+    "fileBase": "/mediaforge/access/files/",
+    "clientVersion": "0.2.7",
+    "runtime": "Python 3.11–3.14；首次安装依赖需要联网。",
+    "scope": "命令行和 AI 工具连接本项目服务；数据和授权仍由原项目管理。",
+    "description": "网页可直接使用云端处理；本包用于 CLI／MCP 调用，不是已配齐系统工具的本机媒体安装器。",
+    "packageLabel": "命令行与 AI 调用包",
+    "packageDescription": "本项目客户端脚本与技能说明；运行环境另行安装，不包含业务凭证。",
+    "authHelp": "先在本项目登录，或使用本项目已有的访问令牌。不会使用运营工作台令牌代替项目授权。",
+    "skillPath": "client/skill/SKILL.md",
+    "skillSummary": "技能包随接入包提供，包含本项目真实工具、步骤、结果判定与失败处理。",
+    "steps": [
+      "将本项目接入包完整解压到独立目录，先检查本页的运行环境要求。",
+      "按照本页命令安装依赖或运行帮助，随后配置该项目自己的服务地址和受限授权。",
+      "需要 AI 调用时，将下方 MCP 模板中的绝对路径和身份配置替换为自己的值。"
+    ],
+    "checks": [
+      "先核对 CLI 帮助及 MCP 工具发现，再执行一个有权限的只读查询。",
+      "查询返回错误、未配置、模拟或待验证时，按原项目结果处理，不当作业务成功。",
+      "需要实际业务验证时，在原项目核对任务状态和最终产物。"
+    ],
+    "limits": [
+      "接入云端时，上传的文件在服务器处理；安装 CLI 不等于本地媒体引擎就绪。",
+      "本地处理需要原项目的系统依赖及模型，按 client/docs/DEPLOYMENT.md 与 MODELS.md 配置并运行 doctor。",
+      "可选语音、抠图和修复模型未随接入包安装；Windows 本次未实机验证。"
+    ],
+    "commands": [
+      {
+        "title": "安装与帮助",
+        "windows": "py -3 install.py\n.venv\\Scripts\\mediaforge.exe --help",
+        "unix": "python3 install.py\n.venv/bin/mediaforge --help"
+      },
+      {
+        "title": "连接已授权的云端工作区",
+        "windows": "$env:MEDIAFORGE_URL=\"https://103.236.60.28:18081/mediaforge\"\n$env:MEDIAFORGE_TOKEN_FILE=\"C:\\私有目录\\媒体工作区令牌.txt\"",
+        "unix": "export MEDIAFORGE_URL=https://103.236.60.28:18081/mediaforge\nexport MEDIAFORGE_TOKEN_FILE=/私有目录/媒体工作区令牌.txt"
+      }
+    ],
+    "mcp": {
+      "windows": {
+        "mcpServers": {
+          "mediaforge": {
+            "command": "C:\\替换为解压目录\\.venv\\Scripts\\mediaforge.exe",
+            "args": [
+              "mcp"
+            ],
+            "env": {
+              "MEDIAFORGE_URL": "https://103.236.60.28:18081/mediaforge",
+              "MEDIAFORGE_TOKEN_FILE": "C:\\私有目录\\媒体工作区令牌.txt"
+            }
+          }
+        }
+      },
+      "unix": {
+        "mcpServers": {
+          "mediaforge": {
+            "command": "/替换为解压目录/.venv/bin/mediaforge",
+            "args": [
+              "mcp"
+            ],
+            "env": {
+              "MEDIAFORGE_URL": "https://103.236.60.28:18081/mediaforge",
+              "MEDIAFORGE_TOKEN_FILE": "/私有目录/媒体工作区令牌.txt"
+            }
+          }
+        }
+      }
+    },
+    "clientCommit": "1d498b35a8e3beb6fd0d696e2e18c3d80b9715c2",
+    "files": [
+      {
+        "name": "mediaforge-0.2.7-client.zip",
+        "label": "媒体工具箱 · 命令行与 AI 调用包",
+        "description": "本项目客户端脚本与技能说明；运行环境另行安装，不包含业务凭证。",
+        "size": 101405,
+        "sha256": "5d80676f4f7a8e59b126b7dcb08840b1b267fca83f53ac3b0052d02319b7f0d8",
+        "url": "/mediaforge/access/files/mediaforge-0.2.7-client.zip",
+        "verification": "已核对包完整性；Windows 实机尚未验证"
+      }
+    ]
+  }
+}

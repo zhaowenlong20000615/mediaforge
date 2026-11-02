@@ -218,6 +218,7 @@ def activate(name):
         if secure_release(old) and old!=release:(BASE/'previous.json').write_text(json.dumps({'release':str(old)}))
         deployed={**meta,'deployed_at':now(),'release':str(release),'url':'https://103.236.60.28:18081/mediaforge/','health':health,'uid':pwd.getpwnam('mediaforge').pw_uid,'dependency_cache':str(cached_wheels) if cached_wheels else None,'dependency_install_report_sha256':hashlib.sha256((release/'dependency-install.json').read_bytes()).hexdigest()}
         (BASE/'deployment.json').write_text(json.dumps(deployed,indent=2)+'\n')
+        (release/'deployment.json').write_text(json.dumps(deployed,indent=2)+'\n')
         print(json.dumps({'activated':str(release),'git_commit':meta['git_commit'],'health':health,'url':deployed['url']}))
     except BaseException:
         if previous_nginx is not None:NGINX.write_bytes(previous_nginx)

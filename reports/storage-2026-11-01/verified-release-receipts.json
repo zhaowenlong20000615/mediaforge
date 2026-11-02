@@ -1,0 +1,20 @@
+[
+  {
+    "release": "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1",
+    "source_commit": "555469449e3ba0fcffb5dccd0d42bc40cbd57302",
+    "historical_deployed_at": "2026-11-02T04:45:05Z",
+    "receipt_present": true
+  },
+  {
+    "release": "/opt/mediaforge/releases/0.2.7-1d498b35a8e3-d6cebaac",
+    "source_commit": "1d498b35a8e3beb6fd0d696e2e18c3d80b9715c2",
+    "historical_deployed_at": "2026-11-02T04:56:08Z",
+    "receipt_present": true
+  },
+  {
+    "release": "/opt/mediaforge/releases/0.2.8-bf40baf34653-e1f43913",
+    "source_commit": "bf40baf34653ee4575034c854fa90b6c062eeb39",
+    "historical_deployed_at": "2026-11-02T05:05:41Z",
+    "receipt_present": true
+  }
+]

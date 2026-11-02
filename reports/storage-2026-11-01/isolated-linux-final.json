@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "version": "0.2.8",
+  "scenarios": [
+    {
+      "isolated_injected_scenario": true,
+      "production_fault_injected": false,
+      "failure_class": "cleanup_permission",
+      "failure_durable": true,
+      "backlog_before": 1,
+      "active_image_task_completed": "succeeded",
+      "output_width": 48,
+      "after_state": "ok",
+      "backlog_after": 0,
+      "original_sha": "9738d79362da40ad327c7f3bde9290ea00be2c7ccb6867cc916f2d7cee31c31e",
+      "passed": true
+    },
+    {
+      "isolated_injected_scenario": true,
+      "production_fault_injected": false,
+      "physical_retirement_after_commit": true,
+      "failure_class": "cleanup_permission",
+      "no_unregistered_file_restored": true,
+      "active_task_completed": true,
+      "retry_removed_recovery_manifest": true,
+      "passed": true
+    }
+  ]
+}

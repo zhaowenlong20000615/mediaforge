@@ -1,0 +1,145 @@
+{
+  "version": {
+    "name": "mediaforge",
+    "version": "0.2.8",
+    "git_commit": "bf40baf34653ee4575034c854fa90b6c062eeb39",
+    "artifact_sha256": "e1f43913562f8a3345a2f29bd9c643f9176831a729935cf20d449a48e49974f3",
+    "built_at": "2026-11-02T05:03:40Z"
+  },
+  "task_id": "task_26975ff6b18f4807a763ad64f526f76a",
+  "output": {
+    "id": "file_6ec7442b163347c6b013e655ba248288",
+    "name": "source__video.mp4",
+    "created_at": 1793595992.0178382,
+    "task_id": "task_26975ff6b18f4807a763ad64f526f76a",
+    "size": 1710083,
+    "sha256": "398f31b9727857825014560d7c70b4e489635774cf8d375be53139e6c0b8d3c5",
+    "kind": "video",
+    "mime": "video/mp4",
+    "warnings": [],
+    "duration": 10.008005,
+    "streams": [
+      {
+        "index": 0,
+        "codec_type": "video",
+        "codec_name": "h264",
+        "width": 960,
+        "height": 540,
+        "avg_frame_rate": "30/1",
+        "pix_fmt": "yuv420p",
+        "sample_aspect_ratio": "1:1",
+        "extradata_hash": "SHA256:258c596acdc0230592b08cf1255d2fb3c122c4fed2f76e28af07d945346a8dc7",
+        "time_base": "1/15360",
+        "rotation": 0
+      },
+      {
+        "index": 1,
+        "codec_type": "audio",
+        "codec_name": "aac",
+        "sample_rate": "44100",
+        "channels": 1,
+        "avg_frame_rate": "0/0",
+        "extradata_hash": "SHA256:e1d9202ffd952e4a2732fa1093c81702a05a553570e848fb8e670c958c05c101",
+        "time_base": "1/44100",
+        "rotation": 0
+      }
+    ],
+    "verification": {
+      "operation": "video-transcode",
+      "expected_container": "mp4",
+      "codec": "libx264",
+      "fully_decoded": true,
+      "profile": "browse-540p",
+      "exact_edit_requires_parent": true
+    },
+    "source_file_ids": [
+      "file_a5b41f1675434e79be46f08cfec64cba"
+    ],
+    "derivation": {
+      "profile": "browse-540p",
+      "operation": "video-transcode",
+      "purpose": "browse_proxy",
+      "parents": [
+        {
+          "file_id": "file_a5b41f1675434e79be46f08cfec64cba",
+          "sha256": "a0d815fa784cdadd6faa21724c5ee953840e2edd2799e30f361733baf06dd7cb",
+          "duration": 10.0,
+          "streams": [
+            {
+              "index": 0,
+              "codec_type": "video",
+              "codec_name": "h264",
+              "width": 1280,
+              "height": 720,
+              "avg_frame_rate": "30/1",
+              "pix_fmt": "yuv420p",
+              "sample_aspect_ratio": "1:1",
+              "extradata_hash": "SHA256:6503d1ad347df3e0d63506cf53ab9e450e8ac649a0a319654a786cfac6b00546",
+              "time_base": "1/15360",
+              "rotation": 0
+            },
+            {
+              "index": 1,
+              "codec_type": "audio",
+              "codec_name": "aac",
+              "sample_rate": "44100",
+              "channels": 1,
+              "avg_frame_rate": "0/0",
+              "extradata_hash": "SHA256:e1d9202ffd952e4a2732fa1093c81702a05a553570e848fb8e670c958c05c101",
+              "time_base": "1/44100",
+              "rotation": 0
+            }
+          ]
+        }
+      ],
+      "parameters": {
+        "profile": "browse-540p",
+        "format": "mp4",
+        "width": 0,
+        "crf": 18
+      },
+      "output": {
+        "sha256": "398f31b9727857825014560d7c70b4e489635774cf8d375be53139e6c0b8d3c5",
+        "duration": 10.008005,
+        "streams": [
+          {
+            "index": 0,
+            "codec_type": "video",
+            "codec_name": "h264",
+            "width": 960,
+            "height": 540,
+            "avg_frame_rate": "30/1",
+            "pix_fmt": "yuv420p",
+            "sample_aspect_ratio": "1:1",
+            "extradata_hash": "SHA256:258c596acdc0230592b08cf1255d2fb3c122c4fed2f76e28af07d945346a8dc7",
+            "time_base": "1/15360",
+            "rotation": 0
+          },
+          {
+            "index": 1,
+            "codec_type": "audio",
+            "codec_name": "aac",
+            "sample_rate": "44100",
+            "channels": 1,
+            "avg_frame_rate": "0/0",
+            "extradata_hash": "SHA256:e1d9202ffd952e4a2732fa1093c81702a05a553570e848fb8e670c958c05c101",
+            "time_base": "1/44100",
+            "rotation": 0
+          }
+        ]
+      },
+      "time_mapping": {
+        "source_start_seconds": 0,
+        "playback_rate": 1,
+        "basis": "parent_playback_seconds",
+        "frame_exact": false,
+        "mapping": "same_rate"
+      },
+      "original_replaced": false,
+      "exact_edit_source": "parent"
+    },
+    "quality_review": "required"
+  },
+  "original_sha": "a0d815fa784cdadd6faa21724c5ee953840e2edd2799e30f361733baf06dd7cb",
+  "passed": true
+}

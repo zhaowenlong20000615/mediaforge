@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "client_version": "0.2.7",
+  "client_commit": "1d498b35a8e3beb6fd0d696e2e18c3d80b9715c2",
+  "zip_crc": true,
+  "zip_sha256": "5d80676f4f7a8e59b126b7dcb08840b1b267fca83f53ac3b0052d02319b7f0d8",
+  "downloaded_source_executed": true,
+  "independent_dependency_install": false,
+  "tool_count": 13,
+  "cli_mcp_maintenance_equal": true,
+  "maintenance": {
+    "last_success": 1793595430.0933473,
+    "last_failure": null,
+    "backlog": {
+      "dry_run": true,
+      "files": 0,
+      "bytes": 0,
+      "tasks": 0,
+      "measured_at": 1793595430.0933492
+    },
+    "state": "ok",
+    "last_attempt": 1793595430.0783708,
+    "error": null,
+    "last_result": {
+      "dry_run": false,
+      "files": 0,
+      "bytes": 0,
+      "tasks": 0
+    },
+    "interval_seconds": 3600,
+    "retention_days": 7,
+    "persistence_error": null,
+    "discovery_error": null
+  },
+  "browse_profile_discovered": true
+}

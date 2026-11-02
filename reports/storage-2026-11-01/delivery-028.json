@@ -1,0 +1,81 @@
+[
+  {
+    "project": "local.mediaforge",
+    "output": "/Users/zhao/Desktop/test/projects/mediaforge/dist/accessDelivery",
+    "files": 1,
+    "client_commit": "bf40baf34653ee4575034c854fa90b6c062eeb39"
+  },
+  {
+    "deployed": "local.mediaforge",
+    "commit": "bf40baf34653ee4575034c854fa90b6c062eeb39",
+    "artifact_sha256": "72684347d0e276918666494976eda6215ec93306ffd9649c63b8a9bd69b478fa",
+    "component_only": true,
+    "native_auth_preserved": true
+  },
+  {
+    "project_id": "local.mediaforge",
+    "created_at": 1793596043.932415,
+    "kept": {
+      "/opt/mediaforge/access/releases/1d498b35a8e3beb6fd0d696e2e18c3d80b9715c2": [
+        "rollback"
+      ],
+      "/opt/mediaforge/access/releases/bf40baf34653ee4575034c854fa90b6c062eeb39": [
+        "current"
+      ],
+      "/opt/mediaforge/releases/0.2.7-1d498b35a8e3-d6cebaac": [
+        "rollback",
+        "shebang/pth/runtime config",
+        "runtime symlink"
+      ],
+      "/opt/mediaforge/releases/0.2.8-bf40baf34653-e1f43913": [
+        "current",
+        "process 2223860",
+        "mapped 2223860",
+        "shebang/pth/runtime config",
+        "runtime symlink"
+      ]
+    },
+    "candidates": [
+      {
+        "path": "/opt/mediaforge/access/releases/555469449e3ba0fcffb5dccd0d42bc40cbd57302",
+        "reason": "unreferenced MediaForge release",
+        "sha256_tree": "7335e41b6278a95a2f424b9f96b80a1205ac842916a6a6c44e8943214c78c4f5",
+        "logical_bytes": 120252
+      },
+      {
+        "path": "/opt/mediaforge/access/backups/555469449e3ba0fcffb5dccd0d42bc40cbd57302",
+        "reason": "superseded delivery configuration rollback snapshot",
+        "sha256_tree": "7e88cc61352ad30f746f655bc5cf93ee413efa87b0980f3ed5b81cd8abea1652",
+        "logical_bytes": 1187
+      }
+    ],
+    "skipped": [
+      "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1",
+      "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.sha256",
+      "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.release.json"
+    ],
+    "applied": true,
+    "deleted": [
+      {
+        "path": "/opt/mediaforge/access/releases/555469449e3ba0fcffb5dccd0d42bc40cbd57302",
+        "reason": "unreferenced MediaForge release",
+        "sha256_tree": "7335e41b6278a95a2f424b9f96b80a1205ac842916a6a6c44e8943214c78c4f5",
+        "logical_bytes": 120252
+      },
+      {
+        "path": "/opt/mediaforge/access/backups/555469449e3ba0fcffb5dccd0d42bc40cbd57302",
+        "reason": "superseded delivery configuration rollback snapshot",
+        "sha256_tree": "7e88cc61352ad30f746f655bc5cf93ee413efa87b0980f3ed5b81cd8abea1652",
+        "logical_bytes": 1187
+      }
+    ],
+    "disk_before": {
+      "free": 33086500864,
+      "used": 91574947840
+    },
+    "disk_after": {
+      "free": 33084895232,
+      "used": 91576553472
+    }
+  }
+]

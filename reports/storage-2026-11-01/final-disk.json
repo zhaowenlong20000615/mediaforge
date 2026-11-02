@@ -1,0 +1,154 @@
+{
+  "at": "2026-11-02T04:58:42.571776+00:00",
+  "hostname": "ser693712513899",
+  "df": "Filesystem        1B-blocks        Used   Available Use% Mounted on\n/dev/vda1      124678225920 88630775808 36030672896  72% /\n",
+  "project_allocated_bytes": 3758948352,
+  "releases": [
+    {
+      "path": "/opt/mediaforge/releases/0.2.7-1d498b35a8e3-d6cebaac",
+      "version_from_interpreter": "0.2.7",
+      "metadata": {
+        "project_id": "local.mediaforge",
+        "version": "0.2.7",
+        "git_commit": "1d498b35a8e3beb6fd0d696e2e18c3d80b9715c2",
+        "artifact_sha256": "d6cebaacf0a01b0a2b3c8dc13943000bde3ebefde7d244ff88c7fa2e2960a5bb",
+        "built_at": "2026-11-02T04:54:11Z",
+        "python": "3.12",
+        "target": "linux-x86_64",
+        "dependency_cache_commit": "555469449e3ba0fcffb5dccd0d42bc40cbd57302"
+      }
+    },
+    {
+      "path": "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1",
+      "version_from_interpreter": "0.2.7",
+      "metadata": {
+        "project_id": "local.mediaforge",
+        "version": "0.2.7",
+        "git_commit": "555469449e3ba0fcffb5dccd0d42bc40cbd57302",
+        "artifact_sha256": "b49630c1084331864263485d6a7693d9d2ef66aebfe7a32af0e4eb2e01c43c5f",
+        "built_at": "2026-11-02T04:42:48Z",
+        "python": "3.12",
+        "target": "linux-x86_64",
+        "dependency_cache_commit": "f159f8fbb4c8a6767622d8e9b3bedf326dedad1b"
+      }
+    }
+  ],
+  "delivery_releases": [
+    "555469449e3ba0fcffb5dccd0d42bc40cbd57302",
+    "1d498b35a8e3beb6fd0d696e2e18c3d80b9715c2"
+  ],
+  "current": "/opt/mediaforge/releases/0.2.7-1d498b35a8e3-d6cebaac",
+  "previous": {
+    "release": "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1"
+  },
+  "delivery": {
+    "project_id": "local.mediaforge",
+    "source_commit": "1d498b35a8e3beb6fd0d696e2e18c3d80b9715c2",
+    "artifact_sha256": "4deb301a43a5b6b4739d8762e31199a8df3c079b2b71b3a4c27aaf591e0730b6",
+    "previous": "/opt/mediaforge/access/releases/555469449e3ba0fcffb5dccd0d42bc40cbd57302"
+  },
+  "retention": {
+    "project_id": "local.mediaforge",
+    "created_at": 1793595488.326902,
+    "kept": {
+      "/opt/mediaforge/access/releases/1d498b35a8e3beb6fd0d696e2e18c3d80b9715c2": [
+        "current"
+      ],
+      "/opt/mediaforge/access/releases/555469449e3ba0fcffb5dccd0d42bc40cbd57302": [
+        "rollback"
+      ],
+      "/opt/mediaforge/releases/0.2.7-1d498b35a8e3-d6cebaac": [
+        "current",
+        "process 2205831",
+        "mapped 2205831",
+        "shebang/pth/runtime config",
+        "runtime symlink"
+      ],
+      "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1": [
+        "rollback",
+        "shebang/pth/runtime config",
+        "runtime symlink"
+      ]
+    },
+    "candidates": [
+      {
+        "path": "/opt/mediaforge/access/releases/d395e7ca0aab4811d9da439cfb936f3f6f72bb5f",
+        "reason": "unreferenced MediaForge release",
+        "sha256_tree": "61a3bcdfed5552e7c451e8859402eb91814cba7cd9f822e344aa60cce664f4da",
+        "logical_bytes": 116193
+      },
+      {
+        "path": "/opt/mediaforge/access/backups/d395e7ca0aab4811d9da439cfb936f3f6f72bb5f",
+        "reason": "superseded delivery configuration rollback snapshot",
+        "sha256_tree": "aa64aceaa968804d3ccf7bb9507e7431953d1fe35bcee26c46b722994af7fd92",
+        "logical_bytes": 115
+      },
+      {
+        "path": "/opt/mediaforge/access/incoming/d395e7ca0aab4811d9da439cfb936f3f6f72bb5f.tar.gz",
+        "reason": "verified superseded delivery upload",
+        "sha256_tree": "af722402befb3cab02829dd23b1cb469a68956aa33e9be519550775b6023515e",
+        "logical_bytes": 103842
+      }
+    ],
+    "skipped": [
+      "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.sha256",
+      "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.release.json"
+    ],
+    "applied": true,
+    "deleted": [
+      {
+        "path": "/opt/mediaforge/access/releases/d395e7ca0aab4811d9da439cfb936f3f6f72bb5f",
+        "reason": "unreferenced MediaForge release",
+        "sha256_tree": "61a3bcdfed5552e7c451e8859402eb91814cba7cd9f822e344aa60cce664f4da",
+        "logical_bytes": 116193
+      },
+      {
+        "path": "/opt/mediaforge/access/backups/d395e7ca0aab4811d9da439cfb936f3f6f72bb5f",
+        "reason": "superseded delivery configuration rollback snapshot",
+        "sha256_tree": "aa64aceaa968804d3ccf7bb9507e7431953d1fe35bcee26c46b722994af7fd92",
+        "logical_bytes": 115
+      },
+      {
+        "path": "/opt/mediaforge/access/incoming/d395e7ca0aab4811d9da439cfb936f3f6f72bb5f.tar.gz",
+        "reason": "verified superseded delivery upload",
+        "sha256_tree": "af722402befb3cab02829dd23b1cb469a68956aa33e9be519550775b6023515e",
+        "logical_bytes": 103842
+      }
+    ],
+    "disk_before": {
+      "free": 36060712960,
+      "used": 88600735744
+    },
+    "disk_after": {
+      "free": 36057133056,
+      "used": 88604315648
+    }
+  },
+  "deployment": {
+    "project_id": "local.mediaforge",
+    "version": "0.2.7",
+    "git_commit": "1d498b35a8e3beb6fd0d696e2e18c3d80b9715c2",
+    "artifact_sha256": "d6cebaacf0a01b0a2b3c8dc13943000bde3ebefde7d244ff88c7fa2e2960a5bb",
+    "built_at": "2026-11-02T04:54:11Z",
+    "python": "3.12",
+    "target": "linux-x86_64",
+    "dependency_cache_commit": "555469449e3ba0fcffb5dccd0d42bc40cbd57302",
+    "deployed_at": "2026-11-02T04:56:08Z",
+    "release": "/opt/mediaforge/releases/0.2.7-1d498b35a8e3-d6cebaac",
+    "url": "https://103.236.60.28:18081/mediaforge/",
+    "health": {
+      "status": "ready",
+      "worker_ready": true,
+      "worker_error": null,
+      "optional_or_external_dependencies_missing": [],
+      "meaning": "\u670d\u52a1\u5c31\u7eea\u4e0d\u4ee3\u8868\u6240\u6709\u5de5\u5177\u6216\u6a21\u578b\u5df2\u914d\u7f6e\uff1b\u5de5\u5177\u76ee\u5f55\u7ed9\u51fa\u6bcf\u9879\u53ef\u7528\u6027\u3002"
+    },
+    "uid": 995,
+    "dependency_cache": "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1/wheels",
+    "dependency_install_report_sha256": "b28fb5dfb51a2fdcf36d39e02901e8de83c8f299f9236e08d0bbd77a37ddb5d4"
+  },
+  "db_check": "ok",
+  "status_counts": {
+    "succeeded": 2
+  }
+}

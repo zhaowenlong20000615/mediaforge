@@ -1,0 +1,117 @@
+{
+  "at": "2026-11-02T04:50:58.650615+00:00",
+  "hostname": "ser693712513899",
+  "df": "Filesystem        1B-blocks         Used   Available Use% Mounted on\n/dev/vda1      124678225920 112755970048 11905478656  91% /\n",
+  "project_allocated_bytes": 3694219264,
+  "releases": [
+    {
+      "path": "/opt/mediaforge/releases/0.2.6-f159f8fbb4c8-ac032e52",
+      "version_from_interpreter": "0.2.6",
+      "metadata": {
+        "project_id": "local.mediaforge",
+        "version": "0.2.6",
+        "git_commit": "f159f8fbb4c8a6767622d8e9b3bedf326dedad1b",
+        "artifact_sha256": "ac032e520e4e07fa105c729415773e75d7411c0a2e8f80aaa632f0e2cce3516f",
+        "built_at": "2026-10-07T10:46:12Z",
+        "python": "3.12",
+        "target": "linux-x86_64",
+        "dependency_cache_commit": "8120bd517ff797f2041659b0f54b292e20e8eceb"
+      }
+    },
+    {
+      "path": "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1",
+      "version_from_interpreter": "0.2.7",
+      "metadata": {
+        "project_id": "local.mediaforge",
+        "version": "0.2.7",
+        "git_commit": "555469449e3ba0fcffb5dccd0d42bc40cbd57302",
+        "artifact_sha256": "b49630c1084331864263485d6a7693d9d2ef66aebfe7a32af0e4eb2e01c43c5f",
+        "built_at": "2026-11-02T04:42:48Z",
+        "python": "3.12",
+        "target": "linux-x86_64",
+        "dependency_cache_commit": "f159f8fbb4c8a6767622d8e9b3bedf326dedad1b"
+      }
+    }
+  ],
+  "delivery_releases": [
+    "555469449e3ba0fcffb5dccd0d42bc40cbd57302",
+    "d395e7ca0aab4811d9da439cfb936f3f6f72bb5f"
+  ],
+  "current": "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1",
+  "previous": {
+    "release": "/opt/mediaforge/releases/0.2.6-f159f8fbb4c8-ac032e52"
+  },
+  "delivery": {
+    "project_id": "local.mediaforge",
+    "source_commit": "555469449e3ba0fcffb5dccd0d42bc40cbd57302",
+    "artifact_sha256": "a8c913ee9d49d9bff39fecbbd6fed41bab386ca78b1027728c6b103596bce408",
+    "previous": "/opt/mediaforge/access/releases/d395e7ca0aab4811d9da439cfb936f3f6f72bb5f"
+  },
+  "retention": {
+    "project_id": "local.mediaforge",
+    "created_at": 1793595050.8703322,
+    "kept": {
+      "/opt/mediaforge/access/releases/555469449e3ba0fcffb5dccd0d42bc40cbd57302": [
+        "current"
+      ],
+      "/opt/mediaforge/access/releases/d395e7ca0aab4811d9da439cfb936f3f6f72bb5f": [
+        "rollback"
+      ],
+      "/opt/mediaforge/releases/0.2.6-f159f8fbb4c8-ac032e52": [
+        "rollback",
+        "shebang/pth/runtime config",
+        "runtime symlink"
+      ],
+      "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1": [
+        "current",
+        "process 2183974",
+        "mapped 2183974",
+        "shebang/pth/runtime config",
+        "runtime symlink"
+      ]
+    },
+    "candidates": [],
+    "skipped": [
+      "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.sha256",
+      "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.release.json"
+    ],
+    "applied": true,
+    "deleted": [],
+    "disk_before": {
+      "free": 11905380352,
+      "used": 112756068352
+    },
+    "disk_after": {
+      "free": 11905486848,
+      "used": 112755961856
+    }
+  },
+  "deployment": {
+    "project_id": "local.mediaforge",
+    "version": "0.2.7",
+    "git_commit": "555469449e3ba0fcffb5dccd0d42bc40cbd57302",
+    "artifact_sha256": "b49630c1084331864263485d6a7693d9d2ef66aebfe7a32af0e4eb2e01c43c5f",
+    "built_at": "2026-11-02T04:42:48Z",
+    "python": "3.12",
+    "target": "linux-x86_64",
+    "dependency_cache_commit": "f159f8fbb4c8a6767622d8e9b3bedf326dedad1b",
+    "deployed_at": "2026-11-02T04:45:05Z",
+    "release": "/opt/mediaforge/releases/0.2.7-555469449e3b-b49630c1",
+    "url": "https://103.236.60.28:18081/mediaforge/",
+    "health": {
+      "status": "ready",
+      "worker_ready": true,
+      "worker_error": null,
+      "optional_or_external_dependencies_missing": [],
+      "meaning": "\u670d\u52a1\u5c31\u7eea\u4e0d\u4ee3\u8868\u6240\u6709\u5de5\u5177\u6216\u6a21\u578b\u5df2\u914d\u7f6e\uff1b\u5de5\u5177\u76ee\u5f55\u7ed9\u51fa\u6bcf\u9879\u53ef\u7528\u6027\u3002"
+    },
+    "uid": 995,
+    "dependency_cache": "/opt/mediaforge/releases/0.2.6-f159f8fbb4c8-ac032e52/wheels",
+    "dependency_install_report_sha256": "af7e754653e59695f4ad293db23f965373d353c0f5df25bc73d700388c5f544c"
+  },
+  "db_check": "ok",
+  "status_counts": {
+    "failed": 2,
+    "succeeded": 13
+  }
+}

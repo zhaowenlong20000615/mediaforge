@@ -1,0 +1,1205 @@
+{
+  "server": "https://103.236.60.28:18081/mediaforge",
+  "started_at": "2026-11-02T04:45:50.994192+00:00",
+  "workspace": "workspace_42ad3eeee33b47d0992020cf7e66e74a",
+  "cases": [
+    {
+      "id": "file_8cdaaae8577a437d843689b7546b8c16",
+      "sha256": "398f31b9727857825014560d7c70b4e489635774cf8d375be53139e6c0b8d3c5",
+      "bytes": 1710083,
+      "derivation": {
+        "profile": "browse-540p",
+        "operation": "video-transcode",
+        "purpose": "browse_proxy",
+        "parents": [
+          {
+            "file_id": "file_8497c072967f470ebbd7b104f06fb273",
+            "sha256": "a0d815fa784cdadd6faa21724c5ee953840e2edd2799e30f361733baf06dd7cb",
+            "duration": 10.0,
+            "streams": [
+              {
+                "index": 0,
+                "codec_type": "video",
+                "codec_name": "h264",
+                "width": 1280,
+                "height": 720,
+                "avg_frame_rate": "30/1",
+                "pix_fmt": "yuv420p",
+                "sample_aspect_ratio": "1:1",
+                "extradata_hash": "SHA256:6503d1ad347df3e0d63506cf53ab9e450e8ac649a0a319654a786cfac6b00546",
+                "time_base": "1/15360",
+                "rotation": 0
+              },
+              {
+                "index": 1,
+                "codec_type": "audio",
+                "codec_name": "aac",
+                "sample_rate": "44100",
+                "channels": 1,
+                "avg_frame_rate": "0/0",
+                "extradata_hash": "SHA256:e1d9202ffd952e4a2732fa1093c81702a05a553570e848fb8e670c958c05c101",
+                "time_base": "1/44100",
+                "rotation": 0
+              }
+            ]
+          }
+        ],
+        "parameters": {
+          "profile": "browse-540p",
+          "format": "mp4",
+          "width": 0,
+          "crf": 18
+        },
+        "output": {
+          "sha256": "398f31b9727857825014560d7c70b4e489635774cf8d375be53139e6c0b8d3c5",
+          "duration": 10.008005,
+          "streams": [
+            {
+              "index": 0,
+              "codec_type": "video",
+              "codec_name": "h264",
+              "width": 960,
+              "height": 540,
+              "avg_frame_rate": "30/1",
+              "pix_fmt": "yuv420p",
+              "sample_aspect_ratio": "1:1",
+              "extradata_hash": "SHA256:258c596acdc0230592b08cf1255d2fb3c122c4fed2f76e28af07d945346a8dc7",
+              "time_base": "1/15360",
+              "rotation": 0
+            },
+            {
+              "index": 1,
+              "codec_type": "audio",
+              "codec_name": "aac",
+              "sample_rate": "44100",
+              "channels": 1,
+              "avg_frame_rate": "0/0",
+              "extradata_hash": "SHA256:e1d9202ffd952e4a2732fa1093c81702a05a553570e848fb8e670c958c05c101",
+              "time_base": "1/44100",
+              "rotation": 0
+            }
+          ]
+        },
+        "time_mapping": {
+          "source_start_seconds": 0,
+          "playback_rate": 1,
+          "basis": "parent_playback_seconds",
+          "frame_exact": false,
+          "mapping": "same_rate"
+        },
+        "original_replaced": false,
+        "exact_edit_source": "parent"
+      },
+      "verification": {
+        "operation": "video-transcode",
+        "expected_container": "mp4",
+        "codec": "libx264",
+        "fully_decoded": true,
+        "profile": "browse-540p",
+        "exact_edit_requires_parent": true
+      },
+      "full_decode": true
+    },
+    {
+      "id": "file_63a2cd00d786408e8ff384647bfdc13d",
+      "sha256": "398f31b9727857825014560d7c70b4e489635774cf8d375be53139e6c0b8d3c5",
+      "bytes": 1710083,
+      "derivation": {
+        "profile": "browse-540p",
+        "operation": "video-transcode",
+        "purpose": "browse_proxy",
+        "parents": [
+          {
+            "file_id": "file_4288e35db73448acb5d79bdf8e0620d3",
+            "sha256": "a0d815fa784cdadd6faa21724c5ee953840e2edd2799e30f361733baf06dd7cb",
+            "duration": 10.0,
+            "streams": [
+              {
+                "index": 0,
+                "codec_type": "video",
+                "codec_name": "h264",
+                "width": 1280,
+                "height": 720,
+                "avg_frame_rate": "30/1",
+                "pix_fmt": "yuv420p",
+                "sample_aspect_ratio": "1:1",
+                "extradata_hash": "SHA256:6503d1ad347df3e0d63506cf53ab9e450e8ac649a0a319654a786cfac6b00546",
+                "time_base": "1/15360",
+                "rotation": 0
+              },
+              {
+                "index": 1,
+                "codec_type": "audio",
+                "codec_name": "aac",
+                "sample_rate": "44100",
+                "channels": 1,
+                "avg_frame_rate": "0/0",
+                "extradata_hash": "SHA256:e1d9202ffd952e4a2732fa1093c81702a05a553570e848fb8e670c958c05c101",
+                "time_base": "1/44100",
+                "rotation": 0
+              }
+            ]
+          }
+        ],
+        "parameters": {
+          "profile": "browse-540p",
+          "format": "mp4",
+          "width": 0,
+          "crf": 18
+        },
+        "output": {
+          "sha256": "398f31b9727857825014560d7c70b4e489635774cf8d375be53139e6c0b8d3c5",
+          "duration": 10.008005,
+          "streams": [
+            {
+              "index": 0,
+              "codec_type": "video",
+              "codec_name": "h264",
+              "width": 960,
+              "height": 540,
+              "avg_frame_rate": "30/1",
+              "pix_fmt": "yuv420p",
+              "sample_aspect_ratio": "1:1",
+              "extradata_hash": "SHA256:258c596acdc0230592b08cf1255d2fb3c122c4fed2f76e28af07d945346a8dc7",
+              "time_base": "1/15360",
+              "rotation": 0
+            },
+            {
+              "index": 1,
+              "codec_type": "audio",
+              "codec_name": "aac",
+              "sample_rate": "44100",
+              "channels": 1,
+              "avg_frame_rate": "0/0",
+              "extradata_hash": "SHA256:e1d9202ffd952e4a2732fa1093c81702a05a553570e848fb8e670c958c05c101",
+              "time_base": "1/44100",
+              "rotation": 0
+            }
+          ]
+        },
+        "time_mapping": {
+          "source_start_seconds": 0,
+          "playback_rate": 1,
+          "basis": "parent_playback_seconds",
+          "frame_exact": false,
+          "mapping": "same_rate"
+        },
+        "original_replaced": false,
+        "exact_edit_source": "parent"
+      },
+      "verification": {
+        "operation": "video-transcode",
+        "expected_container": "mp4",
+        "codec": "libx264",
+        "fully_decoded": true,
+        "profile": "browse-540p",
+        "exact_edit_requires_parent": true
+      },
+      "full_decode": true
+    },
+    {
+      "id": "file_e53439d5510a45aeb7e52044972fdb1c",
+      "sha256": "398f31b9727857825014560d7c70b4e489635774cf8d375be53139e6c0b8d3c5",
+      "bytes": 1710083,
+      "derivation": {
+        "profile": "browse-540p",
+        "operation": "video-transcode",
+        "purpose": "browse_proxy",
+        "parents": [
+          {
+            "file_id": "file_90d52fd98fa44ac59612eaf7be92423f",
+            "sha256": "a0d815fa784cdadd6faa21724c5ee953840e2edd2799e30f361733baf06dd7cb",
+            "duration": 10.0,
+            "streams": [
+              {
+                "index": 0,
+                "codec_type": "video",
+                "codec_name": "h264",
+                "width": 1280,
+                "height": 720,
+                "avg_frame_rate": "30/1",
+                "pix_fmt": "yuv420p",
+                "sample_aspect_ratio": "1:1",
+                "extradata_hash": "SHA256:6503d1ad347df3e0d63506cf53ab9e450e8ac649a0a319654a786cfac6b00546",
+                "time_base": "1/15360",
+                "rotation": 0
+              },
+              {
+                "index": 1,
+                "codec_type": "audio",
+                "codec_name": "aac",
+                "sample_rate": "44100",
+                "channels": 1,
+                "avg_frame_rate": "0/0",
+                "extradata_hash": "SHA256:e1d9202ffd952e4a2732fa1093c81702a05a553570e848fb8e670c958c05c101",
+                "time_base": "1/44100",
+                "rotation": 0
+              }
+            ]
+          }
+        ],
+        "parameters": {
+          "profile": "browse-540p",
+          "format": "mp4",
+          "width": 0,
+          "crf": 18
+        },
+        "output": {
+          "sha256": "398f31b9727857825014560d7c70b4e489635774cf8d375be53139e6c0b8d3c5",
+          "duration": 10.008005,
+          "streams": [
+            {
+              "index": 0,
+              "codec_type": "video",
+              "codec_name": "h264",
+              "width": 960,
+              "height": 540,
+              "avg_frame_rate": "30/1",
+              "pix_fmt": "yuv420p",
+              "sample_aspect_ratio": "1:1",
+              "extradata_hash": "SHA256:258c596acdc0230592b08cf1255d2fb3c122c4fed2f76e28af07d945346a8dc7",
+              "time_base": "1/15360",
+              "rotation": 0
+            },
+            {
+              "index": 1,
+              "codec_type": "audio",
+              "codec_name": "aac",
+              "sample_rate": "44100",
+              "channels": 1,
+              "avg_frame_rate": "0/0",
+              "extradata_hash": "SHA256:e1d9202ffd952e4a2732fa1093c81702a05a553570e848fb8e670c958c05c101",
+              "time_base": "1/44100",
+              "rotation": 0
+            }
+          ]
+        },
+        "time_mapping": {
+          "source_start_seconds": 0,
+          "playback_rate": 1,
+          "basis": "parent_playback_seconds",
+          "frame_exact": false,
+          "mapping": "same_rate"
+        },
+        "original_replaced": false,
+        "exact_edit_source": "parent"
+      },
+      "verification": {
+        "operation": "video-transcode",
+        "expected_container": "mp4",
+        "codec": "libx264",
+        "fully_decoded": true,
+        "profile": "browse-540p",
+        "exact_edit_requires_parent": true
+      },
+      "full_decode": true
+    },
+    {
+      "id": "file_44d21ac971a74a51b8e5b8855b897073",
+      "sha256": "398f31b9727857825014560d7c70b4e489635774cf8d375be53139e6c0b8d3c5",
+      "bytes": 1710083,
+      "derivation": {
+        "profile": "browse-540p",
+        "operation": "video-transcode",
+        "purpose": "browse_proxy",
+        "parents": [
+          {
+            "file_id": "file_76f50fa391704884be07b0c5b5a08678",
+            "sha256": "a0d815fa784cdadd6faa21724c5ee953840e2edd2799e30f361733baf06dd7cb",
+            "duration": 10.0,
+            "streams": [
+              {
+                "index": 0,
+                "codec_type": "video",
+                "codec_name": "h264",
+                "width": 1280,
+                "height": 720,
+                "avg_frame_rate": "30/1",
+                "pix_fmt": "yuv420p",
+                "sample_aspect_ratio": "1:1",
+                "extradata_hash": "SHA256:6503d1ad347df3e0d63506cf53ab9e450e8ac649a0a319654a786cfac6b00546",
+                "time_base": "1/15360",
+                "rotation": 0
+              },
+              {
+                "index": 1,
+                "codec_type": "audio",
+                "codec_name": "aac",
+                "sample_rate": "44100",
+                "channels": 1,
+                "avg_frame_rate": "0/0",
+                "extradata_hash": "SHA256:e1d9202ffd952e4a2732fa1093c81702a05a553570e848fb8e670c958c05c101",
+                "time_base": "1/44100",
+                "rotation": 0
+              }
+            ]
+          }
+        ],
+        "parameters": {
+          "profile": "browse-540p",
+          "format": "mp4",
+          "width": 0,
+          "crf": 18
+        },
+        "output": {
+          "sha256": "398f31b9727857825014560d7c70b4e489635774cf8d375be53139e6c0b8d3c5",
+          "duration": 10.008005,
+          "streams": [
+            {
+              "index": 0,
+              "codec_type": "video",
+              "codec_name": "h264",
+              "width": 960,
+              "height": 540,
+              "avg_frame_rate": "30/1",
+              "pix_fmt": "yuv420p",
+              "sample_aspect_ratio": "1:1",
+              "extradata_hash": "SHA256:258c596acdc0230592b08cf1255d2fb3c122c4fed2f76e28af07d945346a8dc7",
+              "time_base": "1/15360",
+              "rotation": 0
+            },
+            {
+              "index": 1,
+              "codec_type": "audio",
+              "codec_name": "aac",
+              "sample_rate": "44100",
+              "channels": 1,
+              "avg_frame_rate": "0/0",
+              "extradata_hash": "SHA256:e1d9202ffd952e4a2732fa1093c81702a05a553570e848fb8e670c958c05c101",
+              "time_base": "1/44100",
+              "rotation": 0
+            }
+          ]
+        },
+        "time_mapping": {
+          "source_start_seconds": 0,
+          "playback_rate": 1,
+          "basis": "parent_playback_seconds",
+          "frame_exact": false,
+          "mapping": "same_rate"
+        },
+        "original_replaced": false,
+        "exact_edit_source": "parent"
+      },
+      "verification": {
+        "operation": "video-transcode",
+        "expected_container": "mp4",
+        "codec": "libx264",
+        "fully_decoded": true,
+        "profile": "browse-540p",
+        "exact_edit_requires_parent": true
+      },
+      "full_decode": true
+    }
+  ],
+  "task_id": "task_0653ca7d624a4c3689b1bf27bb7bab00",
+  "progress_samples": [
+    {
+      "status": "accepted",
+      "progress": 0.0,
+      "counts": {
+        "accepted": 4,
+        "running": 0,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "accepted",
+      "progress": 0.0,
+      "counts": {
+        "accepted": 4,
+        "running": 0,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "accepted",
+      "progress": 0.0,
+      "counts": {
+        "accepted": 4,
+        "running": 0,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 0.0,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 1.25,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 1.25,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 1.25,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 2.0,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 2.0,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 2.0,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 4.0479998,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 4.0479998,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 5.2182857,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 5.2182857,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 6.388571600000001,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 7.656381500000001,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 7.656381500000001,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 8.777905400000002,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 8.777905400000002,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 8.777905400000002,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 9.8019053,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 9.8019053,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 10.8259052,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 12.0449531,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 12.0449531,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 12.0449531,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 12.0449531,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 13.166477000000002,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 14.4342848,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 14.4342848,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 14.4342848,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 15.8971427,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 15.8971427,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 17.2624766,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 17.2624766,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 17.2624766,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 18.5790485,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 18.5790485,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 19.8468563,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 19.8468563,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 19.8468563,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 21.1146662,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 21.1146662,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 22.2849521,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 22.2849521,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 22.2849521,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 22.2849521,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 22.2849521,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 22.967617999999998,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 22.967617999999998,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 22.967617999999998,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 22.967617999999998,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 22.967617999999998,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 22.967617999999998,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 22.967617999999998,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 24.25,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 24.25,
+      "counts": {
+        "accepted": 3,
+        "running": 1,
+        "succeeded": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    },
+    {
+      "status": "running",
+      "progress": 24.25,
+      "counts": {
+        "accepted": 3,
+        "running": 0,
+        "succeeded": 1,
+        "failed": 0,
+        "cancelled": 0,
+        "recoverable": 0
+      }
+    }
+  ],
+  "cancelled_state": "cancelled",
+  "resumed_state": "succeeded",
+  "idempotent": true,
+  "successful_items_not_retried": true,
+  "original_sha": "a0d815fa784cdadd6faa21724c5ee953840e2edd2799e30f361733baf06dd7cb",
+  "originals_unchanged": true,
+  "logs": {
+    "events": [
+      {
+        "time": 1793594762.4100113,
+        "code": "accepted",
+        "message": "任务已受理，等待执行。"
+      },
+      {
+        "time": 1793594762.954189,
+        "code": "item_started",
+        "message": "正在处理第 1 项。"
+      },
+      {
+        "time": 1793594774.8900888,
+        "code": "item_succeeded",
+        "message": "第 1 项完成；结果可读取，需人工确认质量。"
+      },
+      {
+        "time": 1793594774.9001343,
+        "code": "item_started",
+        "message": "正在处理第 2 项。"
+      },
+      {
+        "time": 1793594774.968738,
+        "code": "cancel_requested",
+        "message": "已请求取消；正在执行的进程停止后确认。"
+      },
+      {
+        "time": 1793594775.516856,
+        "code": "cancelled",
+        "message": "处理已停止。"
+      },
+      {
+        "time": 1793594775.5318065,
+        "code": "cancelled",
+        "message": "已取消；已完成结果保留"
+      },
+      {
+        "time": 1793594775.6983745,
+        "code": "resumed",
+        "message": "保留成功项，重新执行其余项目。"
+      },
+      {
+        "time": 1793594776.5970721,
+        "code": "item_started",
+        "message": "正在处理第 2 项。"
+      },
+      {
+        "time": 1793594787.509534,
+        "code": "item_succeeded",
+        "message": "第 2 项完成；结果可读取，需人工确认质量。"
+      },
+      {
+        "time": 1793594787.5186696,
+        "code": "item_started",
+        "message": "正在处理第 3 项。"
+      },
+      {
+        "time": 1793594798.2754946,
+        "code": "item_succeeded",
+        "message": "第 3 项完成；结果可读取，需人工确认质量。"
+      },
+      {
+        "time": 1793594798.2847698,
+        "code": "item_started",
+        "message": "正在处理第 4 项。"
+      },
+      {
+        "time": 1793594809.2807028,
+        "code": "item_succeeded",
+        "message": "第 4 项完成；结果可读取，需人工确认质量。"
+      },
+      {
+        "time": 1793594809.2873602,
+        "code": "succeeded",
+        "message": "处理完成，请检查结果"
+      }
+    ]
+  },
+  "maintenance": {
+    "last_success": 1793594767.521833,
+    "last_failure": null,
+    "backlog": {
+      "dry_run": true,
+      "files": 0,
+      "bytes": 0,
+      "tasks": 0,
+      "measured_at": 1793594767.521835
+    },
+    "state": "ok",
+    "last_attempt": 1793594767.3498447,
+    "error": null,
+    "last_result": {
+      "dry_run": false,
+      "files": 0,
+      "bytes": 0,
+      "tasks": 0
+    },
+    "interval_seconds": 3600,
+    "retention_days": 7,
+    "persistence_error": null,
+    "discovery_error": null
+  },
+  "passed": true,
+  "finished_at": "2026-11-02T04:46:53.010018+00:00"
+}
