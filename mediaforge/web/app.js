@@ -279,7 +279,7 @@ async function showPreview(f){
 async function renderDiagnostics(){
  const version=state.viewVersion;const d=await api('api/doctor');if(version!==state.viewVersion)return;state.checks=d.checks;state.storage=d.storage;
  $('#main').replaceChildren(head('检查你的工具链','这里显示实际运行处理任务的服务环境。未配置的模型不会自动下载，缺失能力会明确停用。',button('重新检查',()=>action(async()=>{state.tools=(await api('api/tools')).tools;await renderDiagnostics();}))),
- d.worker_error?errorBlock(d.worker_error):null,
+ ...(d.worker_error?[errorBlock(d.worker_error)]:[]),
  h('section',{class:'setting-block'},h('h2',{},'后台存储维护'),
  h('p',{},'状态：'+({ok:'上次已完成',failed:'上次失败',running:'正在清理',interrupted:'上次中断',not_run:'尚未执行'}[d.maintenance?.state]||'未知')),
  h('p',{},'最近成功：'+(d.maintenance?.last_success?time(d.maintenance.last_success):'暂无记录')+' · 最近失败：'+(d.maintenance?.last_failure?time(d.maintenance.last_failure):'暂无记录')),
