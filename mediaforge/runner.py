@@ -81,14 +81,27 @@ def media(c):
         fmt=p.get('format','mp4'); out=c.work/('video.'+fmt)
         filters=['scale=trunc(iw/2)*2:trunc(ih/2)*2:flags=lanczos']
         if p.get('width'): filters=['scale='+str(p['width']//2*2)+':-2:flags=lanczos']
+        if p.get('profile')=='browse-540p':
+            filters=["scale=w='min(960,iw)':h='min(540,ih)':force_original_aspect_ratio=decrease:force_divisible_by=2:flags=lanczos",'fps=30']
         codec='libvpx-vp9' if fmt=='webm' else 'libx264'
-        args=['-i',src,'-map','0:v:0','-map','0:a?','-vf',','.join(filters),'-c:v',codec,'-crf',str(p.get('crf',23)),
+        args=['-i',src,'-map','0:v:0','-map','0:a?','-vf',','.join(filters),'-c:v',codec,'-crf',str(23 if p.get('profile')=='browse-540p' else p.get('crf',23)),
               '-c:a','libopus' if fmt=='webm' else 'aac','-b:a','192k','-pix_fmt','yuv420p']
         if fmt=='webm':args+=['-b:v','0']
         else:args+=['-preset','medium']
         if fmt=='mp4':args+=['-movflags','+faststart']
         c.ffmpeg(args+[out],duration)
-        c.out(out,verification={'operation':op,'expected_container':fmt,'codec':codec}); return
+        verification={'operation':op,'expected_container':fmt,'codec':codec}
+        if p.get('profile')=='browse-540p':
+            actual=probe(out);streams=actual['streams'];video=next(s for s in streams if s['codec_type']=='video')
+            if video['width']>960 or video['height']>540 or Fraction(video['avg_frame_rate'])!=30:
+                raise ForgeError('verification_failed','浏览代理规格不符合预设。')
+            if duration and abs(float(actual['format']['duration'])-duration)>max(.25,duration*.01):
+                raise ForgeError('verification_failed','浏览代理时长与原件不一致。')
+            if sum(s['codec_type']=='audio' for s in streams)!=sum(s['codec_type']=='audio' for s in f.get('streams',[])):
+                raise ForgeError('verification_failed','浏览代理音轨数量不一致。')
+            c.run([verified_binary('ffmpeg'),'-v','error','-xerror','-nostdin','-i',out,'-f','null','-'])
+            verification.update(fully_decoded=True,profile='browse-540p',exact_edit_requires_parent=True)
+        c.out(out,verification=verification); return
     if op in {'audio-extract','audio-normalize','audio-denoise','media-compress'}:
         track=p.get('track',0); check_track(f,'audio',track)
         fmt=p.get('format','mp3' if op=='media-compress' else 'wav')

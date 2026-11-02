@@ -150,7 +150,7 @@ def create_app(settings=None,start_worker=True):
     def tools(who=Depends(owner)):return {'tools':catalog_status(OPS)}
 
     @app.get('/api/doctor')
-    def doctor(who=Depends(owner)):return {'checks':checks(),'ocr_languages':ocr_languages(),'storage':store.storage(who),'server_platform':sys_platform(),'worker_ready':engine.ready,'worker_error':engine.scheduler_error}
+    def doctor(who=Depends(owner)):return {'checks':checks(),'ocr_languages':ocr_languages(),'storage':store.storage(who),'server_platform':sys_platform(),'worker_ready':engine.ready,'worker_error':engine.scheduler_error,'maintenance':engine.maintenance.status(who)}
 
     @app.post('/api/files',status_code=201)
     async def upload(request:Request,name:str=Query(min_length=1,max_length=220),who=Depends(owner)):

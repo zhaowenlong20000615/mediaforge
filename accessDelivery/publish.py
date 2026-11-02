@@ -9,7 +9,7 @@ slug=config.get('deploySlug',root.name);assert slug==root.name or root.name=='su
 conf,port=('sub2api-fork.conf',18087) if a.fork else ('mediaforge.conf',18081)
 commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip();assert re.fullmatch('[a-f0-9]{40}',commit)
 if a.dry_run:
- print(json.dumps({'target':'107.151.245.166','project_id':config['projectId'],'port':port,'nginx':conf,'source_commit':commit,'component_only':True}));raise SystemExit()
+ print(json.dumps({'target':'103.236.60.28','project_id':config['projectId'],'port':port,'nginx':conf,'source_commit':commit,'component_only':True}));raise SystemExit()
 assert not subprocess.check_output(['git','status','--porcelain','--','accessDelivery','tool.manifest.json'],cwd=root,text=True).strip(),'Commit delivery changes before publishing'
 remote=subprocess.check_output(['git','ls-remote','origin','refs/heads/main'],cwd=root,text=True).split()[0];assert remote==commit,'Push the exact source commit before publishing'
 subprocess.run(['python3',str(root/'accessDelivery/build.py'),configName] if a.fork else ['python3',str(root/'accessDelivery/build.py')],cwd=root,check=True)
@@ -20,10 +20,11 @@ with tarfile.open(artifact,'w:gz') as archive:
  for file in sorted(output.rglob('*')):
   if file.is_file() and not file.is_symlink() and (file.parent.name!='files' or file.name in allowed):archive.add(file,arcname=file.relative_to(output),recursive=False)
 sha=hashlib.sha256(artifact.read_bytes()).hexdigest()
-key=Path(os.environ.get('DELIVERY_SSH_KEY',str(Path.home()/'.ssh/chimera-lab_root_ed25519')))
-ssh=['ssh','-i',str(key),'-o','IdentitiesOnly=yes','-o','BatchMode=yes','root@107.151.245.166']
+key=Path(os.environ.get('DELIVERY_SSH_KEY',str(Path.home()/'.ssh/103.236.60.28_root_ed25519')))
+ssh=['ssh','-i',str(key),'-o','IdentitiesOnly=yes','-o','BatchMode=yes','root@103.236.60.28']
 base='/usr/local/lib/homeward/access' if conf=='native' else '/opt/'+slug+'/access'
 subprocess.run([*ssh,'install -d -m 0755 '+base+'/incoming'],check=True)
-subprocess.run(['scp','-i',str(key),'-o','IdentitiesOnly=yes',str(artifact),'root@107.151.245.166:'+base+'/incoming/'+commit+'.tar.gz'],check=True)
+subprocess.run(['scp','-i',str(key),'-o','IdentitiesOnly=yes',str(artifact),'root@103.236.60.28:'+base+'/incoming/'+commit+'.tar.gz'],check=True)
 args=[slug,config['projectId'],commit,sha,conf,str(port)];assert all(re.fullmatch('[A-Za-z0-9.-]+',x) for x in args)
 subprocess.run([*ssh,'python3 - '+' '.join(args)],input=(root/'accessDelivery/activate.py').read_text(),text=True,check=True)
+subprocess.run(['python3',str(root/'deploy/release.py'),'retain-apply'],cwd=root,check=True)

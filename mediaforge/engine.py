@@ -13,6 +13,7 @@ import time
 from .errors import ForgeError, safe_error
 from .files import inspect
 from .store import uid
+from .maintenance import Maintenance
 
 
 class Engine:
@@ -22,6 +23,9 @@ class Engine:
         self.pool=ThreadPoolExecutor(max_workers=store.settings.concurrency,thread_name_prefix='mediaforge-worker')
         self.futures={}
         self.scheduler_error=None
+        self.maintenance=Maintenance(store)
+        self.cleanup_pool=ThreadPoolExecutor(max_workers=1,thread_name_prefix='mediaforge-cleanup')
+        self.cleanup_future=None
 
     def start(self):
         try: self.lock.acquire(timeout=0)
@@ -76,10 +80,8 @@ class Engine:
                     except OSError:pass  # Logging must not kill recovery on a full disk.
                 self.stop_event.wait(1);continue
             if time.monotonic()>next_cleanup:
-                try:
-                    with self.store.connect() as con: owners=[r[0] for r in con.execute('SELECT DISTINCT owner FROM tokens')]
-                    for owner in owners: self.store.cleanup(owner,dry_run=False)
-                except Exception: pass  # Never stops active processing; explicit cleanup exposes errors.
+                if self.cleanup_future is None or self.cleanup_future.done():
+                    self.cleanup_future=self.cleanup_pool.submit(self.maintenance.run_once)
                 next_cleanup=time.monotonic()+3600
             self.stop_event.wait(.15)
 
@@ -87,6 +89,7 @@ class Engine:
         self.stop_event.set()
         if self.thread: self.thread.join(3)
         self.pool.shutdown(wait=True,cancel_futures=False)
+        self.cleanup_pool.shutdown(wait=True,cancel_futures=False)
         self.lock.release()
 
     def _row(self,tid):
@@ -214,6 +217,21 @@ class Engine:
                     name=stem+'__'+name
                 meta=inspect(path,name); meta['verification']=out.get('verification',{'decoded':True})
                 meta['source_file_ids']=[f['id'] for f in inputs]
+                if t['tool'] in {'video-transcode','media-compress','media-trim','image-process','video-frames'}:
+                    params=json.loads(t['params'])
+                    browsing=params.get('profile')=='browse-540p'
+                    meta['derivation']={'profile':params.get('profile',t['tool']),'operation':t['tool'],
+                        'purpose':'browse_proxy' if browsing else 'processed_result',
+                        'parents':[{'file_id':f['id'],'sha256':f['sha256'],'duration':f.get('duration'),'streams':f.get('streams',[])} for f in inputs],
+                        'parameters':params,'output':{k:meta[k] for k in ['sha256','width','height','duration','streams'] if k in meta},
+                        'time_mapping':{'source_start_seconds':params.get('start',0),'playback_rate':1,
+                                        'basis':'parent_playback_seconds','frame_exact':False,
+                                        'mapping':'sampled_frames' if t['tool']=='video-frames' else 'same_rate'},
+                        'original_replaced':False,'exact_edit_source':'parent'}
+                    if t['tool']=='video-frames':
+                        import re
+                        frame=re.search(r'frame-(\d+)',out['name'])
+                        meta['derivation']['time_mapping']['source_start_seconds']=(int(frame[1])-1)*params['interval'] if frame else None
                 meta['quality_review']='required'
                 prepared.append((path,name,meta))
             moved=[]

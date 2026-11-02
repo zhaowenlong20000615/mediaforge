@@ -11,7 +11,15 @@ root=(Path('/usr/local/lib/homeward/access') if configName=='native' else Path('
 with (root/'activation.lock').open('w') as lock:
  fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
  artifact=root/'incoming'/(commit+'.tar.gz');assert hashlib.sha256(artifact.read_bytes()).hexdigest()==digest
- target=root/'releases'/commit;assert not target.exists(),'Immutable component already exists'
+ if slug=='mediaforge':
+  import socket
+  assert socket.gethostname()=='ser693712513899','Wrong deployment host'
+  assert shutil.disk_usage(root).free>=max(10*1024**3,artifact.stat().st_size*3+32*1024**2),'Insufficient disk space for delivery activation'
+ target=root/'releases'/commit
+ if target.exists() and (root/'current').resolve()==target:
+  known=json.loads((target/'deployment.json').read_text());assert known['artifact_sha256']==digest
+  print(json.dumps({'already_active':project,'commit':commit}));raise SystemExit(0)
+ assert not target.exists(),'Immutable component already exists'
  target.mkdir(parents=True)
  try:
   with tarfile.open(artifact) as archive:
@@ -26,7 +34,7 @@ with (root/'activation.lock').open('w') as lock:
    p=target/'files'/item['name'];assert p.is_file() and p.stat().st_size==item['size'] and hashlib.sha256(p.read_bytes()).hexdigest()==item['sha256']
   if configName=='native':
    import urllib.request
-   with urllib.request.urlopen('https://107.151.245.166:18043/version',timeout=10) as response:running=json.load(response)
+   with urllib.request.urlopen('https://103.236.60.28:18043/version',timeout=10) as response:running=json.load(response)
    assert tuple(map(int,running['version'].split('.'))) >= (0,1,2),'Upgrade the native authenticated download handler first'
    previous=os.readlink(root/'current') if (root/'current').is_symlink() else None
    temporary=root/'current.next'
@@ -39,6 +47,7 @@ with (root/'activation.lock').open('w') as lock:
   assert len(re.findall(r'\bserver\s*\{',before))==1,'Ambiguous server block'
   after=before if marker in before else re.sub(r'(\bserver\s*\{)',lambda m:m.group(1)+'\n'+marker,before,count=1)
   previous=os.readlink(root/'current') if (root/'current').is_symlink() else None
+  old_rules=(root/'current/nginx.conf').read_bytes() if previous else None
   backup=root/'backups'/commit;backup.mkdir(parents=True,mode=0o700);(backup/'nginx.conf').write_text(before);(backup/'nginx.conf').chmod(0o600)
   (backup/'previous.json').write_text(json.dumps({'target':previous,'config':configName}));(backup/'previous.json').chmod(0o600)
   def link(value):
@@ -50,7 +59,7 @@ with (root/'activation.lock').open('w') as lock:
   temporary=original.with_suffix('.next');temporary.write_text(after);temporary.chmod(0o644);os.replace(temporary,original)
   try:
    subprocess.run(['nginx','-t'],check=True,capture_output=True)
-   subprocess.run(['systemctl','reload','nginx'],check=True)
+   if after!=before or old_rules!=(target/'nginx.conf').read_bytes():subprocess.run(['systemctl','reload','nginx'],check=True)
   except Exception:
    original.write_text(before);link(previous);subprocess.run(['nginx','-t'],check=True,capture_output=True);subprocess.run(['systemctl','reload','nginx'],check=True);raise
   (target/'deployment.json').write_text(json.dumps({'project_id':project,'source_commit':commit,'artifact_sha256':digest,'previous':previous}))

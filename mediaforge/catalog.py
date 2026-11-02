@@ -38,9 +38,10 @@ MEDIA = ['video', 'audio']
 OPS = [
     op('export-results','结果打包','批量',['image','video','audio','pdf','docx','doc','text','subtitle','zip'],[],'将已完成的结果打包为 ZIP。',{},combine=True,max_files=500),
     op('video-transcode', '视频转码', '视频 / 音频', ['video'], ['ffmpeg'], '转换视频格式与分辨率。', {
+        'profile':choice('用途（custom 自定义 / browse-540p 仅浏览）',['custom','browse-540p'],'custom'),
         'format': choice('输出格式', ['mp4','mkv','webm'], 'mp4'),
         'width': field('integer','输出宽度（0 保持原尺寸）',0,minimum=0,maximum=7680,anyOf=[{'const':0},{'minimum':2}]),
-        'crf': field('integer','压缩强度（越大体积越小）',18,minimum=16,maximum=40)}),
+        'crf': field('integer','压缩强度（越大体积越小）',18,minimum=16,maximum=40)},note='browse-540p 固定最大960×540、30fps、CRF23，忽略自定义宽度和强度；仅用于浏览，精确编辑保留原件。'),
     op('audio-extract','提取 / 转换音频','视频 / 音频',MEDIA,['ffmpeg'], '导出指定音轨，或转换音频格式。', {
         'format': choice('输出格式',['mp3','wav','flac','m4a','ogg'],'mp3'),
         'track':field('integer','音轨序号（从 0 开始）',0,minimum=0,maximum=31)}),

@@ -3,11 +3,11 @@
   "slug": "mediaforge",
   "title": "媒体工具箱",
   "accent": "#80542b",
-  "home": "https://107.151.245.166:18081/mediaforge/",
-  "pageUrl": "https://107.151.245.166:18081/mediaforge/access/",
+  "home": "https://103.236.60.28:18081/mediaforge/",
+  "pageUrl": "https://103.236.60.28:18081/mediaforge/access/",
   "fileBase": "/mediaforge/access/files/",
   "clientRef": "HEAD",
-  "clientVersion": "0.2.6",
+  "clientVersion": "0.2.7",
   "buildMode": "python",
   "pythonMin": [
     3,
@@ -54,8 +54,8 @@
     },
     {
       "title": "连接已授权的云端工作区",
-      "windows": "$env:MEDIAFORGE_URL=\"https://107.151.245.166:18081/mediaforge\"\n$env:MEDIAFORGE_TOKEN_FILE=\"C:\\私有目录\\媒体工作区令牌.txt\"",
-      "unix": "export MEDIAFORGE_URL=https://107.151.245.166:18081/mediaforge\nexport MEDIAFORGE_TOKEN_FILE=/私有目录/媒体工作区令牌.txt"
+      "windows": "$env:MEDIAFORGE_URL=\"https://103.236.60.28:18081/mediaforge\"\n$env:MEDIAFORGE_TOKEN_FILE=\"C:\\私有目录\\媒体工作区令牌.txt\"",
+      "unix": "export MEDIAFORGE_URL=https://103.236.60.28:18081/mediaforge\nexport MEDIAFORGE_TOKEN_FILE=/私有目录/媒体工作区令牌.txt"
     }
   ],
   "mcp": {
@@ -67,7 +67,7 @@
             "mcp"
           ],
           "env": {
-            "MEDIAFORGE_URL": "https://107.151.245.166:18081/mediaforge",
+            "MEDIAFORGE_URL": "https://103.236.60.28:18081/mediaforge",
             "MEDIAFORGE_TOKEN_FILE": "C:\\私有目录\\媒体工作区令牌.txt"
           }
         }
@@ -81,7 +81,7 @@
             "mcp"
           ],
           "env": {
-            "MEDIAFORGE_URL": "https://107.151.245.166:18081/mediaforge",
+            "MEDIAFORGE_URL": "https://103.236.60.28:18081/mediaforge",
             "MEDIAFORGE_TOKEN_FILE": "/私有目录/媒体工作区令牌.txt"
           }
         }

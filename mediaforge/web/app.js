@@ -273,12 +273,18 @@ async function showPreview(f){
   }
  }
  else panel.append(h('p',{},'此格式需下载到对应应用中查看。'));
- panel.append(h('details',{},h('summary',{},'文件校验信息'),h('pre',{},JSON.stringify({sha256:f.sha256,verification:f.verification},null,2))));panel.scrollIntoView({behavior:'auto',block:'start'});
+ if(f.derivation)panel.append(h('p',{class:'callout info'},f.derivation.purpose==='browse_proxy'?'此文件是浏览用代理。精确编辑请选择原件；生成代理不会删除原件。':'独立派生结果；原件不会被覆盖。'));
+ panel.append(h('details',{},h('summary',{},'文件校验信息'),h('pre',{},JSON.stringify({sha256:f.sha256,verification:f.verification,derivation:f.derivation},null,2))));panel.scrollIntoView({behavior:'auto',block:'start'});
 }
 async function renderDiagnostics(){
  const version=state.viewVersion;const d=await api('api/doctor');if(version!==state.viewVersion)return;state.checks=d.checks;state.storage=d.storage;
  $('#main').replaceChildren(head('检查你的工具链','这里显示实际运行处理任务的服务环境。未配置的模型不会自动下载，缺失能力会明确停用。',button('重新检查',()=>action(async()=>{state.tools=(await api('api/tools')).tools;await renderDiagnostics();}))),
  d.worker_error?errorBlock(d.worker_error):null,
+ h('section',{class:'setting-block'},h('h2',{},'后台存储维护'),
+ h('p',{},'状态：'+({ok:'上次已完成',failed:'上次失败',running:'正在清理',interrupted:'上次中断',not_run:'尚未执行'}[d.maintenance?.state]||'未知')),
+ h('p',{},'最近成功：'+(d.maintenance?.last_success?time(d.maintenance.last_success):'暂无记录')+' · 最近失败：'+(d.maintenance?.last_failure?time(d.maintenance.last_failure):'暂无记录')),
+ h('p',{},d.maintenance?.backlog?`待清理 ${d.maintenance.backlog.files} 个文件、${bytes(d.maintenance.backlog.bytes)}（测量于 ${time(d.maintenance.backlog.measured_at)}）`:'积压尚未测量；不等于没有待清理文件。'),
+ d.maintenance?.error?errorBlock(d.maintenance.error):null,d.maintenance?.persistence_error?errorBlock(d.maintenance.persistence_error):null,d.maintenance?.discovery_error?errorBlock(d.maintenance.discovery_error):null),
  h('div',{class:'summary-line'},h('span',{},d.server_platform.system+' / '+d.server_platform.architecture),h('span',{},d.worker_ready?'任务引擎运行中':'任务引擎未就绪'),h('span',{},`OCR 语言：${d.ocr_languages.join('、')||'未安装'}`)),
  h('div',{class:'diagnostics'},d.checks.map(c=>h('div',{class:'dependency'},h('div',{},h('strong',{},c.name),h('small',{},c.purpose),!c.available?h('code',{},c.install):null,Object.keys(c.details||{}).length?h('p',{class:'file-meta'},Object.entries(c.details).map(([k,v])=>k+': '+v).join(' · ')):null),h('div',{},h('span',{class:'tag'+(c.available?'':' warning')},c.available?'已配置':c.status==='broken'?'启动失败':'未配置'))))));
 }

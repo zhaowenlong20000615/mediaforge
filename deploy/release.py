@@ -14,7 +14,7 @@ import urllib.parse
 import zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
-HOST='107.151.245.166'
+HOST='103.236.60.28'
 
 
 def run(args,**kw):return subprocess.run([str(x) for x in args],check=True,**kw)
@@ -75,10 +75,10 @@ def package():
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('action',choices=['build','package','upload','activate','status','rollback']);p.add_argument('artifact',nargs='?');p.add_argument('--dry-run',action='store_true');args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('action',choices=['build','package','upload','activate','status','rollback','retain','retain-apply']);p.add_argument('artifact',nargs='?');p.add_argument('--dry-run',action='store_true');args=p.parse_args()
     if os.getenv('TARGET_HOST',HOST)!=HOST:raise SystemExit('Refusing unexpected deployment host.')
     dry=args.dry_run or os.getenv('DRY_RUN')=='1'
-    key=Path(os.getenv('DEPLOY_SSH_KEY',str(Path.home()/'.ssh/chimera-lab_root_ed25519'))).expanduser()
+    key=Path(os.getenv('DEPLOY_SSH_KEY',str(Path.home()/'.ssh/103.236.60.28_root_ed25519'))).expanduser()
     ssh=['ssh','-i',key,'-o','IdentitiesOnly=yes','-o','BatchMode=yes','-o','ConnectTimeout=10','root@'+HOST]
     if args.action=='build':
         if dry:print('DRY_RUN: build local wheel')
@@ -96,11 +96,12 @@ def main():
             for suffix in ['', '.sha256','.release.json']:
                 if not Path(str(artifact)+suffix).is_file():raise SystemExit('Missing artifact sidecar.')
             run(ssh+['install -d -m 700 /opt/mediaforge/incoming'])
+            run(ssh+['python3 -c '+__import__('shlex').quote("import socket,shutil;assert socket.gethostname()=='ser693712513899';assert shutil.disk_usage('/opt/mediaforge').free>=max(10*1024**3,"+str(artifact.stat().st_size*3+2*1024**3)+"),'Insufficient disk space before upload'")])
             run(['scp','-i',key,'-o','IdentitiesOnly=yes','-o','BatchMode=yes',artifact,str(artifact)+'.sha256',str(artifact)+'.release.json','root@'+HOST+':/opt/mediaforge/incoming/'])
             print('Uploaded artifact and integrity metadata.')
         else:
             # The script is sent from the local checkout; the server does not access GitHub.
-            with (ROOT/'deploy/remote.py').open('rb') as script:
-                run(ssh+['python3 - '+args.action+' '+(artifact.name if args.action=='activate' else '')],stdin=script)
+            script='_RETENTION_SOURCE='+repr((ROOT/'deploy/retention.py').read_text())+'\n'+(ROOT/'deploy/remote.py').read_text()
+            run(ssh+['python3 - '+args.action+' '+(artifact.name if args.action=='activate' else '')],input=script,text=True)
 
 if __name__=='__main__':main()

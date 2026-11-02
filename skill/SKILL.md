@@ -79,3 +79,9 @@ PDF→Word默认layout，保留图片/有框表格并附document-preview.pdf；�
 ## 0.2.6 存储故障
 
 readyz在任务调度存储故障时返回503，doctor的worker_error说明原因。调度会自动重试，存储恢复后已有accepted任务继续；recoverable任务需核对后显式resume。storage_full时释放服务端空间，local_storage_full时释放调用端输出目录空间，不能把两者混为一谈。下载失败不会留下已发布的残缺结果。
+
+## 0.2.7 维护与派生
+
+`diagnose_workspace` / CLI `doctor --json` 的maintenance仅对应当前工作区。先看state、last_success、last_failure、error及backlog.measured_at；null积压表示未测得，不能报告为零。清理失败不会停止活动任务；状态保存失败时告知管理员。
+
+仅用户需要浏览代理时提交video-transcode，params中设profile=browse-540p；默认custom不变。该预设固定最大960×540/30fps/CRF23，不采用width/crf自定义值。完成后核对derivation.parents中的SHA、output的尺寸/帧率/音轨、time_mapping及verification.fully_decoded。profile=browse-540p只适合浏览；精确编辑应选择derivation.parents的原件。生成或验证代理不授权删除原件，时间关系不是逐帧精确映射。

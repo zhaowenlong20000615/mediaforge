@@ -1,4 +1,6 @@
-# MediaForge 0.2.6
+# MediaForge 0.2.7
+
+> 服务器迁移后，当前入口和默认部署目标为 `103.236.60.28:22`，SSH 密钥为 `~/.ssh/103.236.60.28_root_ed25519`。本文入口按现址更新；迁移前的原始交付证据保留在项目文档与迁移审计中。
 
 媒体与文档工作台：选择文件与工具、设置参数、观察任务、核对结果，再下载或继续处理。Web、CLI 和标准 MCP 使用同一个有认证的 API；服务端只接受工作区内的文件 ID。
 
@@ -52,7 +54,7 @@ CLI 连接服务，不直接修改状态数据库。全局 `--server`、`--token
 远程访问示例（不将令牌放入命令参数）：
 
 ```sh
-export MEDIAFORGE_URL=https://107.151.245.166:18081/mediaforge
+export MEDIAFORGE_URL=https://103.236.60.28:18081/mediaforge
 export MEDIAFORGE_TOKEN_FILE=/secure/path/workspace.token
 .venv/bin/mediaforge doctor --json
 ```
@@ -68,7 +70,7 @@ export MEDIAFORGE_TOKEN_FILE=/secure/path/workspace.token
       "command": "/absolute/path/mediaforge/.venv/bin/mediaforge",
       "args": ["mcp"],
       "env": {
-        "MEDIAFORGE_URL": "https://107.151.245.166:18081/mediaforge",
+        "MEDIAFORGE_URL": "https://103.236.60.28:18081/mediaforge",
         "MEDIAFORGE_TOKEN_FILE": "/secure/path/workspace.token",
         "MEDIAFORGE_LOCAL_ROOTS": "/authorized/input/folder",
         "MEDIAFORGE_OUTPUT_ROOTS": "/authorized/output/folder"
@@ -100,7 +102,7 @@ MEDIAFORGE_ASR_MODEL=/path/model U2NET_HOME=/path/u2net MEDIAFORGE_SPEECH_FIXTUR
 
 ## 项目下载与 AI 接入
 
-本项目自己的中文下载、安装和 CLI／MCP／技能说明：https://107.151.245.166:18081/mediaforge/access/ 。接入包固定到已核对的客户端提交，不带业务凭证；下载沿用原项目身份，不依赖私有 GitHub 访问。运行位置：命令行和 AI 工具连接本项目服务；数据和授权仍由原项目管理。 Windows 本次未实机验证。构建：python3 accessDelivery/build.py。
+本项目自己的中文下载、安装和 CLI／MCP／技能说明：https://103.236.60.28:18081/mediaforge/access/ 。接入包固定到已核对的客户端提交，不带业务凭证；下载沿用原项目身份，不依赖私有 GitHub 访问。运行位置：命令行和 AI 工具连接本项目服务；数据和授权仍由原项目管理。 Windows 本次未实机验证。构建：python3 accessDelivery/build.py。
 
 ## 0.2.2 运行与验证说明
 
@@ -125,3 +127,9 @@ Word 的 HTML/Markdown 正文导出使用 Mammoth、markdownify，保留标题�
 0.2.5使用PyMuPDF正确读取中文OCR文字层，避免无效NUL字符影响TXT/Word导出。CLI/MCP遇到临时连接断开时，仅自动重试只读请求及带原幂等键的任务/导出提交一次，避免重复操作。
 
 0.2.6增加存储异常恢复：调度线程持续重试，空间/数据库恢复后继续已有排队任务；诊断显示具体故障，已完成结果保留。本机下载空间不足返回local_storage_full，不发布半成品。
+
+## 0.2.7 存储维护和派生文件
+
+诊断页、CLI `doctor --json`、MCP `diagnose_workspace` 返回当前工作区的 `maintenance`：最近成功/失败、脱敏错误、积压及测量时间。尚未执行、上次中断、状态保存失败不等于清理成功；清理在独立线程运行。沿用原有7天保留和文件/任务引用保护，没有新增原件自动退役规则。
+
+视频转码可显式选择 `profile=browse-540p`，输出独立浏览代理（最大960×540、30fps、CRF23），不放大源尺寸、保留音轨及播放时长并实际解码。自定义转码默认值不变。派生元数据记录父文件ID/SHA、profile、规格/音轨和播放时间关系；浏览代理不代替原件的精确编辑用途，取消或失败不覆盖原件。

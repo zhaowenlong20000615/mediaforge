@@ -13,6 +13,7 @@ import sys
 import tarfile
 import time
 import urllib.parse
+import fcntl
 
 BASE=Path('/opt/mediaforge')
 CURRENT=BASE/'current'
@@ -31,6 +32,24 @@ def switch(path):
 
 
 def now():return time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())
+
+
+def retain(apply=False):
+    scope={'__name__':'mediaforge_retention'}
+    source=globals().get('_RETENTION_SOURCE') or Path(__file__).with_name('retention.py').read_text()
+    exec(compile(source,'retention.py','exec'),scope)
+    return scope['retain'](BASE,apply)
+
+
+def post_release_retention():
+    try:
+        preview=retain();print(json.dumps({'retention_preview':preview}),flush=True)
+        result=retain(True)
+        print(json.dumps({'retention':result,'health':ready()}),flush=True)
+    except Exception as exc:
+        # A maintenance failure must not roll back a verified running release.
+        (BASE/'release-retention.json').write_text(json.dumps({'project_id':'local.mediaforge','state':'failed','time':now(),'error_type':type(exc).__name__,'action':'Run retain preview and retry; active release unchanged.'}))
+        print(json.dumps({'retention_failed':type(exc).__name__}),flush=True)
 
 
 def ready():
@@ -61,7 +80,7 @@ def configure():
     data.mkdir(exist_ok=True,mode=0o700);os.chown(data,user.pw_uid,user.pw_gid);data.chmod(0o700)
     (BASE/'models').mkdir(exist_ok=True)
     if not (BASE/'runtime.env').exists():
-        (BASE/'runtime.env').write_text('MEDIAFORGE_DATA=/opt/mediaforge/data\nMEDIAFORGE_UNIX_SOCKET=/run/mediaforge/api.sock\nMEDIAFORGE_PORT=18081\nMEDIAFORGE_SECURE_COOKIE=1\nMEDIAFORGE_COOKIE_PATH=/mediaforge/\nMEDIAFORGE_PUBLIC_URL=https://107.151.245.166:18081\nMEDIAFORGE_RELEASE_FILE=/opt/mediaforge/current/release.json\nMEDIAFORGE_ASR_MODEL=/opt/mediaforge/models/faster-whisper-small\nU2NET_HOME=/opt/mediaforge/models/u2net\nMEDIAFORGE_WORKER_MEMORY=6442450944\nOMP_NUM_THREADS=2\nOPENBLAS_NUM_THREADS=2\nNUMBA_CACHE_DIR=/opt/mediaforge/data/numba-cache\n')
+        (BASE/'runtime.env').write_text('MEDIAFORGE_DATA=/opt/mediaforge/data\nMEDIAFORGE_UNIX_SOCKET=/run/mediaforge/api.sock\nMEDIAFORGE_PORT=18081\nMEDIAFORGE_SECURE_COOKIE=1\nMEDIAFORGE_COOKIE_PATH=/mediaforge/\nMEDIAFORGE_PUBLIC_URL=https://103.236.60.28:18081\nMEDIAFORGE_RELEASE_FILE=/opt/mediaforge/current/release.json\nMEDIAFORGE_ASR_MODEL=/opt/mediaforge/models/faster-whisper-small\nU2NET_HOME=/opt/mediaforge/models/u2net\nMEDIAFORGE_WORKER_MEMORY=6442450944\nOMP_NUM_THREADS=2\nOPENBLAS_NUM_THREADS=2\nNUMBA_CACHE_DIR=/opt/mediaforge/data/numba-cache\n')
         (BASE/'runtime.env').chmod(0o600)
     unit='''[Unit]
 Description=MediaForge authenticated media workbench
@@ -93,7 +112,9 @@ CPUQuota=250%
 [Install]
 WantedBy=multi-user.target
 '''
-    Path('/etc/systemd/system/'+SERVICE).write_text(unit)
+    unit_path=Path('/etc/systemd/system/'+SERVICE)
+    unit_changed=not unit_path.exists() or unit_path.read_text()!=unit
+    if unit_changed:unit_path.write_text(unit)
     cert=Path('/etc/letsencrypt/live/homeward-ip/fullchain.pem');key=cert.with_name('privkey.pem')
     if not cert.exists() or not key.exists():raise RuntimeError('Configured shared IP TLS certificate is unavailable')
     if NGINX.exists() and '# MediaForge owned' not in NGINX.read_text():raise RuntimeError('Refusing to replace an unowned ingress configuration')
@@ -102,7 +123,7 @@ WantedBy=multi-user.target
         NGINX.write_text('''# MediaForge owned; no other virtual host is modified.
     server {
         listen 18081 ssl;
-        server_name 107.151.245.166;
+        server_name 103.236.60.28;
         ssl_certificate /etc/letsencrypt/live/homeward-ip/fullchain.pem;
         ssl_certificate_key /etc/letsencrypt/live/homeward-ip/privkey.pem;
         ssl_protocols TLSv1.2 TLSv1.3;
@@ -124,7 +145,7 @@ WantedBy=multi-user.target
     }
     ''')
     command(['nginx','-t'])
-    command(['systemctl','daemon-reload'])
+    if unit_changed:command(['systemctl','daemon-reload'])
 
 
 def activate(name):
@@ -136,11 +157,8 @@ def activate(name):
     if digest!=expected or digest!=meta['artifact_sha256'] or meta['project_id']!='local.mediaforge':raise RuntimeError('Artifact integrity mismatch')
     if not re.fullmatch('[0-9a-f]{40}',meta['git_commit']) or not re.fullmatch(r'\d+\.\d+\.\d+',meta['version']):raise RuntimeError('Invalid release metadata')
     release=BASE/'releases'/(meta['version']+'-'+meta['git_commit'][:12]+'-'+digest[:8])
-    release.mkdir(parents=True,exist_ok=True)
-    with tarfile.open(artifact) as tar:
-        if any(m.issym() or m.islnk() or m.isdev() for m in tar):raise RuntimeError('Links and devices are not accepted in release packages')
-        tar.extractall(release,filter='data')
-    (release/'release.json').write_text(json.dumps(meta,indent=2)+'\n')
+    if target(CURRENT)==release and (BASE/'deployment.json').is_file():
+        print(json.dumps({'already_active':str(release),'health':ready()}));post_release_retention();return
     old=target(CURRENT)
     expected_cache=meta.get('dependency_cache_commit')
     if expected_cache:
@@ -148,6 +166,19 @@ def activate(name):
             raise RuntimeError('Declared dependency cache is not a safe MediaForge release')
         if json.loads((old/'release.json').read_text())['git_commit']!=expected_cache:
             raise RuntimeError('Current release does not match the declared dependency cache; upload a full package')
+    with tarfile.open(artifact) as tar:expanded=sum(m.size for m in tar)
+    # Locked wheels are hard-linked from the current cache. Reserve a full
+    # environment plus unpacked sources and margin, without copying user data.
+    peak=expanded+2*1024**3
+    free=shutil.disk_usage(BASE).free
+    if free<max(10*1024**3,peak):
+        print(json.dumps({'space_preflight':{'free':free,'peak_estimate':peak},'retention_preview':retain()}))
+        raise RuntimeError('Insufficient disk space; review project retention before activation')
+    release.mkdir(parents=True,exist_ok=True)
+    with tarfile.open(artifact) as tar:
+        if any(m.issym() or m.islnk() or m.isdev() for m in tar):raise RuntimeError('Links and devices are not accepted in release packages')
+        tar.extractall(release,filter='data')
+    (release/'release.json').write_text(json.dumps(meta,indent=2)+'\n')
     venv=release/'.venv'
     if not venv.exists():command(['python3','-m','venv',str(venv)])
     wheel_sources=['--find-links',str(release/'wheels')]
@@ -183,9 +214,9 @@ def activate(name):
         command(['systemctl','enable',SERVICE],capture_output=True)
         command(['systemctl','restart',SERVICE])
         health=ready()
-        command(['systemctl','reload','nginx'])
+        if previous_nginx!=NGINX.read_bytes():command(['systemctl','reload','nginx'])
         if secure_release(old) and old!=release:(BASE/'previous.json').write_text(json.dumps({'release':str(old)}))
-        deployed={**meta,'deployed_at':now(),'release':str(release),'url':'https://107.151.245.166:18081/mediaforge/','health':health,'uid':pwd.getpwnam('mediaforge').pw_uid,'dependency_cache':str(cached_wheels) if cached_wheels else None,'dependency_install_report_sha256':hashlib.sha256((release/'dependency-install.json').read_bytes()).hexdigest()}
+        deployed={**meta,'deployed_at':now(),'release':str(release),'url':'https://103.236.60.28:18081/mediaforge/','health':health,'uid':pwd.getpwnam('mediaforge').pw_uid,'dependency_cache':str(cached_wheels) if cached_wheels else None,'dependency_install_report_sha256':hashlib.sha256((release/'dependency-install.json').read_bytes()).hexdigest()}
         (BASE/'deployment.json').write_text(json.dumps(deployed,indent=2)+'\n')
         print(json.dumps({'activated':str(release),'git_commit':meta['git_commit'],'health':health,'url':deployed['url']}))
     except BaseException:
@@ -196,6 +227,7 @@ def activate(name):
         subprocess.run(['nginx','-t'],capture_output=True)
         subprocess.run(['systemctl','reload','nginx'],capture_output=True)
         raise
+    post_release_retention()
 
 
 def rollback():
@@ -212,8 +244,13 @@ def rollback():
         switch(old);command(['systemctl','restart',SERVICE]);raise
 
 if __name__=='__main__':
-    if sys.argv[1]=='activate':activate(sys.argv[2])
-    elif sys.argv[1]=='rollback':rollback()
-    else:
-        print((BASE/'deployment.json').read_text() if (BASE/'deployment.json').exists() else '{}')
-        print(json.dumps(ready()))
+    import socket
+    if socket.gethostname()!='ser693712513899':raise RuntimeError('Refusing unexpected deployment host')
+    with (BASE/'deploy.lock').open('a') as lock:
+        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        if sys.argv[1]=='activate':activate(sys.argv[2])
+        elif sys.argv[1]=='rollback':rollback()
+        elif sys.argv[1] in {'retain','retain-apply'}:print(json.dumps(retain(sys.argv[1]=='retain-apply')))
+        else:
+            print((BASE/'deployment.json').read_text() if (BASE/'deployment.json').exists() else '{}')
+            print(json.dumps({'health':ready(),'retention':json.loads((BASE/'release-retention.json').read_text()) if (BASE/'release-retention.json').exists() else None}))
