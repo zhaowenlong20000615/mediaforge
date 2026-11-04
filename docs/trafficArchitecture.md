@@ -18,4 +18,59 @@
 
 92项本地通过、2项模型条件不足跳过；本轮不补跑模型/ASR。新API检查涵盖首次miss/二次hit、304零正文、PDF仅渲染一次、容量/TTL淘汰、跨工作区/匿名拒绝、源件变更/退役不复用缓存。8项本地网页流程通过，包含预览/下载、窄屏和离线恢复。[Python](../reports/traffic-2026-11-04/local-tests.json)、[浏览器](../reports/traffic-2026-11-04/local-browser.json)。额外定向检查在后续日志中记录。锁文件只更新本项目版本，第三方依赖不变；本机offline重新求解因缺其它平台索引缓存未通过，未因此升级依赖或绕过wheel校验。
 
-线上发布与真实字节验证完成后补充。无需新设备/第三方授权，无新增付费模型/ASR/向量。
+线上结果见下文。无需新设备/第三方授权，无新增付费模型/ASR/向量。
+
+## 最终运行版本与发布
+
+实际目标103.236.60.28，hostname=ser693712513899；当前 **0.2.9 / d3fdbf8511f0638a1a121b153687b9bbd95ef1e7**。本机提交推送GitHub main、本机构建发布包，再SSH上传；服务器不拉源码。发布前无活动任务，不中断或重投在途工作。默认HTTPS/认证/Origin/Unix socket链路和runtime.env SHA保持；第三方中转及开发工具不在此任务内，没有修改相关配置。
+
+发布包 `mediaforge-0.2.9-d3fdbf8511f0-20261104T130825Z.tar.gz`，本机UTC2026-11-04T13:08:25Z构建，SHA-256 `39d4a74f91bd61b75990d148a52da8c1d91f7d3499f9f69b2cfa6c512df26cfc`。`MEDIAFORGE_DEPENDENCY_CACHE_COMMIT=bf40baf34653ee4575034c854fa90b6c062eeb39`实际生效，98份依赖wheel按SHA离线安装/物化复用，第三方依赖重上传0字节。不是“代码里写了支持”而未实际验证。[发布包](../reports/traffic-2026-11-04/release.json)、[激活/收尾](../reports/traffic-2026-11-04/deployment.json)、[依赖来源与日志](../reports/traffic-2026-11-04/log-validation.json)。
+
+接入包同样为0.2.9/d3fdbf8，原项目鉴权下载保持；实际ZIP CRC/SHA、下载包源码执行CLI任务查询、13工具MCP初始化/同原任务查询/预览发现通过。MCP browse_preview保留父SHA与规格，download_url仍是原件URL；没有为验收补跑模型。沿用现有依赖，不将此检查冒称新独立联网安装通过。[交付记录](../reports/traffic-2026-11-04/delivery.json)、[CLI/MCP证据](../reports/traffic-2026-11-04/clients.json)。
+
+程序current0.2.9、previous0.2.8的解释器均实际导入正确版本，SQLite quick_check=ok；当前、回滚和实际依赖保留。沿原收尾退役超出窗口的0.2.7旧环境及无用途旧上传组；未清理其它项目或业务原件。登记表只更新MediaForge条目。后续测试/文档证据提交不冒充当前运行提交。
+
+## 固定案例：响应正文与缓存
+
+验证对象为改前已上传并冻结的同一组file ID/源SHA，没有改名重建输入冒充缓存命中。技术验证中的完整原件SHA与格式检查在103原地完成；报告仅返回小证据。不存在>10MiB跨网全量技术回拉。合成图与PDF分别约9.45MB，不能代表任意业务文件的节省比例。
+
+| 同一来源 | 改前第一次/第二次正文 | 改后第一次/第二次正文 | 实际结果 |
+| --- | --- | --- | --- |
+| 图片浏览 | 9,451,120 / 9,451,120字节 | 638,244 / 0字节 | 最大1280×960 JPEG、独立preview ID/parent SHA；重验证304 |
+| PDF第1页 | 4,409,937 / 4,409,937字节 | 4,409,937 / 0字节 | 同页1400px渲染缓存命中、重验证304；无二次渲染 |
+
+图片首次正文比原件减少93.25%。PDF首次保持原1400px页面规格与PNG输出，本轮节省来自重复渲染/传输。普通不带If-None-Match的HTTP客户端仍会收到缓存派生正文，只节省重渲染；304零正文来自符合ETag的重验证，不承诺所有第三方客户端自动缓存。
+
+服务器原地检查实际打开预览图像、重复条件/无条件请求、缓存manifest/输出inode与mtime一致，证明未重生成；重复ID稳定，parent SHA不变，两个原件通过相同授权content接口流式SHA核验保持原字节。验证脚本首次在读取root-only runtime.env指纹时权限失败；没有放宽权限，改由独立授权root只读指纹核对。此前生成的缓存仍有效，因此最终原地证据中“第一次改后请求”已是hit；日志保留首次miss，不能将脚本重跑伪称新渲染。[同源实际证据](../reports/traffic-2026-11-04/after.json)。
+
+真实浏览器同一图反复点击预览、同一PDF页反复装载均未请求content原件；CDP观察只产生两条派生响应，重复显示复用浏览器的私有缓存。PDF正常UI的逐页预览也在原8项线上回归走通。[浏览器网络](../reports/traffic-2026-11-04/browser-preview.json)、[图片预览截图](../reports/traffic-2026-11-04/image-preview.png)。精确原图按钮另用175字节的小图实际点击、解码和SHA验证，不为按钮验收重复跨网拉9.45MB原图。[原图能力](../reports/traffic-2026-11-04/exact-view.json)。
+
+缓存命中不绕鉴权：固定缓存页对匿名401、另一工作区404；源件变更409、源件退役404；渲染失败500/preview_failed且不发布缓存，错误同样有request_id和真实响应正文计数。本地检查容量项数/TTL淘汰、故障不缓存、私有ETag隔离均通过。[定向失败检查](../reports/traffic-2026-11-04/failure-tests.json)。最终仅按已命名的隔离审计工作区清理测试任务/文件；已删除源件的旧预览URL明确404。缓存本身可按上限/TTL淘汰，不声称清理原件即同步逐字节移除缓存。[收尾](../reports/traffic-2026-11-04/final-state.json)。
+
+## 轮询与恢复
+
+相同7.2秒有界观察：终态详情从3次/4,695字节到0次/0字节；终态列表从4次/2,344字节到0次/0字节。隐藏契约检查在浏览器覆盖document.hidden并触发visibilitychange，隐藏7.2秒0请求，恢复可见后更新；这是明确的可见性条件检查，不冒称真实后台30分钟实测。手动刷新实际产生一次查询；离线/重新连接由8项浏览器流程验证。终态/闲页按源码60秒低频保活，隐藏不查，活跃accepted/running仍按2秒刷新。[改前](../reports/traffic-2026-11-04/poll-before.json)、[改后](../reports/traffic-2026-11-04/poll-after.json)。
+
+计时脚本首次将页面初始响应算进空闲窗口，导致一条意外计数；修正为等待初始响应完成后再计，未通过的初次检查不计入通过。另一个初次脚本尝试从模块外直接调用showPreview失败，改为实际点击产品按钮；没有修改产品全局暴露函数来迎合脚本。
+
+## 日志、授权、结果与费用保持
+
+本项目ASGI在响应发送后逐块记录request_body_bytes/response_body_bytes，四个固定API request_id与调用端实际body长度逐条一致：两次条件重验证都是0字节，cache=hit且body_complete=true。路由只模板不含query/文件名，日志不保存正文/凭据；日志依旧journal、原Nginx入口保留。ASGI字节不是TLS、网卡、SSH或其它服务计数，本轮不建设全局监控或限流平台。[日志对账](../reports/traffic-2026-11-04/log-validation.json)。
+
+发布前全项目MediaForge任务库没有在途工作；除本次隔离workspace外的任务行集合为空，发布前后同一SHA指纹保持，runtime.env SHA保持。没有原有收费原单可供本轮另测，不能凭空宣称核对了历史账单；产品本轮不调用模型/ASR/向量，新增费用调用0。文件原SHA、任务ID、幂等键及取消恢复业务逻辑未改。旧107独立保留未连接/更改。[部署前](../reports/traffic-2026-11-04/retained-before.json)、[最终](../reports/traffic-2026-11-04/final-state.json)。
+
+## 已通过与限制
+
+- 本地92项回归通过、2项模型条件不足跳过；定向API检查及8项本地网页通过。最终线上8/8、0重试/跳过；[本地](../reports/traffic-2026-11-04/local-tests.json)、[线上](../reports/traffic-2026-11-04/online-browser.json)。本轮未以模型补测扩大范围。
+- 线上固定源件预览/缓存/304、解码、原件SHA、权限拒绝及源件退役阻断通过；实际下载CLI/MCP原任务查询和合同通过。维护和worker就绪状态正常。
+- 首轮证据属于本轮合成固定样例，未据此证明历史流量归因。未做30分钟/长时压测、任意大文档或高并发缓存压力、故意生产撤权、Windows/CUDA验证。缓存容量/TTL通过本地可控检查，线上仅有界样例；实际长期命中率待运行数据。
+- 更换文件字节时须重新导入生成新SHA；命中校验依据源文件inode/大小/mtime/ctime，缓存未损坏时不反复读取整份原件；首次生成或源签名改变会完整校验SHA。超大图、损坏/加密PDF沿原错误边界，不为缓存放宽权限或文件规则。
+
+最终df：
+
+```
+Filesystem        1B-blocks        Used   Available Use% Mounted on
+/dev/vda1      124678225920 98085134336 26576314368  79% /
+```
+
+服务器同期有其它项目活动，df净变化不全部归因本轮。完整小证据索引见[摘要](../reports/traffic-2026-11-04/summary.json)。

@@ -1,0 +1,66 @@
+{
+  "task": "traffic-architecture-20261104-round1",
+  "version": {
+    "name": "mediaforge",
+    "version": "0.2.9",
+    "git_commit": "d3fdbf8511f0638a1a121b153687b9bbd95ef1e7",
+    "artifact_sha256": "39d4a74f91bd61b75990d148a52da8c1d91f7d3499f9f69b2cfa6c512df26cfc",
+    "built_at": "2026-11-04T13:08:25Z"
+  },
+  "fixed_case": {
+    "image": {
+      "file_id": "file_4bd6cfec04e44556b671101deb9dd21a",
+      "parent_sha": "91267ad60c63a488879d77cb0210f1cdc99033aeb750eff540c438924ef867db",
+      "original_bytes": 9451120,
+      "before_first_bytes": 9451120,
+      "before_repeat_bytes": 9451120,
+      "after_first_bytes": 638244,
+      "after_repeat_bytes": 0,
+      "repeat_status": 304,
+      "repeat_render": false
+    },
+    "pdf": {
+      "file_id": "file_5f2075231dae497a9c6c8a1183120a8a",
+      "parent_sha": "c2c1ff6d7d64d75fd87cbf342aa57f65206a42e54faa3b6cf21d4e8f77200849",
+      "original_bytes": 9450845,
+      "before_first_bytes": 4409937,
+      "before_repeat_bytes": 4409937,
+      "after_first_bytes": 4409937,
+      "after_repeat_bytes": 0,
+      "repeat_status": 304,
+      "repeat_render": false
+    }
+  },
+  "poll_before": {
+    "sample_ms": 7200,
+    "detail": {
+      "calls": 3,
+      "body_bytes": 4695
+    },
+    "list": {
+      "calls": 4,
+      "body_bytes": 2344
+    }
+  },
+  "poll_after": {
+    "sample_ms": 7200,
+    "detail": {
+      "calls": 0,
+      "body_bytes": 0
+    },
+    "list": {
+      "calls": 0,
+      "body_bytes": 0
+    },
+    "hidden": {
+      "calls": 0,
+      "sample_ms": 7200
+    },
+    "visible_refresh": true
+  },
+  "dependency_wheels_reused": 98,
+  "third_party_dependency_reupload_bytes": 0,
+  "model_asr_vector_calls": 0,
+  "all_original_validation_on_server": true,
+  "final_df": "Filesystem        1B-blocks        Used   Available Use% Mounted on\n/dev/vda1      124678225920 98085134336 26576314368  79% /\n"
+}
