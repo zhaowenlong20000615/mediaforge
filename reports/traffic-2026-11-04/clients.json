@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "client_version": "0.2.9",
+  "client_commit": "d3fdbf8511f0638a1a121b153687b9bbd95ef1e7",
+  "zip_sha256": "c4ff012ac2e30bdda01157f88daac096a82ebdbbb1f20bc53c253a8c00337607",
+  "zip_bytes": 105837,
+  "cli_same_existing_task": true,
+  "cli_output_bytes": 1687,
+  "mcp_tool_count": 13,
+  "mcp_same_existing_task": true,
+  "mcp_browse_parent_sha_matches": true,
+  "original_download_url_retained": true,
+  "independent_dependency_install": false,
+  "model_asr_calls": 0
+}

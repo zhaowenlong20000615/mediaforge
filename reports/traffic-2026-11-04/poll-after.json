@@ -1,0 +1,16 @@
+{
+  "sample_ms": 7200,
+  "detail": {
+    "calls": 0,
+    "body_bytes": 0
+  },
+  "list": {
+    "calls": 0,
+    "body_bytes": 0
+  },
+  "hidden": {
+    "calls": 0,
+    "sample_ms": 7200
+  },
+  "visible_refresh": true
+}

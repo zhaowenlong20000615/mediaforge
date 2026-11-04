@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "same_source_repeated": true,
+  "default_original_requests": 0,
+  "screen_width": 1280,
+  "pdf_width": 1400,
+  "original_view_button": true,
+  "network": [
+    {
+      "requestId": "75460.14",
+      "path": "/mediaforge/api/files/file_77a82d1b87c3412991ad4ab0a4ff7526/thumbnail",
+      "fromDiskCache": false,
+      "status": 200,
+      "cache": "miss",
+      "apiRequestId": "8499188c2c5fd752",
+      "encodedDataLength": 639234
+    },
+    {
+      "requestId": "75460.17",
+      "path": "/mediaforge/api/files/file_5f2075231dae497a9c6c8a1183120a8a/page",
+      "fromDiskCache": false,
+      "status": 200,
+      "cache": "hit",
+      "apiRequestId": "da4a66f438055474"
+    }
+  ]
+}

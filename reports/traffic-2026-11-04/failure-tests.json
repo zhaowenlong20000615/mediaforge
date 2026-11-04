@@ -1,0 +1,12 @@
+{
+  "command": "pytest tests/test_api.py -q",
+  "result": "9 passed, 2 warnings in 4.43s",
+  "purpose": [
+    "renderer_failure_not_cached",
+    "error_body_bytes_and_request_id",
+    "permission_revalidation",
+    "LRU_and_TTL_bounds",
+    "source_change_rejected"
+  ],
+  "new_framework": false
+}

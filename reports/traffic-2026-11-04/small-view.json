@@ -1,0 +1,26 @@
+{
+  "task_id": "task_2779380c7b024cffbc98cceca833bb3f",
+  "original_sha": "5df2c0d9c82e9954b5e7c3076664cc57941d2c2f2ad19e804f949494f72b5220",
+  "output": {
+    "id": "file_4465d609b325429682108fddc0d0b633",
+    "name": "image-0001.png",
+    "created_at": 1793798774.0086238,
+    "task_id": "task_2779380c7b024cffbc98cceca833bb3f",
+    "size": 175,
+    "sha256": "5df2c0d9c82e9954b5e7c3076664cc57941d2c2f2ad19e804f949494f72b5220",
+    "kind": "image",
+    "mime": "image/png",
+    "warnings": [],
+    "width": 80,
+    "height": 60,
+    "frames": 1,
+    "verification": {
+      "operation": "rename_copy",
+      "content_unchanged": true
+    },
+    "source_file_ids": [
+      "file_f9e906ecf65a4343a20d96eeacdc2476"
+    ],
+    "quality_review": "required"
+  }
+}

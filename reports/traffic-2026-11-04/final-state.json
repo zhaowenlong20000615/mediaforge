@@ -1,0 +1,78 @@
+{
+  "cleanup": {
+    "dry_run": false,
+    "files": 17,
+    "bytes": 28419337,
+    "tasks": 8
+  },
+  "retired_source_blocks_cached_access": true,
+  "retained": {
+    "task_ids": [],
+    "task_state_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "runtime_env_sha256": "ac71f91ba3711e63e280b6a68c46adc53aed1996278db9a4b7ddc0339a57ce21"
+  },
+  "db_check": "ok",
+  "version": {
+    "name": "mediaforge",
+    "version": "0.2.9",
+    "git_commit": "d3fdbf8511f0638a1a121b153687b9bbd95ef1e7",
+    "artifact_sha256": "39d4a74f91bd61b75990d148a52da8c1d91f7d3499f9f69b2cfa6c512df26cfc",
+    "built_at": "2026-11-04T13:08:25Z"
+  },
+  "readyz": {
+    "status": "ready",
+    "worker_ready": true,
+    "worker_error": null,
+    "optional_or_external_dependencies_missing": [],
+    "meaning": "\u670d\u52a1\u5c31\u7eea\u4e0d\u4ee3\u8868\u6240\u6709\u5de5\u5177\u6216\u6a21\u578b\u5df2\u914d\u7f6e\uff1b\u5de5\u5177\u76ee\u5f55\u7ed9\u51fa\u6bcf\u9879\u53ef\u7528\u6027\u3002"
+  },
+  "maintenance": {
+    "last_success": 1793797996.0238504,
+    "last_failure": null,
+    "backlog": {
+      "dry_run": true,
+      "files": 0,
+      "bytes": 0,
+      "tasks": 0,
+      "measured_at": 1793797996.0238526
+    },
+    "state": "ok",
+    "last_attempt": 1793797996.0079942,
+    "error": null,
+    "last_result": {
+      "dry_run": false,
+      "files": 0,
+      "bytes": 0,
+      "tasks": 0
+    },
+    "interval_seconds": 3600,
+    "retention_days": 7,
+    "persistence_error": null,
+    "discovery_error": null
+  },
+  "releases": [
+    {
+      "path": "/opt/mediaforge/releases/0.2.9-d3fdbf8511f0-39d4a74f",
+      "interpreter_version": "0.2.9"
+    },
+    {
+      "path": "/opt/mediaforge/releases/0.2.8-bf40baf34653-e1f43913",
+      "interpreter_version": "0.2.8"
+    }
+  ],
+  "delivery": {
+    "project_id": "local.mediaforge",
+    "source_commit": "d3fdbf8511f0638a1a121b153687b9bbd95ef1e7",
+    "artifact_sha256": "d89b856c37a1adefc42fc89fb1b6cf2d26039f25016d812552aac669e73bd1d0",
+    "previous": "/opt/mediaforge/access/releases/bf40baf34653ee4575034c854fa90b6c062eeb39"
+  },
+  "df": "Filesystem        1B-blocks        Used   Available Use% Mounted on\n/dev/vda1      124678225920 98085134336 26576314368  79% /\n",
+  "paid_model_asr_vector_calls": 0,
+  "preview_cache": {
+    "entries": 7,
+    "bytes": 5084099,
+    "capacity_bytes": 134217728,
+    "capacity_entries": 256,
+    "ttl_idle_seconds": 86400
+  }
+}

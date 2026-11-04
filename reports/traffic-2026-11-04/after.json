@@ -1,0 +1,104 @@
+{
+  "version": {
+    "name": "mediaforge",
+    "version": "0.2.9",
+    "git_commit": "d3fdbf8511f0638a1a121b153687b9bbd95ef1e7",
+    "artifact_sha256": "39d4a74f91bd61b75990d148a52da8c1d91f7d3499f9f69b2cfa6c512df26cfc",
+    "built_at": "2026-11-04T13:08:25Z"
+  },
+  "server_local_validation": true,
+  "case_source_sha": {
+    "image": "91267ad60c63a488879d77cb0210f1cdc99033aeb750eff540c438924ef867db",
+    "pdf": "c2c1ff6d7d64d75fd87cbf342aa57f65206a42e54faa3b6cf21d4e8f77200849"
+  },
+  "calls": {
+    "image": [
+      {
+        "status": 200,
+        "body_bytes": 638244,
+        "request_id": "2337614996cab5e9",
+        "cache": "hit",
+        "preview_id": "preview_e97abe98834656196cfd93a1bb7c4651b0ab0ffaa15424c6b5431734c0bc528b",
+        "parent_sha": "91267ad60c63a488879d77cb0210f1cdc99033aeb750eff540c438924ef867db",
+        "profile": "image-screen",
+        "width": "1280",
+        "height": "960",
+        "etag": "\"bd58a86d574f6929637836811653aff1c91156cb58e667219205d27b1b897692\""
+      },
+      {
+        "status": 304,
+        "body_bytes": 0,
+        "request_id": "75e3e98ba63da970",
+        "cache": "hit",
+        "preview_id": "preview_e97abe98834656196cfd93a1bb7c4651b0ab0ffaa15424c6b5431734c0bc528b",
+        "parent_sha": "91267ad60c63a488879d77cb0210f1cdc99033aeb750eff540c438924ef867db",
+        "profile": "image-screen",
+        "width": "1280",
+        "height": "960",
+        "etag": "\"bd58a86d574f6929637836811653aff1c91156cb58e667219205d27b1b897692\""
+      }
+    ],
+    "pdf": [
+      {
+        "status": 200,
+        "body_bytes": 4409937,
+        "request_id": "1b75a5cf42914994",
+        "cache": "hit",
+        "preview_id": "preview_c418f8a5a918d95a66ba270046521d1e4937f4021f0644d454ccb34932dc8516",
+        "parent_sha": "c2c1ff6d7d64d75fd87cbf342aa57f65206a42e54faa3b6cf21d4e8f77200849",
+        "profile": "pdf-page",
+        "width": "1400",
+        "height": "1050",
+        "etag": "\"8debe142e169141ced1ad6cf7170bc4aa2d7cf7a7ed8f9597b71a4216d0cb129\""
+      },
+      {
+        "status": 304,
+        "body_bytes": 0,
+        "request_id": "b40d68442814cbe6",
+        "cache": "hit",
+        "preview_id": "preview_c418f8a5a918d95a66ba270046521d1e4937f4021f0644d454ccb34932dc8516",
+        "parent_sha": "c2c1ff6d7d64d75fd87cbf342aa57f65206a42e54faa3b6cf21d4e8f77200849",
+        "profile": "pdf-page",
+        "width": "1400",
+        "height": "1050",
+        "etag": "\"8debe142e169141ced1ad6cf7170bc4aa2d7cf7a7ed8f9597b71a4216d0cb129\""
+      }
+    ]
+  },
+  "original_checks": [
+    {
+      "file_id": "file_4bd6cfec04e44556b671101deb9dd21a",
+      "sha256": "91267ad60c63a488879d77cb0210f1cdc99033aeb750eff540c438924ef867db",
+      "bytes": 9451120,
+      "same_as_baseline": true,
+      "validated_on_server": true
+    },
+    {
+      "file_id": "file_5f2075231dae497a9c6c8a1183120a8a",
+      "sha256": "c2c1ff6d7d64d75fd87cbf342aa57f65206a42e54faa3b6cf21d4e8f77200849",
+      "bytes": 9450845,
+      "same_as_baseline": true,
+      "validated_on_server": true
+    }
+  ],
+  "checks": {
+    "image_no_regeneration": true,
+    "image_cache_permission_preserved": true,
+    "pdf_no_regeneration": true,
+    "pdf_cache_permission_preserved": true,
+    "originals_unchanged": true
+  },
+  "cache_disk": {
+    "entries": 2,
+    "bytes": 5049171,
+    "capacity_bytes": 134217728,
+    "capacity_entries": 256,
+    "ttl_idle_seconds": 86400
+  },
+  "retained": {
+    "task_ids": [],
+    "task_state_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "db_quick_check": "ok",
+  "passed": true
+}

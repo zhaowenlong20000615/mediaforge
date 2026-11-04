@@ -1,0 +1,10 @@
+{
+  "project_id": "local.mediaforge",
+  "version": "0.2.9",
+  "git_commit": "d3fdbf8511f0638a1a121b153687b9bbd95ef1e7",
+  "artifact_sha256": "39d4a74f91bd61b75990d148a52da8c1d91f7d3499f9f69b2cfa6c512df26cfc",
+  "built_at": "2026-11-04T13:08:25Z",
+  "python": "3.12",
+  "target": "linux-x86_64",
+  "dependency_cache_commit": "bf40baf34653ee4575034c854fa90b6c062eeb39"
+}

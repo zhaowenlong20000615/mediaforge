@@ -1,0 +1,146 @@
+{
+  "retention": {
+    "project_id": "local.mediaforge",
+    "created_at": 1793797989.2033262,
+    "kept": {
+      "/opt/mediaforge/access/releases/1d498b35a8e3beb6fd0d696e2e18c3d80b9715c2": [
+        "rollback"
+      ],
+      "/opt/mediaforge/access/releases/bf40baf34653ee4575034c854fa90b6c062eeb39": [
+        "current"
+      ],
+      "/opt/mediaforge/releases/0.2.8-bf40baf34653-e1f43913": [
+        "rollback",
+        "shebang/pth/runtime config",
+        "runtime symlink"
+      ],
+      "/opt/mediaforge/releases/0.2.9-d3fdbf8511f0-39d4a74f": [
+        "current",
+        "process 3136873",
+        "mapped 3136873",
+        "shebang/pth/runtime config",
+        "runtime symlink"
+      ]
+    },
+    "candidates": [
+      {
+        "path": "/opt/mediaforge/releases/0.2.7-1d498b35a8e3-d6cebaac",
+        "reason": "unreferenced MediaForge release",
+        "sha256_tree": "86c895ef58d26f3b59a4223f38b333e5f0467d3d00bfcde3b1770849abc45217",
+        "logical_bytes": 1642605543
+      },
+      {
+        "path": "/opt/mediaforge/incoming/mediaforge-0.2.7-1d498b35a8e3-20261102T045411Z.tar.gz",
+        "reason": "verified superseded upload",
+        "sha256_tree": "2a7a61f1ca8fdfb9563c815f7c9bcfe2cbff20d33286ed202a4d5bf90f721d90",
+        "logical_bytes": 4070338
+      },
+      {
+        "path": "/opt/mediaforge/incoming/mediaforge-0.2.7-1d498b35a8e3-20261102T045411Z.tar.gz.release.json",
+        "reason": "upload sidecar",
+        "sha256_tree": "8840760926eb528aece9629bcca3d951d83fc94267100de15d1cfbc1c306725f",
+        "logical_bytes": 369
+      },
+      {
+        "path": "/opt/mediaforge/incoming/mediaforge-0.2.7-1d498b35a8e3-20261102T045411Z.tar.gz.sha256",
+        "reason": "upload sidecar",
+        "sha256_tree": "ad2980581638d8b9a8db041e51e6a9ca4d995a83c64394e1b859edf491e2de88",
+        "logical_bytes": 120
+      },
+      {
+        "path": "/opt/mediaforge/incoming/mediaforge-0.2.7-555469449e3b-20261102T044248Z.tar.gz",
+        "reason": "verified superseded upload",
+        "sha256_tree": "03e747844679e472c8ff9b1ef182a39eab02add54ae72ed98329f20a41a4b034",
+        "logical_bytes": 4071310
+      },
+      {
+        "path": "/opt/mediaforge/incoming/mediaforge-0.2.7-555469449e3b-20261102T044248Z.tar.gz.release.json",
+        "reason": "upload sidecar",
+        "sha256_tree": "1e9f40b5c0e6e52291bdaf26c628fee52fc12e2f2534a09442c558a1e5c5ce3d",
+        "logical_bytes": 369
+      },
+      {
+        "path": "/opt/mediaforge/incoming/mediaforge-0.2.7-555469449e3b-20261102T044248Z.tar.gz.sha256",
+        "reason": "upload sidecar",
+        "sha256_tree": "7ae36cf063f578b79239ffe6eb3224b8593a82ee46fd0a0c6060b02eb5505a96",
+        "logical_bytes": 120
+      },
+      {
+        "path": "/opt/mediaforge/access/incoming/555469449e3ba0fcffb5dccd0d42bc40cbd57302.tar.gz",
+        "reason": "verified superseded delivery upload",
+        "sha256_tree": "9c78428c1aa667068cdf07c693f083d5c395a01d2a2ec965d04700d961e55d27",
+        "logical_bytes": 107685
+      }
+    ],
+    "skipped": [
+      "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.sha256",
+      "/opt/mediaforge/incoming/mediaforge-0.2.3-82e1e7e32be1-20261007T084623Z.tar.gz.release.json"
+    ],
+    "applied": true,
+    "deleted": [
+      {
+        "path": "/opt/mediaforge/releases/0.2.7-1d498b35a8e3-d6cebaac",
+        "reason": "unreferenced MediaForge release",
+        "sha256_tree": "86c895ef58d26f3b59a4223f38b333e5f0467d3d00bfcde3b1770849abc45217",
+        "logical_bytes": 1642605543
+      },
+      {
+        "path": "/opt/mediaforge/incoming/mediaforge-0.2.7-1d498b35a8e3-20261102T045411Z.tar.gz",
+        "reason": "verified superseded upload",
+        "sha256_tree": "2a7a61f1ca8fdfb9563c815f7c9bcfe2cbff20d33286ed202a4d5bf90f721d90",
+        "logical_bytes": 4070338
+      },
+      {
+        "path": "/opt/mediaforge/incoming/mediaforge-0.2.7-1d498b35a8e3-20261102T045411Z.tar.gz.release.json",
+        "reason": "upload sidecar",
+        "sha256_tree": "8840760926eb528aece9629bcca3d951d83fc94267100de15d1cfbc1c306725f",
+        "logical_bytes": 369
+      },
+      {
+        "path": "/opt/mediaforge/incoming/mediaforge-0.2.7-1d498b35a8e3-20261102T045411Z.tar.gz.sha256",
+        "reason": "upload sidecar",
+        "sha256_tree": "ad2980581638d8b9a8db041e51e6a9ca4d995a83c64394e1b859edf491e2de88",
+        "logical_bytes": 120
+      },
+      {
+        "path": "/opt/mediaforge/incoming/mediaforge-0.2.7-555469449e3b-20261102T044248Z.tar.gz",
+        "reason": "verified superseded upload",
+        "sha256_tree": "03e747844679e472c8ff9b1ef182a39eab02add54ae72ed98329f20a41a4b034",
+        "logical_bytes": 4071310
+      },
+      {
+        "path": "/opt/mediaforge/incoming/mediaforge-0.2.7-555469449e3b-20261102T044248Z.tar.gz.release.json",
+        "reason": "upload sidecar",
+        "sha256_tree": "1e9f40b5c0e6e52291bdaf26c628fee52fc12e2f2534a09442c558a1e5c5ce3d",
+        "logical_bytes": 369
+      },
+      {
+        "path": "/opt/mediaforge/incoming/mediaforge-0.2.7-555469449e3b-20261102T044248Z.tar.gz.sha256",
+        "reason": "upload sidecar",
+        "sha256_tree": "7ae36cf063f578b79239ffe6eb3224b8593a82ee46fd0a0c6060b02eb5505a96",
+        "logical_bytes": 120
+      },
+      {
+        "path": "/opt/mediaforge/access/incoming/555469449e3ba0fcffb5dccd0d42bc40cbd57302.tar.gz",
+        "reason": "verified superseded delivery upload",
+        "sha256_tree": "9c78428c1aa667068cdf07c693f083d5c395a01d2a2ec965d04700d961e55d27",
+        "logical_bytes": 107685
+      }
+    ],
+    "disk_before": {
+      "free": 25342713856,
+      "used": 99318734848
+    },
+    "disk_after": {
+      "free": 26661879808,
+      "used": 97999568896
+    }
+  },
+  "health": {
+    "status": "ready",
+    "worker_ready": true,
+    "worker_error": null,
+    "optional_or_external_dependencies_missing": [],
+    "meaning": "\u670d\u52a1\u5c31\u7eea\u4e0d\u4ee3\u8868\u6240\u6709\u5de5\u5177\u6216\u6a21\u578b\u5df2\u914d\u7f6e\uff1b\u5de5\u5177\u76ee\u5f55\u7ed9\u51fa\u6bcf\u9879\u53ef\u7528\u6027\u3002"
+  }
+}

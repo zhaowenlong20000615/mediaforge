@@ -1,0 +1,95 @@
+{
+  "checked_at": "2026-11-04T13:23:29.791521+00:00",
+  "passed": true,
+  "matched_requests": 4,
+  "exact_application_body_bytes": [
+    {
+      "time": "2026-11-04T13:18:11Z",
+      "project_id": "local.mediaforge",
+      "request_id": "2337614996cab5e9",
+      "task_id": null,
+      "method": "GET",
+      "route": "/api/files/{id}/thumbnail",
+      "status": 200,
+      "request_body_bytes": 0,
+      "response_body_bytes": 638244,
+      "body_complete": true,
+      "preview_cache": "hit"
+    },
+    {
+      "time": "2026-11-04T13:18:11Z",
+      "project_id": "local.mediaforge",
+      "request_id": "75e3e98ba63da970",
+      "task_id": null,
+      "method": "GET",
+      "route": "/api/files/{id}/thumbnail",
+      "status": 304,
+      "request_body_bytes": 0,
+      "response_body_bytes": 0,
+      "body_complete": true,
+      "preview_cache": "hit"
+    },
+    {
+      "time": "2026-11-04T13:18:11Z",
+      "project_id": "local.mediaforge",
+      "request_id": "1b75a5cf42914994",
+      "task_id": null,
+      "method": "GET",
+      "route": "/api/files/{id}/page",
+      "status": 200,
+      "request_body_bytes": 0,
+      "response_body_bytes": 4409937,
+      "body_complete": true,
+      "preview_cache": "hit"
+    },
+    {
+      "time": "2026-11-04T13:18:11Z",
+      "project_id": "local.mediaforge",
+      "request_id": "b40d68442814cbe6",
+      "task_id": null,
+      "method": "GET",
+      "route": "/api/files/{id}/page",
+      "status": 304,
+      "request_body_bytes": 0,
+      "response_body_bytes": 0,
+      "body_complete": true,
+      "preview_cache": "hit"
+    }
+  ],
+  "retained": {
+    "task_ids": [],
+    "task_state_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "runtime_env_sha256": "ac71f91ba3711e63e280b6a68c46adc53aed1996278db9a4b7ddc0339a57ce21"
+  },
+  "deployment": {
+    "project_id": "local.mediaforge",
+    "version": "0.2.9",
+    "git_commit": "d3fdbf8511f0638a1a121b153687b9bbd95ef1e7",
+    "artifact_sha256": "39d4a74f91bd61b75990d148a52da8c1d91f7d3499f9f69b2cfa6c512df26cfc",
+    "built_at": "2026-11-04T13:08:25Z",
+    "python": "3.12",
+    "target": "linux-x86_64",
+    "dependency_cache_commit": "bf40baf34653ee4575034c854fa90b6c062eeb39",
+    "deployed_at": "2026-11-04T13:12:16Z",
+    "release": "/opt/mediaforge/releases/0.2.9-d3fdbf8511f0-39d4a74f",
+    "url": "https://103.236.60.28:18081/mediaforge/",
+    "health": {
+      "status": "ready",
+      "worker_ready": true,
+      "worker_error": null,
+      "optional_or_external_dependencies_missing": [],
+      "meaning": "\u670d\u52a1\u5c31\u7eea\u4e0d\u4ee3\u8868\u6240\u6709\u5de5\u5177\u6216\u6a21\u578b\u5df2\u914d\u7f6e\uff1b\u5de5\u5177\u76ee\u5f55\u7ed9\u51fa\u6bcf\u9879\u53ef\u7528\u6027\u3002"
+    },
+    "uid": 995,
+    "dependency_cache": "/opt/mediaforge/releases/0.2.8-bf40baf34653-e1f43913/wheels",
+    "dependency_install_report_sha256": "c2a9815681f6e59da5eb3d056cf36034b73400b597e77ec850112a19f1f81259"
+  },
+  "previous": {
+    "release": "/opt/mediaforge/releases/0.2.8-bf40baf34653-e1f43913"
+  },
+  "dependency_files_installed_from_cache": 98,
+  "new_third_party_dependency_upload_bytes": 0,
+  "df": "Filesystem        1B-blocks        Used   Available Use% Mounted on\n/dev/vda1      124678225920 98080317440 26581131264  79% /\n",
+  "preview_cache_entries": 2,
+  "paid_model_calls_added": 0
+}

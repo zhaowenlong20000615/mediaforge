@@ -141,3 +141,20 @@ def test_pdf_cache_renders_once_and_is_bounded(api,samples,monkeypatch):
     page2=c.get('/api/files/'+f['id']+'/page?page=2');assert page2.status_code==200
     assert len([p for p in cache.root.iterdir() if p.is_dir()])==1
     cache.ttl=-1;cache.clean();assert not [p for p in cache.root.iterdir() if p.is_dir()]
+
+
+def test_failed_preview_is_not_published_and_byte_logs_include_errors(api,samples,monkeypatch,capsys):
+    import mediaforge.previews as previews
+    from types import SimpleNamespace
+    c,s=api;f=upload(c,samples/'document.pdf').json();original=previews.subprocess.run
+    monkeypatch.setattr(previews.subprocess,'run',lambda *a,**kw:SimpleNamespace(returncode=1))
+    response=c.get('/api/files/'+f['id']+'/page?page=1')
+    assert response.status_code==500 and response.json()['error']['code']=='preview_failed'
+    assert not [p for p in c.app.state.preview_cache.root.iterdir() if p.is_dir()]
+    monkeypatch.setattr(previews.subprocess,'run',original)
+    denied=c.post('/api/tasks',headers={'Origin':'https://untrusted.invalid'},json={})
+    assert denied.status_code==403 and denied.headers['x-request-id']
+    logs=[json.loads(l) for l in capsys.readouterr().out.splitlines() if l.startswith('{')]
+    assert logs[-1]['request_id']==denied.headers['x-request-id']
+    assert logs[-1]['response_body_bytes']==len(denied.content) and logs[-1]['body_complete']
+    assert 'query' not in logs[-1] and 'authorization' not in logs[-1]
