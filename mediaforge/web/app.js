@@ -80,11 +80,11 @@ function head(title,desc,extra=null,eyebrow='MEDIAFORGE / WORKSPACE') { return h
 async function route(){
  if(!state.owner)return;
  const version=++state.viewVersion;
- const parts=location.hash.slice(1).split('/');state.nav=parts[0]||'workbench';state.taskId=parts[1];state.renderKey='';shell();
+ const parts=location.hash.slice(1).split('/');state.nav=parts[0]||'workbench';state.taskId=parts[1];state.task=null;state.listActive=false;state.lastPoll=Date.now();state.renderKey='';shell();
  const main=$('#main');
  try {
  if(state.nav==='workbench')renderWorkbench();
- else if(state.nav==='tasks') {main.append(head('任务队列','受理、执行、结果各有记录。筛选任务，查看详情，或将结果一起导出。'));renderTaskControls();await refreshTasks();}
+ else if(state.nav==='tasks') {main.append(head('任务队列','受理、执行、结果各有记录。筛选任务，查看详情，或将结果一起导出。',button('刷新任务',()=>action(refreshTasks))));renderTaskControls();await refreshTasks();}
  else if(state.nav==='task'&&state.taskId){main.append(h('div',{class:'loading'},'正在读取任务…'));await refreshDetail();}
  else if(state.nav==='diagnostics')await renderDiagnostics();
  else if(state.nav==='settings')await renderSettings();
@@ -207,6 +207,7 @@ async function refreshTasks(){
  const version=state.viewVersion;const query=++state.queryVersion;const filters=new URLSearchParams({status:state.filter,search:state.search,limit:20,offset:state.offset}).toString();
  const data=await api('api/tasks?'+filters);
  if(state.nav!=='tasks'||version!==state.viewVersion||query!==state.queryVersion)return;
+ state.listActive=data.tasks.some(t=>['accepted','running'].includes(t.status));
  const key=JSON.stringify(data);if(key===state.renderKey)return;state.renderKey=key;
  const list=$('#task-list');if(!list)return;
  if(!data.tasks.length)list.replaceChildren(h('div',{class:'empty'},h('h3',{},'这里还没有匹配的任务'),h('p',{},'任务会保留处理状态和结果。你可以调整筛选条件，或开始处理第一份文件。'),h('a',{href:'#workbench',class:'button-link'},'开始处理文件 →')));
@@ -237,7 +238,7 @@ async function refreshDetail(){
  main.replaceChildren(head(nameOf(data.tool),'每个文件独立记录。处理完成后，请检查内容质量再交付。',h('a',{href:'#tasks',class:'button-link'},'← 任务队列'),'TASK / '+data.id.slice(-12)));
  main.append(h('div',{class:'summary-line'},badge(data.status),h('span',{},'创建于 '+time(data.created_at)),h('span',{},`${data.counts.succeeded} / ${data.item_count} 项完成`),h('span',{},data.group_name||'未分组')),
  h('div',{class:'task-progress'},h('strong',{},data.stage),h('span',{},Math.round(data.progress)+'%')),h('progress',{value:data.progress,max:100,'aria-label':'任务总进度'}));
- const actions=h('div',{class:'detail-actions'});
+ const actions=h('div',{class:'detail-actions'},button('刷新任务',()=>action(refreshDetail)));
  if(['accepted','running'].includes(data.status))actions.append(button(data.cancel_requested?'正在停止…':'取消任务',()=>action(async()=>{await post('api/tasks/'+id+'/cancel');await refreshDetail();}),'danger',{disabled:data.cancel_requested}));
  if(['failed','partial','cancelled','recoverable'].includes(data.status))actions.append(button('重试未完成项',()=>action(async()=>{await post('api/tasks/'+id+'/resume');await refreshDetail();}),'primary'));
  if(data.outputs.length)actions.append(button('打包全部结果',()=>exportTasks([id])),button('用结果继续处理',()=>reuse(data.outputs)));
@@ -259,7 +260,7 @@ async function showPreview(f){
  panel.replaceChildren(h('div',{class:'section-title'},h('h2',{},f.name),button('关闭预览',()=>panel.remove(),'small')),h('p',{class:'muted'},'请检查画面、声音或文字是否符合预期。'));
  const url='./api/files/'+f.id+'/content?inline=true';
  if(data.text!==undefined)panel.append(data.layout_preview===false?h('p',{class:'muted'},'文字预览不代表 Word 排版效果；请下载后核对。'):null,h('pre',{},data.text),data.truncated?h('small',{},'这里只显示前部分内容，完整结果请下载。'):null);
- else if(data.kind==='image')panel.append(h('img',{src:url,alt:'处理结果：'+f.name}));
+ else if(data.kind==='image')panel.append(h('img',{src:'./'+data.browse_preview.url,alt:'处理结果：'+f.name,onError:()=>toast('预览暂时不可用，可点击查看原图。')}),button('查看原图',()=>{const image=panel.querySelector('img');image.src=url;image.alt='原图：'+f.name;}),h('small',{},'日常预览使用适合屏幕的派生图；精确核对可查看原图。'));
  else if(data.kind==='video')panel.append(h('video',{src:url,controls:true,preload:'metadata'}));
  else if(data.kind==='audio')panel.append(h('audio',{src:url,controls:true,preload:'metadata'}));
  else if(data.kind==='pdf'){
@@ -311,9 +312,13 @@ async function bootstrap(){
 }
 $('.skip').addEventListener('click',e=>{e.preventDefault();$('#main')?.focus();$('#main')?.scrollIntoView();});
 window.addEventListener('hashchange',()=>action(route));
+window.addEventListener('offline',()=>connection(false));
+window.addEventListener('online',()=>{state.lastPoll=0;});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)state.lastPoll=0;});
 setInterval(async()=>{
  if(!state.owner||state.polling||document.hidden)return;
- const interval=state.connected?2000:8000;if(Date.now()-state.lastPoll<interval)return;
+ const active=state.nav==='task'?['accepted','running'].includes(state.task?.status):state.nav==='tasks'&&state.listActive;
+ const interval=!state.connected?8000:active?2000:60000;if(Date.now()-state.lastPoll<interval)return;
  state.polling=true;state.lastPoll=Date.now();
  try{if(state.nav==='tasks')await refreshTasks();else if(state.nav==='task')await refreshDetail();else await api('api/me');}catch(e){if(e.code!=='unauthorized')connection(false);}finally{state.polling=false;}
 },1000);

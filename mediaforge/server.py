@@ -19,6 +19,8 @@ from .engine import Engine
 from .errors import ForgeError
 from .catalog import OPS
 from .dependencies import checks,catalog_status,ocr_languages
+from .previews import PreviewCache
+from .traffic import TrafficLog
 
 
 class TaskInput(BaseModel):
@@ -58,6 +60,8 @@ def create_app(settings=None,start_worker=True):
 
     app=FastAPI(title='MediaForge',version=__version__,lifespan=lifespan,docs_url=None,redoc_url=None,openapi_url=None)
     app.state.store=store;app.state.engine=engine
+    preview_cache=PreviewCache(store.root);app.state.preview_cache=preview_cache
+    engine.maintenance.preview_cache=preview_cache
 
     def origin_ok(request):
         origin=request.headers.get('origin')
@@ -70,7 +74,7 @@ def create_app(settings=None,start_worker=True):
 
     @app.middleware('http')
     async def boundary(request,call_next):
-        request_id=secrets.token_hex(8);request.state.request_id=request_id
+        request_id=request.state.request_id
         if request.method not in {'GET','HEAD','OPTIONS'} and not origin_ok(request):
             return JSONResponse({'error':{'code':'invalid_origin','message':'请求来源不受信任。','action':'从工作台所在地址重新打开页面。'}},status_code=403)
         if request.method not in {'GET','HEAD'} and request.url.path!='/api/files':
@@ -84,10 +88,7 @@ def create_app(settings=None,start_worker=True):
         response.headers['X-Frame-Options']='SAMEORIGIN'
         response.headers['Content-Security-Policy']="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self'"
         response.headers['X-Request-ID']=request_id
-        if request.url.path.startswith('/api/'):response.headers['Cache-Control']='no-store'
-        # Method and route template only: never parameters, headers, filenames or body.
-        route=request.scope.get('route');route_path=getattr(route,'path','unmatched')
-        print(json.dumps({'time':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'project_id':'local.mediaforge','request_id':request_id,'task_id':None,'method':request.method,'route':route_path,'status':response.status_code}),flush=True)
+        if request.url.path.startswith('/api/') and 'Cache-Control' not in response.headers:response.headers['Cache-Control']='no-store'
         return response
 
     @app.exception_handler(ForgeError)
@@ -199,38 +200,38 @@ def create_app(settings=None,start_worker=True):
             result.update(text=text[:64000],truncated=len(text)>64000,layout_preview=False)
         elif f['kind'] in {'image','video','audio','pdf'}:
             result['inline']=True
+            if f['kind']=='image':result['browse_preview']={'url':'api/files/'+id+'/thumbnail?profile=screen','profile':'image-screen','parent_sha256':f['sha256'],'max_width':1280,'max_height':960,'purpose':'browse_only'}
             if f['kind']=='pdf':result['pages']=f.get('pages',0);result['encrypted']=f.get('encrypted',False)
         else:result['download_only']=True
         return result
 
+    def cached_preview(request,who,f,profile,page=1):
+        # The authorization and source-file checks have already run. Keep the
+        # lease through reading so LRU eviction cannot remove the response body.
+        with preview_cache.lock.acquire(timeout=25):
+            path,meta,hit=preview_cache.get(who,f,profile,page)
+            etag='"'+meta['sha256']+'"'
+            headers={'Cache-Control':'private, no-cache','ETag':etag,'Vary':'Cookie, Authorization',
+                     'X-Preview-Cache':hit,'X-Preview-ID':meta['id'],'X-Parent-SHA256':meta['parent_sha256'],
+                     'X-Parent-File-ID':f['id'],
+                     'X-Preview-Profile':profile,'X-Preview-Width':str(meta['width']),'X-Preview-Height':str(meta['height'])}
+            tags=[t.strip().removeprefix('W/') for t in request.headers.get('if-none-match','').split(',')]
+            if etag in tags or '*' in tags:return Response(status_code=304,headers=headers)
+            return Response(path.read_bytes(),media_type=meta['mime'],headers=headers)
+
     @app.get('/api/files/{id}/page')
-    def pdf_page(id:str,page:int=Query(1,ge=1,le=500),who=Depends(owner)):
-        import tempfile
-        import subprocess
-        from .dependencies import verified_binary
+    def pdf_page(request:Request,id:str,page:int=Query(1,ge=1,le=500),who=Depends(owner)):
         f=store.file(who,id,True)
         if f['kind']!='pdf':raise ForgeError('not_pdf','此文件不是 PDF。')
         if f.get('encrypted') and not f.get('pages'):raise ForgeError('password_required','此 PDF 需要密码。','先以正确密码处理，再预览结果。',409)
         if page>f.get('pages',0):raise ForgeError('page_range','页码超出范围。')
-        exe=verified_binary('poppler')
-        if not exe:raise ForgeError('dependency_missing','PDF 预览需要 Poppler。','在诊断页配置 PDF 渲染工具。',409)
-        with tempfile.TemporaryDirectory(prefix='preview-',dir=store.root/'staging') as folder:
-            prefix=Path(folder)/'page'
-            try:
-                r=subprocess.run([exe,'-f',str(page),'-l',str(page),'-singlefile','-scale-to','1400','-png',f['path'],str(prefix)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=20)
-                out=prefix.with_suffix('.png')
-                if r.returncode or not out.exists() or out.stat().st_size>16*1024**2:raise ValueError()
-                return Response(out.read_bytes(),media_type='image/png')
-            except (subprocess.TimeoutExpired,ValueError):raise ForgeError('preview_failed','PDF 页面预览未完成。','可下载文件，或使用 PDF 转图片工具。')
+        return cached_preview(request,who,f,'pdf-page',page)
 
     @app.get('/api/files/{id}/thumbnail')
-    def thumbnail(id:str,who=Depends(owner)):
-        from PIL import Image,ImageOps
+    def thumbnail(request:Request,id:str,profile:str=Query('thumb',pattern='^(thumb|screen)$'),who=Depends(owner)):
         f=store.file(who,id,True)
         if f['kind']!='image':raise ForgeError('no_thumbnail','此文件没有图片缩略图。',status=404)
-        with Image.open(f['path']) as src:
-            im=ImageOps.exif_transpose(src);im.thumbnail((320,240));out=io.BytesIO();im.convert('RGB').save(out,format='JPEG',quality=75)
-        return Response(out.getvalue(),media_type='image/jpeg')
+        return cached_preview(request,who,f,'image-screen' if profile=='screen' else 'image-thumb')
 
     @app.post('/api/tasks',status_code=202)
     async def submit(request:Request,who=Depends(owner)):
@@ -300,6 +301,7 @@ def create_app(settings=None,start_worker=True):
         if name not in allowed:raise ForgeError('not_found','资源不存在。',status=404)
         return FileResponse(web/name,media_type=allowed[name])
 
+    app.add_middleware(TrafficLog)
     return app
 
 

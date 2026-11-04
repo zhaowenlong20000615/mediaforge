@@ -1,0 +1,11 @@
+{
+  "sample_ms": 7200,
+  "detail": {
+    "calls": 3,
+    "body_bytes": 4695
+  },
+  "list": {
+    "calls": 4,
+    "body_bytes": 2344
+  }
+}

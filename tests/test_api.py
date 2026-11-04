@@ -105,3 +105,39 @@ def test_pdf_page_preview_and_password_boundary(api,samples):
     assert c.get('/api/files/'+f['id']+'/page?page=4').status_code==400
     protected=upload(c,samples/'protected.pdf').json()
     assert c.get('/api/files/'+protected['id']+'/page').status_code==409
+
+
+def test_private_preview_cache_revalidation_and_source_retirement(api,samples,monkeypatch,capsys):
+    c,s=api;f=upload(c,samples/'图片 sample.png').json();url='/api/files/'+f['id']+'/thumbnail?profile=screen'
+    first=c.get(url);assert first.status_code==200 and first.headers['x-preview-cache']=='miss'
+    assert first.headers['x-parent-sha256']==f['sha256'] and first.headers['x-preview-id'].startswith('preview_')
+    assert first.headers['cache-control']=='private, no-cache' and int(first.headers['x-preview-width'])<=1280
+    second=c.get(url,headers={'If-None-Match':first.headers['etag']});assert second.status_code==304 and not second.content and second.headers['x-preview-cache']=='hit'
+    logs=[json.loads(l) for l in capsys.readouterr().out.splitlines() if l.startswith('{')]
+    assert logs[-1]['response_body_bytes']==0 and logs[-1]['preview_cache']=='hit'
+    token=c.headers['Authorization'];other=c.post('/api/workspaces',json={'name':'other'}).json();c.headers['Authorization']='Bearer '+other['token']
+    assert c.get(url,headers={'If-None-Match':first.headers['etag']}).status_code==404
+    c.headers.pop('Authorization');assert c.get(url,headers={'If-None-Match':first.headers['etag']}).status_code==401
+    c.headers['Authorization']=token
+    # Content identity changes cannot silently reuse an old parent SHA.
+    path=Path(s.file(OWNER,f['id'],True)['path']);path.write_bytes(path.read_bytes()+b'changed')
+    assert c.get(url).status_code==409
+    c.post('/api/cleanup',json={'days':0,'dry_run':False})
+    assert c.get(url,headers={'If-None-Match':first.headers['etag']}).status_code==404
+
+
+def test_pdf_cache_renders_once_and_is_bounded(api,samples,monkeypatch):
+    import mediaforge.previews as previews
+    c,s=api;f=upload(c,samples/'document.pdf').json();url='/api/files/'+f['id']+'/page?page=1'
+    real=previews.subprocess.run;count=[]
+    def counted(*args,**kw):
+        if '-singlefile' in args[0]:count.append(1)
+        return real(*args,**kw)
+    monkeypatch.setattr(previews.subprocess,'run',counted)
+    first=c.get(url);assert first.status_code==200
+    repeat=c.get(url);assert repeat.content==first.content and repeat.headers['x-preview-cache']=='hit' and len(count)==1
+    assert c.get(url,headers={'If-None-Match':first.headers['etag']}).status_code==304 and len(count)==1
+    cache=c.app.state.preview_cache;cache.max_entries=1
+    page2=c.get('/api/files/'+f['id']+'/page?page=2');assert page2.status_code==200
+    assert len([p for p in cache.root.iterdir() if p.is_dir()])==1
+    cache.ttl=-1;cache.clean();assert not [p for p in cache.root.iterdir() if p.is_dir()]

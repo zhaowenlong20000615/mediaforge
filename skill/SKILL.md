@@ -87,3 +87,7 @@ readyz在任务调度存储故障时返回503，doctor的worker_error说明原�
 仅用户需要浏览代理时提交video-transcode，params中设profile=browse-540p；默认custom不变。该预设固定最大960×540/30fps/CRF23，不采用width/crf自定义值。完成后核对derivation.parents中的SHA、output的尺寸/帧率/音轨、time_mapping及verification.fully_decoded。profile=browse-540p只适合浏览；精确编辑应选择derivation.parents的原件。生成或验证代理不授权删除原件，时间关系不是逐帧精确映射。
 
 0.2.8：清理失败可能发生在索引提交后的物理删除阶段；maintenance失败不代表索引已回滚。不要自行把暂存文件搬回原位置，下一轮维护会按恢复清单核对后重试。
+
+## 0.2.9 预览和原件
+
+preview_result在图片时返回browse_preview（URL/profile/parent SHA/最大尺寸），download_url仍指原件且沿用权限。调用预览的thumbnail或PDF page时，记录响应X-Preview-ID、X-Parent-SHA256、X-Preview-Profile/Width/Height与ETag；后续带If-None-Match可获304，必须保留原有身份。预览是有界可重建缓存，不是精确编辑文件，不承诺长期存在，也不授权退役原件。401/404/409/preview_failed不可解释为已验证原件成功。CLI/MCP查询受理/取消/恢复和幂等逻辑不变；本轮无模型调用。

@@ -1,0 +1,24 @@
+{
+  "suites": [
+    {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "2",
+      "tests": "94",
+      "time": "50.460",
+      "timestamp": "2026-11-04T04:57:44.384893-08:00",
+      "hostname": "zhaodeMac-mini.local"
+    }
+  ],
+  "skipped": [
+    {
+      "test": "test_asr_local_model",
+      "reason": "Explicit local ASR model and synthetic speech fixture not configured"
+    },
+    {
+      "test": "test_background_model",
+      "reason": "Explicit background model not configured"
+    }
+  ]
+}

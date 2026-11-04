@@ -1,0 +1,77 @@
+{
+  "server": "https://103.236.60.28:18081/mediaforge",
+  "workspace": "workspace_c4a8157429f442e896a5b67f6914e9a6",
+  "image": {
+    "id": "file_4bd6cfec04e44556b671101deb9dd21a",
+    "name": "fixed-image.png",
+    "created_at": 1793796514.134588,
+    "task_id": null,
+    "size": 9451120,
+    "sha256": "91267ad60c63a488879d77cb0210f1cdc99033aeb750eff540c438924ef867db",
+    "kind": "image",
+    "mime": "image/png",
+    "warnings": [],
+    "width": 2048,
+    "height": 1536,
+    "frames": 1
+  },
+  "pdf": {
+    "id": "file_5f2075231dae497a9c6c8a1183120a8a",
+    "name": "fixed.pdf",
+    "created_at": 1793796514.2869968,
+    "task_id": null,
+    "size": 9450845,
+    "sha256": "c2c1ff6d7d64d75fd87cbf342aa57f65206a42e54faa3b6cf21d4e8f77200849",
+    "kind": "pdf",
+    "mime": "application/pdf",
+    "warnings": [],
+    "encrypted": false,
+    "pages": 1
+  },
+  "task_id": "task_56631232479f4cd0b62990ab55a45413",
+  "baseline": {
+    "image": [
+      {
+        "status": 200,
+        "body_bytes": 9451120,
+        "sha256": "91267ad60c63a488879d77cb0210f1cdc99033aeb750eff540c438924ef867db",
+        "elapsed_ms": 175.79,
+        "cache": null,
+        "request_id": "19c5c042af51a038"
+      },
+      {
+        "status": 200,
+        "body_bytes": 9451120,
+        "sha256": "91267ad60c63a488879d77cb0210f1cdc99033aeb750eff540c438924ef867db",
+        "elapsed_ms": 236.79,
+        "cache": null,
+        "request_id": "ea7615bfc1c1deea"
+      }
+    ],
+    "pdf": [
+      {
+        "status": 200,
+        "body_bytes": 4409937,
+        "sha256": "8debe142e169141ced1ad6cf7170bc4aa2d7cf7a7ed8f9597b71a4216d0cb129",
+        "elapsed_ms": 1019.53,
+        "cache": null,
+        "request_id": "fb3de9542e2eadff"
+      },
+      {
+        "status": 200,
+        "body_bytes": 4409937,
+        "sha256": "8debe142e169141ced1ad6cf7170bc4aa2d7cf7a7ed8f9597b71a4216d0cb129",
+        "elapsed_ms": 1090.31,
+        "cache": null,
+        "request_id": "579fc2747597f260"
+      }
+    ]
+  },
+  "version": {
+    "name": "mediaforge",
+    "version": "0.2.8",
+    "git_commit": "bf40baf34653ee4575034c854fa90b6c062eeb39",
+    "artifact_sha256": "e1f43913562f8a3345a2f29bd9c643f9176831a729935cf20d449a48e49974f3",
+    "built_at": "2026-11-02T05:03:40Z"
+  }
+}

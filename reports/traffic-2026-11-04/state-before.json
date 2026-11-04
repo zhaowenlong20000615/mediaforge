@@ -1,0 +1,30 @@
+{
+  "deployment": {
+    "project_id": "local.mediaforge",
+    "version": "0.2.8",
+    "git_commit": "bf40baf34653ee4575034c854fa90b6c062eeb39",
+    "artifact_sha256": "e1f43913562f8a3345a2f29bd9c643f9176831a729935cf20d449a48e49974f3",
+    "built_at": "2026-11-02T05:03:40Z",
+    "python": "3.12",
+    "target": "linux-x86_64",
+    "dependency_cache_commit": "1d498b35a8e3beb6fd0d696e2e18c3d80b9715c2",
+    "deployed_at": "2026-11-02T05:05:41Z",
+    "release": "/opt/mediaforge/releases/0.2.8-bf40baf34653-e1f43913",
+    "url": "https://103.236.60.28:18081/mediaforge/",
+    "health": {
+      "status": "ready",
+      "worker_ready": true,
+      "worker_error": null,
+      "optional_or_external_dependencies_missing": [],
+      "meaning": "\u670d\u52a1\u5c31\u7eea\u4e0d\u4ee3\u8868\u6240\u6709\u5de5\u5177\u6216\u6a21\u578b\u5df2\u914d\u7f6e\uff1b\u5de5\u5177\u76ee\u5f55\u7ed9\u51fa\u6bcf\u9879\u53ef\u7528\u6027\u3002"
+    },
+    "uid": 995,
+    "dependency_cache": "/opt/mediaforge/releases/0.2.7-1d498b35a8e3-d6cebaac/wheels",
+    "dependency_install_report_sha256": "0255e2d2c1c95cd6181d15bfb7ca2e07ac82038f1be4f97ddd4520cbbc88f928"
+  },
+  "active_task_count": 0,
+  "retained_task_ids": [],
+  "retained_task_state_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "df": "Filesystem        1B-blocks        Used   Available Use% Mounted on\n/dev/vda1      124678225920 97931337728 26730110976  79% /\n",
+  "runtime_env_sha256": "ac71f91ba3711e63e280b6a68c46adc53aed1996278db9a4b7ddc0339a57ce21"
+}
